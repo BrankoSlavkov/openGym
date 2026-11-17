@@ -14,6 +14,15 @@ test('names the configured values when the RP ID does not match', () => {
 test('does the same for an origin mismatch, on login and on registration', () => {
   assert.match(verifyError(new Error('Unexpected authentication response origin'), cfg), /must match the address you opened/);
   assert.match(verifyError(new Error('Unexpected registration response origin'), cfg), /must match the address you opened/);
+  assert.match(verifyError(new Error('Unexpected response origin "http://10.0.0.4", expected one of: https://gym.example.com'), cfg), /must match the address you opened/);
+});
+
+test('reads the error code @simplewebauthn/server v14 attaches, whatever the wording', () => {
+  const coded = (message, code) => Object.assign(new Error(message), { code });
+  assert.equal(isMisconfigured(coded('anything', 'UNEXPECTED_ORIGIN')), true);
+  assert.equal(isMisconfigured(coded('anything', 'UNEXPECTED_RP_ID')), true);
+  assert.equal(isMisconfigured(coded('Signature verification failed', 'INVALID_SIGNATURE')), false);
+  assert.match(verifyError(coded('anything', 'UNEXPECTED_ORIGIN'), cfg), /RP_ID=gym\.example\.com/);
 });
 
 test('leaves an unrelated verification failure alone', () => {

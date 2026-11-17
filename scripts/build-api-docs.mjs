@@ -14,14 +14,14 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import yaml from 'js-yaml'
+import { load as loadYaml } from 'js-yaml'
 import { applyRef } from './site/ref-template.mjs'
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const specPath = path.join(root, 'api', 'openapi.yaml')
 const outPath = path.join(root, 'website', 'api.html')
 const check = process.argv.includes('--check')
-const spec = yaml.load(fs.readFileSync(specPath, 'utf8'))
+const spec = loadYaml(fs.readFileSync(specPath, 'utf8'))
 
 // The cache-busting ?v= the website's pages share. index.html is the one place it is bumped;
 // a copy here drifted to an older number and turned --check red on every branch (#795).
