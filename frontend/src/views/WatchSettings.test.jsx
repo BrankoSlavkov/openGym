@@ -4,7 +4,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createRoot } from 'react-dom/client'
 import { act } from 'react'
-import { MemoryRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
+import { useLocation } from '../router/hooks.tsx'
 
 const mocks = vi.hoisted(() => ({ health: { on: false }, link: { paired: true, installed: true } }))
 vi.mock('../lib/health-sync.js', () => ({ loadHealth: async () => mocks.health, onHealthChange: () => () => {}, initHealthSync: () => {} }))
@@ -16,16 +17,19 @@ import { readWatchPrefs, writeWatchStatus, watchLinkState } from '../lib/watch-s
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 let where = null
-function Where() { where = useLocation(); return null }
+// The page at its own address; anywhere else, only where the app went.
+function Screen() {
+  const loc = useLocation()
+  if (loc.pathname === '/settings/watch') return <WatchSettingsPage />
+  where = loc
+  return null
+}
 
 async function mount() {
   const el = document.createElement('div')
   document.body.replaceChildren(el)
   await act(async () => {
-    createRoot(el).render(<MemoryRouter initialEntries={['/settings/watch']}><Routes>
-      <Route path="/settings/watch" element={<WatchSettingsPage />} />
-      <Route path="*" element={<Where />} />
-    </Routes></MemoryRouter>)
+    createRoot(el).render(<TestRouter initialEntries={['/settings/watch']}><Screen /></TestRouter>)
   })
   return el
 }

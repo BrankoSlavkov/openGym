@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { scrollToTop } from '../lib/scroll-top.js'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { countedS } from '../lib/counted-log.js'
 import { dayPhotosOf, serverTakesDayPhotos } from '../lib/day-photos.js'

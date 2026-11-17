@@ -86,7 +86,7 @@ vi.mock('../store/useUI.js', () => {
   }
   return { useUI }
 })
-vi.mock('react-router-dom', () => ({ useNavigate: () => mocks.nav }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => mocks.nav }))
 // The Live Activity's Done (lib/live-activity.js): the handler the workout screen binds.
 vi.mock('../lib/live-activity.js', () => ({ bindLiveActions: h => { mocks.live = h; return () => { if (mocks.live === h) mocks.live = null } } }))
 vi.mock('../sheets.jsx', () => ({

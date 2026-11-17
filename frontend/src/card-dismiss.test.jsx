@@ -18,7 +18,7 @@ import MuscleExplorer from './components/MuscleExplorer.jsx'
 import Home from './views/Home.jsx'
 
 const { navSpy } = vi.hoisted(() => ({ navSpy: vi.fn() }))
-vi.mock('react-router-dom', () => ({ useNavigate: () => navSpy, useLocation: () => ({ pathname: '/', state: null, search: '' }), useSearchParams: () => [new URLSearchParams()] }))
+vi.mock('./router/hooks.tsx', () => ({ useNavigate: () => navSpy, useLocation: () => ({ pathname: '/', state: null, search: '' }), useSearchParams: () => [new URLSearchParams()] }))
 vi.mock('./sheets.jsx', async orig => ({ ...(await orig()), calendarSheet: vi.fn() }))
 
 const BENCH = '0025'

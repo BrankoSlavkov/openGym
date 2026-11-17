@@ -3,7 +3,7 @@
 // the plates and the warm-up speak its unit, and every change is stored in the profile's.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Workout from './Workout.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -41,7 +41,7 @@ function mount(entries, patch = {}) {
   container = document.createElement('div')
   document.body.appendChild(container)
   root = createRoot(container)
-  act(() => root.render(<MemoryRouter><Workout /></MemoryRouter>))
+  act(() => root.render(<TestRouter><Workout /></TestRouter>))
 }
 const heads = () => [...container.querySelectorAll('.sethead .w-sp')].map(el => el.textContent)
 const weights = () => [...container.querySelectorAll('.wl-unit')].map(u => [...u.querySelectorAll('.stp input')].filter((_, i) => i % 2 === 0).map(el => el.value))

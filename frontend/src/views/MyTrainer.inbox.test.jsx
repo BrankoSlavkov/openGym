@@ -32,7 +32,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = snap
   return { useUI }
 })
-vi.mock('react-router-dom', () => ({ useLocation: () => ({ search: mocks.search }) }))
+vi.mock('../router/hooks.tsx', () => ({ useLocation: () => ({ search: mocks.search }) }))
 vi.mock('../sheets.jsx', () => ({ confirmSheet: vi.fn() }))
 
 const mounted = []

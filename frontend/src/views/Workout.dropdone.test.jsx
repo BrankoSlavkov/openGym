@@ -3,7 +3,7 @@
 // rest-pause set's bursts) stayed bright as if still to do. They carry the row's done state now.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
@@ -34,7 +34,7 @@ function mount(sets) {
   container = document.createElement('div')
   document.body.appendChild(container)
   root = createRoot(container)
-  act(() => root.render(<MemoryRouter><Workout /></MemoryRouter>))
+  act(() => root.render(<TestRouter><Workout /></TestRouter>))
 }
 
 describe('drops and bursts of a done set', () => {

@@ -3,7 +3,7 @@
 // The member decides, the server enforces: every change here is a request the server checks, and
 // counts from the trainer's very next request. Only shown with config.trainers (TRAINERS=on).
 import { useEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t, baseLang } from '../lib/i18n.js'

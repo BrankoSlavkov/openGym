@@ -46,6 +46,9 @@ reworked several times).
 - **`same` / `moved` files:** apply the intent to our version. Our file may be TypeScript, may use
   TanStack Router instead of react-router-dom, and may carry fork-only changes (see
   `git log -- <our path>`); keep those. Don't paste upstream's file over ours.
+- **Routing:** upstream uses react-router-dom. Its `<Route>` lines in App.jsx map to
+  `frontend/src/router/routes.ts` + `VIEWS` in App.jsx; `react-router-dom` imports in views and
+  tests map to `router/hooks.tsx` / `router/testing.tsx` (FORK.md, "Routing").
 - **`new` files:** add them in our conventions (TypeScript `.ts/.tsx` once the folder is converted,
   our router, exact-pinned deps). Imports name the real file (`./foo.ts`) and TypeScript stays erasable
   (FORK.md, "Converting a file to TypeScript"); `node frontend/scripts/ts-convert.mjs` renames a JS file
@@ -62,6 +65,11 @@ reworked several times).
   changed one side, both sides must match here too.
 - **api/ and mcp/** are still upstream-shaped JavaScript: their changes usually apply almost
   verbatim (`git show <sha> -- api/ | git apply -3` is fine there when it applies cleanly; review it).
+  The api runs on Bun and routes through Hono (FORK.md, "The api on Bun and Hono"): an upstream
+  change to the dispatcher at the bottom of `server.js` goes into its `cors` / `routePathOf` /
+  `guard` / `fail` functions, a new `{param}` needs its pattern in `api/http-app.js` `PARAMS`, a
+  change to `api/package.json` is made with `bun add --exact` (there is no package-lock.json), and
+  a Node-only trick in a test (V8 flags, undici) needs its Bun equivalent.
 - **A conflict with a fork feature** (FORK.md lists them, `git log upstream/main..main`): keep the
   fork's behaviour and adapt upstream's change around it; if they truly clash, ask the user.
 
@@ -81,7 +89,7 @@ Run the checks before each commit (or at least before the last one):
 
 ```bash
 cd frontend && vp check && vp test && vp build    # format, lint, types, tests, build
-cd api && npm test
+cd api && bun run test
 cd mcp && npm test
 ```
 

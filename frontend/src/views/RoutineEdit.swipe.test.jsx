@@ -4,7 +4,7 @@
 // picked up does not swipe. The exercise's sheet keeps Remove, with the same Undo.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const sheets = vi.hoisted(() => ({
@@ -32,7 +32,7 @@ function mount(entries, wc) {
   if (wc) S.wc = { ...S.wc, ...wc }
   useStore.setState({ S, user: null })
   host = document.createElement('div'); document.body.appendChild(host); root = createRoot(host)
-  act(() => root.render(<MemoryRouter initialEntries={['/plan/r/r1']}><Routes><Route path="/plan/r/:id" element={<RoutineEdit />} /></Routes></MemoryRouter>))
+  act(() => root.render(<TestRouter initialEntries={['/plan/r/r1']}><RoutineEdit /></TestRouter>))
 }
 const ex = () => useStore.getState().S.routines[0].ex
 const swrows = () => [...host.querySelectorAll('.swrow')]

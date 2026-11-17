@@ -15,7 +15,7 @@ vi.mock('../sheets.jsx', () => ({ startFlow: (ids, opts) => started.push(opts?.l
 import { startPickerSheet, startOrPreview, previewSheet } from './StartSheets.jsx'
 import TabBar, { START_HOLD_MS } from './TabBar.jsx'
 
-vi.mock('react-router-dom', () => ({ useNavigate: () => () => {}, useLocation: () => ({ pathname: '/home' }) }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => () => {}, useLocation: () => ({ pathname: '/home' }) }))
 
 bindUI(useUI)
 globalThis.IS_REACT_ACT_ENVIRONMENT = true

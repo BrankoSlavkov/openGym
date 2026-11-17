@@ -23,7 +23,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = snap
   return { useUI }
 })
-vi.mock('react-router-dom', () => ({ useNavigate: () => () => {} }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => () => {} }))
 vi.mock('../lib/mobile.js', () => ({ MOBILE: true }))
 vi.mock('../lib/coach-secrets.js', () => ({ getApiKey: async () => null, setApiKey: vi.fn(async () => {}), clearApiKey: vi.fn(async () => {}) }))
 vi.mock('../lib/coach-local.js', () => ({ localModels: (...a) => mocks.localModels(...a), localForget: vi.fn() }))

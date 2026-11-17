@@ -3,7 +3,7 @@
 // buzz and two notes; the next open set says how close it is. Both have their own switch.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Workout from './Workout.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -35,7 +35,7 @@ function mount(patch = {}) {
   container = document.createElement('div')
   document.body.appendChild(container)
   root = createRoot(container)
-  act(() => root.render(<MemoryRouter><Workout /></MemoryRouter>))
+  act(() => root.render(<TestRouter><Workout /></TestRouter>))
 }
 
 describe('records on the set in the workout', () => {

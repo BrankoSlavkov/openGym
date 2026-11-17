@@ -3,7 +3,7 @@
 // this row's weight, shown where the stack changes and once for a run of equal weights.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Workout from './Workout.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -52,7 +52,7 @@ function mount(entries, patch = {}) {
   container = document.createElement('div')
   document.body.appendChild(container)
   root = createRoot(container)
-  act(() => root.render(<MemoryRouter><Workout /></MemoryRouter>))
+  act(() => root.render(<TestRouter><Workout /></TestRouter>))
 }
 
 const lines = () => [...container.querySelectorAll('.plateline')].map(el => ({

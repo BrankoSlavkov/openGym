@@ -1,7 +1,8 @@
 // @vitest-environment happy-dom
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createMemoryRouter, RouterProvider } from 'react-router-dom'
+import { TestRouter, createTestRouter } from '../router/testing.tsx'
+import { locationStoreFor } from '../router/hooks.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import TabBar from './TabBar.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -18,12 +19,11 @@ beforeEach(() => {
   document.body.appendChild(host)
   root = createRoot(host)
   onStart = vi.fn()
-  router = createMemoryRouter([{ path: '*', element: <TabBar onStart={onStart} /> }], { initialEntries: ['/home'] })
-  act(() => root.render(<RouterProvider router={router} />))
+  router = createTestRouter(['/home'])
+  act(() => root.render(<TestRouter router={router}><TabBar onStart={onStart} /></TestRouter>))
 })
 afterEach(() => {
   act(() => root.unmount())
-  router.dispose()
   host.remove()
   useStore.setState({ S: originalS, user: originalUser })
 })
@@ -32,7 +32,7 @@ const tap = async label => {
   expect(button).toBeTruthy()
   await act(async () => button.click())
 }
-const go = async to => { await act(async () => router.navigate(to)) }
+const go = async to => { await act(async () => locationStoreFor(router).navigate(to)) }
 
 describe('root tab history', () => {
   it('does not accumulate a back stack when switching tabs repeatedly', async () => {
@@ -40,44 +40,44 @@ describe('root tab history', () => {
       for (const label of ['Plan', 'Stats', 'Exercises', 'Home']) await tap(label)
     }
     await tap('Plan')
-    expect(router.state.location.pathname).toBe('/plan')
+    expect(locationStoreFor(router).getSnapshot().location.pathname).toBe('/plan')
     await go(-1)
-    expect(router.state.location.pathname).toBe('/plan')
+    expect(locationStoreFor(router).getSnapshot().location.pathname).toBe('/plan')
   })
 
   it('ignores a tap on the current root, but clears a tab query when returning to its root', async () => {
-    const key = router.state.location.key
+    const key = locationStoreFor(router).getSnapshot().location.key
     await tap('Home')
-    expect(router.state.location.key).toBe(key)
+    expect(locationStoreFor(router).getSnapshot().location.key).toBe(key)
     await go('/stats?range=month')
     await tap('Stats')
-    expect(router.state.location.pathname).toBe('/stats')
-    expect(router.state.location.search).toBe('')
+    expect(locationStoreFor(router).getSnapshot().location.pathname).toBe('/stats')
+    expect(locationStoreFor(router).getSnapshot().location.search).toBe('')
   })
 
   it('still pushes a detail page and returns to the tab it opened from', async () => {
     await tap('Plan')
     await go('/plan/r/one')
     await go(-1)
-    expect(router.state.location.pathname).toBe('/plan')
+    expect(locationStoreFor(router).getSnapshot().location.pathname).toBe('/plan')
     await go('/settings/workout')
     await go(-1)
-    expect(router.state.location.pathname).toBe('/plan')
+    expect(locationStoreFor(router).getSnapshot().location.pathname).toBe('/plan')
   })
 
   it('opens a different tab root from a nested page of the active tab', async () => {
     await go('/plan/r/one')
     await tap('Plan')
-    expect(router.state.location.pathname).toBe('/plan')
-    expect(router.state.historyAction).toBe('REPLACE')
+    expect(locationStoreFor(router).getSnapshot().location.pathname).toBe('/plan')
+    expect(locationStoreFor(router).getSnapshot().navType).toBe('REPLACE')
   })
 
   it('preserves the workout chooser return path', async () => {
     useStore.setState({ S: { ...useStore.getState().S, routines: [] } })
     await tap('Start')
-    expect(router.state.location.pathname).toBe('/workout')
+    expect(locationStoreFor(router).getSnapshot().location.pathname).toBe('/workout')
     await go(-1)
-    expect(router.state.location.pathname).toBe('/home')
+    expect(locationStoreFor(router).getSnapshot().location.pathname).toBe('/home')
     expect(onStart).not.toHaveBeenCalled()
   })
 })

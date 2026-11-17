@@ -5,7 +5,7 @@
 import React, { act } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from './router/testing.tsx'
 import { DEF, useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
 import { exercisePicker } from './sheets.jsx'
@@ -43,7 +43,7 @@ afterEach(() => { act(() => { mounted.splice(0).forEach(root => root.unmount()) 
 
 describe('exercise search clear button', () => {
   for (const [where, open] of [
-    ['Library', () => mount(<MemoryRouter><Library /></MemoryRouter>)],
+    ['Library', () => mount(<TestRouter><Library /></TestRouter>)],
     ['exercise picker', () => { exercisePicker(vi.fn()); return renderTopSheet() }],
   ]) {
     it(`${where}: shows with text, and one tap empties the search`, () => {

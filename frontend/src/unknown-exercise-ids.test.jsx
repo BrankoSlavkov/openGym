@@ -7,7 +7,7 @@
 // nothing may drop or rewrite it: once the app updates, the same id is a real exercise again.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { TestRouter } from './router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DEF, useStore, restoredStateFor } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
@@ -84,7 +84,7 @@ function render(el, path = '/') {
   document.body.appendChild(host)
   const root = createRoot(host)
   mounted.push(root)
-  act(() => root.render(<MemoryRouter initialEntries={[path]}>{el}</MemoryRouter>))
+  act(() => root.render(<TestRouter initialEntries={[path]}>{el}</TestRouter>))
   return host
 }
 function mountTopSheet() {
@@ -109,7 +109,7 @@ describe('exercise ids this build does not know', () => {
     seed()
     expect(render(<Home />).textContent).toContain('Push')
     render(<Plan />)
-    const edit = render(<Routes><Route path="/plan/r/:id" element={<RoutineEdit />} /></Routes>, '/plan/r/r1')
+    const edit = render(<RoutineEdit />, '/plan/r/r1')
     expect(edit.textContent).toContain('Unknown exercise')
     render(<Library />)
     render(<StructuralBalance />)

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { countedS } from '../lib/counted-log.js'
 import { exOr } from '../lib/exercises.js'

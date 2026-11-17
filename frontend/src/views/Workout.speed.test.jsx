@@ -3,7 +3,7 @@
 // the profile's speed unit, and what it stores is always km/h.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import Workout from './Workout.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -26,7 +26,7 @@ function mount(settings = {}) {
   container = document.createElement('div')
   document.body.appendChild(container)
   root = createRoot(container)
-  act(() => root.render(<MemoryRouter><Workout /></MemoryRouter>))
+  act(() => root.render(<TestRouter><Workout /></TestRouter>))
 }
 function unmount() {
   act(() => root.unmount())

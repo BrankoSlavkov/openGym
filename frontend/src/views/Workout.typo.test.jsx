@@ -3,7 +3,7 @@
 // logged until you say so, and Fix it leaves the set unticked to correct.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Workout from './Workout.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -40,7 +40,7 @@ function mount(sets, workouts) {
   S.workouts = workouts
   S.active = { id: 'typo-test', d: '2026-10-09', start: Date.now(), routineId: null, name: 'Typo', bw: null, cur: 0, entries: [entry(sets)], workoutView: 'list' }
   useStore.setState({ S, user: null })
-  return render(<MemoryRouter><Workout /></MemoryRouter>)
+  return render(<TestRouter><Workout /></TestRouter>)
 }
 const tick = (el, n = 1) => act(() => el.querySelector(`[aria-label^="Set ${n} done"]`).click())
 const setAt = i => useStore.getState().S.active.entries[0].sets[i]

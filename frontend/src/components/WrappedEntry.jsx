@@ -3,7 +3,7 @@
 // list of pages), the December
 // notification on the phones, and #/stats?wrapped=2026. The stories themselves load on first open.
 import { Suspense, lazy, useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { useWrappedUI, openWrapped, openMonthStory } from '../lib/wrapped-ui.js'
 import { homeCardYear, wrappedYears, wrappedNow, withYear, notifyOn } from '../lib/wrapped.js'

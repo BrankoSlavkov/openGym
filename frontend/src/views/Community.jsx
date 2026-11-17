@@ -4,7 +4,7 @@
 // Only a signed-in profile on a server with LIBRARY=on sees any of this (lib/shared-api.js
 // libraryOn); guests and phones on their own get a friendly line instead.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t, baseLang } from '../lib/i18n.js'
@@ -22,7 +22,7 @@ import { Button, SearchField, Segmented, Check, TextField, TextArea } from '../c
 import Icon from '../components/Icon.jsx'
 import { confirmSheet } from '../sheets.jsx'
 import { useRevealActiveChip } from '../lib/use-sheet-keyboard.js'
-import { pathBefore } from '../lib/nav.js'
+import { pathBefore, historyIndex } from '../lib/nav.js'
 import './Community.css'
 
 const day = ms => fmtDate(isoOf(new Date(ms || 0)))
@@ -155,7 +155,7 @@ export default function Community() {
 
   return <div className="com">
     <div className="hdr com-hdr">
-      {(window.history.state?.idx || 0) > 0 && <button type="button" className="iconbtn com-back" data-back={pathBefore() || '/library'} onClick={() => nav(-1)} aria-label={t('Back')}><Icon name="chevronLeft" /></button>}
+      {historyIndex() > 0 && <button type="button" className="iconbtn com-back" data-back={pathBefore() || '/library'} onClick={() => nav(-1)} aria-label={t('Back')}><Icon name="chevronLeft" /></button>}
       <div className="grow"><h1>{t('Community')}</h1>
         <div className="sub">{t('Shared by people on {0}. Take a copy, it is yours.', serverName())}</div></div>
       <Button size="sm" variant="tinted" icon="plus" onClick={share}>{t('Share yours')}</Button>

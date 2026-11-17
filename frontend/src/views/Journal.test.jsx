@@ -2,7 +2,7 @@
 // gm-journal (1.4.5): Stats → More → Journal, one feed of every note, with filters and folders.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import Journal from './Journal.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -28,7 +28,7 @@ function mount(patch = {}) {
   container = document.createElement('div')
   document.body.appendChild(container)
   root = createRoot(container)
-  act(() => root.render(<MemoryRouter><Journal /></MemoryRouter>))
+  act(() => root.render(<TestRouter><Journal /></TestRouter>))
 }
 const rows = () => [...container.querySelectorAll('.jn-row .jn-text')].map(e => e.textContent)
 const chip = text => [...container.querySelectorAll('.chip')].find(c => c.textContent.includes(text))

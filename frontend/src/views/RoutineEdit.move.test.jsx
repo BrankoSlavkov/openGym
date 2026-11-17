@@ -4,7 +4,7 @@ import { resolve } from 'node:path'
 import React, { act } from 'react'
 import { LANGS, DERIVED_LOCALES } from '../lib/i18n-core.js'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import RoutineEdit from './RoutineEdit.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -47,9 +47,9 @@ function renderRoutine() {
   document.body.appendChild(container)
   root = createRoot(container)
   act(() => root.render(
-    <MemoryRouter initialEntries={['/routine/r1']}>
-      <Routes><Route path="/routine/:id" element={<RoutineEdit />} /></Routes>
-    </MemoryRouter>
+    <TestRouter initialEntries={['/plan/r/r1']}>
+      <RoutineEdit />
+    </TestRouter>
   ))
 }
 

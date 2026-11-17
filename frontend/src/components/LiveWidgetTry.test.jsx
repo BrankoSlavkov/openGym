@@ -34,7 +34,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = snap
   return { useUI }
 })
-vi.mock('react-router-dom', () => ({ useNavigate: () => () => {} }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => () => {} }))
 vi.mock('../lib/mobile.js', () => ({ MOBILE: true, nativePlatform: async () => mocks.os }))
 vi.mock('../lib/gym-reminder.js', () => ({ openAppSettings: async () => { mocks.opened++; return true } }))
 vi.mock('@capacitor/local-notifications', () => ({ LocalNotifications: { requestPermissions: async () => { mocks.permAsked++; if (mocks.perm === 'granted') mocks.status = { ...mocks.status, allowed: true }; return { display: mocks.perm } } } }))

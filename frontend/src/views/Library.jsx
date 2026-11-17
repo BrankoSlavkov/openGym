@@ -1,7 +1,7 @@
 import { laddersSheet } from '../components/Ladders.jsx'
 import { useDeferredValue, useMemo, useRef, useState } from 'react'
 import { useUI } from '../store/useUI.js'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { EXDB, BODYPARTS, allExercises, equipmentOf, byCategory, searchExercises, similarExercises } from '../lib/exercises.js'
 import { MUSCLE_NAME } from '../lib/muscles.js'

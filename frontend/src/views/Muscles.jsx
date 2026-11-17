@@ -1,4 +1,4 @@
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'
+import { useNavigate, useLocation, useSearchParams } from '../router/hooks.tsx'
 import { MUSCLES } from '../lib/muscles.js'
 import { t } from '../lib/i18n.js'
 import MuscleExplorer from '../components/MuscleExplorer.jsx'

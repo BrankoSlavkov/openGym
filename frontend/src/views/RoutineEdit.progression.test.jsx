@@ -3,7 +3,7 @@
 // read like two settings for the same thing. They are not, and the screen now says how.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import RoutineEdit from './RoutineEdit.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -28,9 +28,9 @@ function renderRoutine(routine) {
   document.body.appendChild(container)
   root = createRoot(container)
   act(() => root.render(
-    <MemoryRouter initialEntries={['/routine/r1']}>
-      <Routes><Route path="/routine/:id" element={<RoutineEdit />} /></Routes>
-    </MemoryRouter>
+    <TestRouter initialEntries={['/plan/r/r1']}>
+      <RoutineEdit />
+    </TestRouter>
   ))
 }
 

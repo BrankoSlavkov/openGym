@@ -7,7 +7,7 @@
 //   /trainer/m/:id      one member
 //   /trainer?gym=<id>   the gym lead's view of that gym
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate, useParams } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'

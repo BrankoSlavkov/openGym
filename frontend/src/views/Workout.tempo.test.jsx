@@ -3,7 +3,7 @@
 // set can be given its own from its menu, which the tag then follows.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Workout from './Workout.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -29,7 +29,7 @@ function mount(sets, target = { mode: 'reps', sets: 2, reps: 8, tempo: '3-1-1-0'
   container = document.createElement('div')
   document.body.appendChild(container)
   root = createRoot(container)
-  act(() => root.render(<MemoryRouter><Workout /></MemoryRouter>))
+  act(() => root.render(<TestRouter><Workout /></TestRouter>))
 }
 const renderTop = () => {
   const sheet = useUI.getState().sheets.at(-1)

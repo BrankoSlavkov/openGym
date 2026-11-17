@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Workout, { deleteActiveSet, undoDeleteSet, copyActiveSet, removeActiveExercise, _resetHintQuiet, HINT_QUIET_MS } from './Workout.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -41,7 +41,7 @@ function render() {
   container = document.createElement('div')
   document.body.appendChild(container)
   root = createRoot(container)
-  act(() => root.render(<MemoryRouter><Workout /></MemoryRouter>))
+  act(() => root.render(<TestRouter><Workout /></TestRouter>))
 }
 
 function pointer(target, type, x, y = 300, pointerType = 'touch') {

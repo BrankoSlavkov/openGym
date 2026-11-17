@@ -45,7 +45,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = snap
   return { useUI }
 })
-vi.mock('react-router-dom', () => ({
+vi.mock('../router/hooks.tsx', () => ({
   useNavigate: () => mocks.nav,
   useSearchParams: () => [new URLSearchParams(mocks.search), vi.fn()],
 }))

@@ -29,7 +29,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = snap
   return { useUI }
 })
-vi.mock('react-router-dom', () => ({
+vi.mock('../router/hooks.tsx', () => ({
   useLocation: () => ({ search: mocks.search, pathname: '/trainer' }), useNavigate: () => to => mocks.navs.push(to),
   useParams: () => mocks.params, Navigate: ({ to }) => { mocks.navs.push('redirect:' + to); return null },
 }))

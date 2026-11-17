@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import Workout from './Workout.jsx'
 import { SessionMuscles } from '../components/SessionMuscles.jsx'
@@ -38,7 +38,7 @@ function setActive(entries, { wc, workoutView } = {}) {
   S.active = { id: 'mm', d: '2026-10-19', start: Date.now(), routineId: null, name: 'Push', bw: null, cur: 0, entries, ...(workoutView ? { workoutView } : {}) }
   useStore.setState({ S, user: null })
 }
-function render(node = <MemoryRouter><Workout /></MemoryRouter>) {
+function render(node = <TestRouter><Workout /></TestRouter>) {
   container = document.createElement('div')
   document.body.appendChild(container)
   root = createRoot(container)

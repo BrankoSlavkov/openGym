@@ -3,7 +3,7 @@
 // with their byline (always who and when), taking a copy, and the consent before sharing.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
@@ -55,8 +55,8 @@ beforeEach(() => {
 })
 afterEach(() => { act(() => root.unmount()); host.remove() })
 const flush = () => act(() => new Promise(r => setTimeout(r, 20)))
-const mount = async () => { await act(() => root.render(<MemoryRouter><Community /></MemoryRouter>)); await flush() }
-const sheet = async () => { const h = document.createElement('div'); document.body.appendChild(h); const r = createRoot(h); await act(() => r.render(<MemoryRouter>{mocks.sheets.at(-1)(() => {})}</MemoryRouter>)); await flush(); return h }
+const mount = async () => { await act(() => root.render(<TestRouter><Community /></TestRouter>)); await flush() }
+const sheet = async () => { const h = document.createElement('div'); document.body.appendChild(h); const r = createRoot(h); await act(() => r.render(<TestRouter>{mocks.sheets.at(-1)(() => {})}</TestRouter>)); await flush(); return h }
 const btn = (el, text) => [...el.querySelectorAll('button')].find(b => b.textContent.trim() === text)
 
 describe('Community', () => {

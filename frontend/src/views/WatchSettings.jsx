@@ -4,7 +4,7 @@
 // Apple Health is one switch for phone and watch: the Apple Health card in Settings → Data. This
 // page only says what the watch makes of it (measuring, off, or not allowed there) and leads to it.
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '../router/hooks.tsx'
 import { t } from '../lib/i18n.js'
 import { Section, Row, Switch } from '../components/ui.jsx'
 import { readWatchPrefs, writeWatchPrefs, readWatchStatus, onWatchPrefs, watchLinkState, lastHeardAt } from '../lib/watch-settings.js'

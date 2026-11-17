@@ -4,7 +4,7 @@
 // work: "+" on a picker row adds at the routine's defaults, a tap opens the settings first.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('../lib/api.js', () => ({ api: vi.fn(() => Promise.resolve({})) }))
@@ -27,7 +27,7 @@ function mount(ex) {
   host = document.createElement('div')
   document.body.appendChild(host)
   root = createRoot(host)
-  act(() => root.render(<MemoryRouter initialEntries={['/plan/r/r1']}><Routes><Route path="/plan/r/:id" element={<RoutineEdit />} /></Routes></MemoryRouter>))
+  act(() => root.render(<TestRouter initialEntries={['/plan/r/r1']}><RoutineEdit /></TestRouter>))
 }
 const addButton = () => [...host.querySelectorAll('button')].find(b => b.textContent.trim() === 'Add exercise')
 const stored = () => useStore.getState().S.routines[0].ex

@@ -26,7 +26,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = snap
   return { useUI }
 })
-vi.mock('react-router-dom', () => ({ useNavigate: () => (...a) => mocks.navs.push(a) }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => (...a) => mocks.navs.push(a) }))
 vi.mock('../lib/mobile.js', () => ({ MOBILE: false, nativePlatform: async () => null }))
 vi.mock('@capacitor/core', () => ({ registerPlugin: () => ({}) }))
 

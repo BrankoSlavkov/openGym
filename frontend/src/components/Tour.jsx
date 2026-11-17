@@ -12,7 +12,7 @@
 // pretend workout in it (useStore enterTourSandbox): none of those copies is saved or synced, and
 // each is gone the moment the tour leaves the stops that use it, finished, skipped or closed.
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'

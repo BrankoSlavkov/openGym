@@ -6,7 +6,7 @@
  */
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('../lib/api.js', async importOriginal => ({ ...(await importOriginal()), api: vi.fn(() => Promise.reject(new Error('offline'))), beacon: vi.fn() }))
@@ -23,7 +23,7 @@ function render(el) {
   document.body.appendChild(host)
   const root = createRoot(host)
   mounted.push(root)
-  act(() => root.render(<MemoryRouter>{el}</MemoryRouter>))
+  act(() => root.render(<TestRouter>{el}</TestRouter>))
   return host
 }
 const topSheet = () => { const s = useUI.getState().sheets.at(-1); return s ? render(s.render(() => useUI.getState().closeSheet(s.id))) : null }

@@ -45,7 +45,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = snap
   return { useUI }
 })
-vi.mock('react-router-dom', () => ({ useNavigate: () => mocks.nav }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => mocks.nav }))
 // A getter, so one test can be the web build and the rest the phone.
 vi.mock('../lib/mobile.js', () => ({ get MOBILE() { return mocks.mobile } }))
 vi.mock('../lib/coach-secrets.js', () => ({

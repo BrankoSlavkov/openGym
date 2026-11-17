@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useStore } from '../store/useStore.js'
 import Plan from './Plan.jsx'
 
-vi.mock('react-router-dom', () => ({ useNavigate: () => vi.fn() }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => vi.fn() }))
 vi.mock('../sheets.jsx', () => ({
   dayAssignSheet: vi.fn(), starterPlanSheet: vi.fn(), confirmSheet: vi.fn(), menuSheet: vi.fn(),
   planHasRoutines: () => true, exportPlanFile: vi.fn(), printWholePlan: vi.fn(), importPlanFile: vi.fn(),

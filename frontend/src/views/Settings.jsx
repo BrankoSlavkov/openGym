@@ -2,7 +2,7 @@ import { showsDashboard } from '../lib/trainer-api.js'
 import { recordHintsOn } from '../lib/set-records.js'
 import { setRecoveryHint } from '../lib/recovery-hint.js'
 import { useEffect, useRef, useState, forwardRef, useSyncExternalStore } from 'react'
-import { useNavigate, useParams, useLocation, Navigate } from 'react-router-dom'
+import { useNavigate, useParams, useLocation, Navigate } from '../router/hooks.tsx'
 import { useStore, DEF, hasData } from '../store/useStore.js'
 import { readWatchPrefs, writeWatchPrefs } from '../lib/watch-settings.js'
 import { healthStatus, loadHealth, enableHealth, disableHealth, openHealthConnect, onHealthChange, enableRead, disableRead, allowBirthDate } from '../lib/health-sync.js'
@@ -90,7 +90,7 @@ import { POLICIES_FOR, POLICY_NAME, POLICY_DESC, profileRule } from '../lib/prog
 import { STEPS, profileStep, stepOverrides, applyStepToAll, fmtStepLabel } from '../lib/weight-step.js'
 import { PAGES, ROOT_GROUPS, WATCH_PAGES, pageVisible, onRoot, searchSettings, pageTrail } from './settings-pages.js'
 import { platformNow } from '../lib/platform-now.js'
-import { pathBefore } from '../lib/nav.js'
+import { pathBefore, historyIndex } from '../lib/nav.js'
 import WatchSettingsPage from './WatchSettings.jsx'
 import GarminSettingsPage from './GarminSettings.jsx'
 import WearSettingsPage from './WearSettings.jsx'
@@ -521,7 +521,7 @@ export default function Settings({ page = null, find = null, via = null, entryKe
   // all do the same); a page opened from a link with nothing behind it goes up to its parent.
   const back = () => {
     const up = PAGES[page]?.parent ? '/settings/' + PAGES[page].parent : '/settings'
-    if ((window.history.state?.idx || 0) > 0) nav(-1)
+    if (historyIndex() > 0) nav(-1)
     else nav(up, { replace: true })
   }
 
@@ -1436,7 +1436,7 @@ export default function Settings({ page = null, find = null, via = null, entryKe
       <div className="sp-nav">
         {/* Named by what it says ("Settings", "Workout"), so a voice command for the visible
             word finds it; the chevron is hidden from assistive tech. */}
-        <button className="sp-back" data-tour="sp-back" data-back={((window.history.state?.idx || 0) > 0 ? pathBefore() : null) || (parent ? '/settings/' + parent : '/settings')} onClick={back}>
+        <button className="sp-back" data-tour="sp-back" data-back={(historyIndex() > 0 ? pathBefore() : null) || (parent ? '/settings/' + parent : '/settings')} onClick={back}>
           <Icon name="chevronLeft" /><span>{parent ? t(PAGES[parent].title) : t('Settings')}</span>
         </button>
         <h1 className="sp-title">{t(PAGES[page].title)}</h1>

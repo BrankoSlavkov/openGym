@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Measurements, { manageMeasurementsSheet, measurementLogSheet } from './Measurements.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -73,7 +73,7 @@ describe('a custom measurement without a unit', () => {
       { d: '2026-10-01', other: [{ id: 'visc', value: 9, unit: 'none' }] },
       { d: '2026-10-02', other: [{ id: 'visc', value: 8, unit: 'none' }] },
     ] })
-    const host = render(<MemoryRouter><Measurements /></MemoryRouter>)
+    const host = render(<TestRouter><Measurements /></TestRouter>)
     expect(host.querySelector('.big').textContent.trim()).toBe('8')
     expect(host.textContent).toContain('-1 since previous')
     expect(host.querySelector('.measure-preview b').textContent.trim()).toBe('8')

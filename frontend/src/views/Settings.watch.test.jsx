@@ -2,7 +2,8 @@
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { MemoryRouter, Routes, Route } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
+import { useLocation } from '../router/hooks.tsx'
 import Settings, { SettingsRoute } from './Settings.jsx'
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
@@ -76,12 +77,14 @@ afterEach(() => {
   delete globalThis.Capacitor
 })
 
+// /settings stands in as a plain root page; /settings/<page> is the real route.
+function Screen() {
+  return useLocation().pathname === '/settings' ? <div id="root-page">root</div> : <SettingsRoute />
+}
+
 const open = async path => {
   await act(async () => {
-    root.render(<MemoryRouter initialEntries={[path]}><Routes>
-      <Route path="/settings" element={<div id="root-page">root</div>} />
-      <Route path="/settings/:page" element={<SettingsRoute />} />
-    </Routes></MemoryRouter>)
+    root.render(<TestRouter initialEntries={[path]}><Screen /></TestRouter>)
   })
   await act(async () => { await Promise.resolve(); await Promise.resolve() })
 }
@@ -114,9 +117,9 @@ describe('Settings → Apple Watch', () => {
   it('has its row at once on the iPhone app: Watches on the root, Apple Watch inside', async () => {
     globalThis.Capacitor = { getPlatform: () => 'ios' }
     const rowWith = text => [...host.querySelectorAll('.lrow')].some(r => r.textContent.includes(text))
-    await act(async () => { root.render(<MemoryRouter><Settings /></MemoryRouter>) })
+    await act(async () => { root.render(<TestRouter><Settings /></TestRouter>) })
     expect(rowWith('Watches')).toBe(true)
-    await act(async () => { root.render(<MemoryRouter><Settings page="watches" /></MemoryRouter>) })
+    await act(async () => { root.render(<TestRouter><Settings page="watches" /></TestRouter>) })
     expect(rowWith('Apple Watch')).toBe(true)
   })
 })

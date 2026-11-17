@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { useStore, DEF } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
@@ -22,7 +22,7 @@ beforeEach(() => {
   for (let i = 1; i <= 11; i++) dayPhotos[ref(i).hash] = { d: ago(3 + i * 9), m: ref(i), _ts: 1 }
   useStore.setState({ S: { ...structuredClone(DEF), workouts: [], dayPhotos }, user: null, ready: true })
   host = document.createElement('div'); document.body.appendChild(host); root = createRoot(host)
-  act(() => root.render(<MemoryRouter><ProgressPhotos /></MemoryRouter>))
+  act(() => root.render(<TestRouter><ProgressPhotos /></TestRouter>))
 })
 afterEach(() => { act(() => root.unmount()); host.remove(); useUI.getState().closeAll?.() })
 const btn = label => [...host.querySelectorAll('button')].find(b => b.textContent === label || b.getAttribute('aria-label') === label)

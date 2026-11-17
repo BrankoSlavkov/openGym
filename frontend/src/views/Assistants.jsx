@@ -6,7 +6,7 @@
 // (a phone on its own, connectors off, an address only the home network knows) it says so plainly
 // and points at what works on the phone instead.
 import { useCallback, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'

@@ -33,7 +33,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = mocks.uiSnapshot
   return { useUI }
 })
-vi.mock('react-router-dom', () => ({ useNavigate: () => mocks.nav }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => mocks.nav }))
 vi.mock('../lib/coach-api.js', () => ({
   useCoachStatus: () => ({ pending: mocks.pending, job: mocks.job, cap: null, loading: false, lastError: null, last: null, refresh: mocks.refresh, maxMessageLen: mocks.maxMessageLen }),
   resolvePending: vi.fn(() => Promise.resolve({})),

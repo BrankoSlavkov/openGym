@@ -8,7 +8,7 @@ import { pickFrom, pickerOptions } from './stats-pick.test-util.js'
 
 const mocks = vi.hoisted(() => ({ charts: [], S: null }))
 vi.mock('../store/useStore.js', () => ({ useStore: selector => selector({ S: mocks.S }) }))
-vi.mock('react-router-dom', () => ({ useNavigate: () => () => {} }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => () => {} }))
 vi.mock('../sheets.jsx', () => ({
   bwSheet: () => {}, goalSheet: () => {}, calendarSheet: () => {}, workoutDetailSheet: () => {}, exerciseHistorySheet: () => {},
   WorkoutRow: () => null, bwDeltaColor: () => 'inherit',

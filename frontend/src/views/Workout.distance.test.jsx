@@ -3,7 +3,7 @@
 // takes km (or miles), and the speed is worked out from the distance and the minutes.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import Workout from './Workout.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -21,7 +21,7 @@ function mount(settings = {}) {
     entries: [{ id: BIKE, target: { sets: 1, min: 30, speed: 8 }, sets: [{ min: 30, speed: 8, done: false }] }] }
   useStore.setState({ S, user: null })
   container = document.createElement('div'); document.body.appendChild(container); root = createRoot(container)
-  act(() => root.render(<MemoryRouter><Workout /></MemoryRouter>))
+  act(() => root.render(<TestRouter><Workout /></TestRouter>))
 }
 afterEach(() => { act(() => root.unmount()); container.remove() })
 const cellAt = n => container.querySelector('.setrow').querySelectorAll('.stp')[n]

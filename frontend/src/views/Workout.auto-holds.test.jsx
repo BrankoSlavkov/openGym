@@ -5,7 +5,7 @@
 // reps one; Stop auto; and a phone that was locked through a whole hold.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Workout from './Workout.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -31,7 +31,7 @@ function renderWorkout(entries, over = {}) {
   container = document.createElement('div')
   document.body.appendChild(container)
   root = createRoot(container)
-  act(() => root.render(<MemoryRouter><Workout /></MemoryRouter>))
+  act(() => root.render(<TestRouter><Workout /></TestRouter>))
 }
 const entriesNow = () => useStore.getState().S.active.entries
 const doneOf = (idx = 0) => entriesNow()[idx].sets.map(s => s.done)

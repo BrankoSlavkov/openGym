@@ -3,7 +3,7 @@
 // rest holds, the screen says so with Resume, and a set ticked while paused carries on.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Workout from './Workout.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -23,7 +23,7 @@ function mount() {
     entries: [{ id: '0025', target: { sets: 2, reps: 5, weight: 60 }, sets: [{ w: 60, r: 5, done: false }, { w: 60, r: 5, done: false }] }] }
   useStore.setState({ S, user: null })
   container = document.createElement('div'); document.body.appendChild(container); root = createRoot(container)
-  act(() => root.render(<MemoryRouter><Workout /></MemoryRouter>))
+  act(() => root.render(<TestRouter><Workout /></TestRouter>))
 }
 function renderTopSheet() {
   if (sheetRoot) act(() => sheetRoot.unmount())

@@ -3,7 +3,8 @@
 // Exercises into its search field. A tap on another tab still just switches.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createMemoryRouter, RouterProvider } from 'react-router-dom'
+import { TestRouter, createTestRouter } from '../router/testing.tsx'
+import { locationStoreFor } from '../router/hooks.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cancelGlideCheck } from '../lib/scroll-top.js'
 import TabBar from './TabBar.jsx'
@@ -31,13 +32,12 @@ beforeEach(() => {
   page.innerHTML = '<div class="page"><div class="search"><input class="input"></div></div>'
   document.body.appendChild(page)
   host = document.createElement('div'); document.body.appendChild(host); root = createRoot(host)
-  router = createMemoryRouter([{ path: '*', element: <TabBar onStart={vi.fn()} /> }], { initialEntries: ['/library'] })
-  act(() => root.render(<RouterProvider router={router} />))
+  router = createTestRouter(['/library'])
+  act(() => root.render(<TestRouter router={router}><TabBar onStart={vi.fn()} /></TestRouter>))
 })
 afterEach(() => {
   cancelGlideCheck()
   act(() => root.unmount())
-  router.dispose()
   host.remove(); page.remove()
   document.body.style.position = ''
   useStore.setState({ S: originalS, user: originalUser })
@@ -46,12 +46,12 @@ afterEach(() => {
 describe('tapping the tab you are on', () => {
   it.each(['Home', 'Plan', 'Stats', 'Exercises'])('%s scrolls its page to the top, smoothly', async label => {
     const path = { Home: '/home', Plan: '/plan', Stats: '/stats', Exercises: '/library' }[label]
-    await act(async () => router.navigate(path))
-    const key = router.state.location.key
+    await act(async () => locationStoreFor(router).navigate(path))
+    const key = locationStoreFor(router).getSnapshot().location.key
     at(3000)
     await tap(label)
     expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'smooth' })
-    expect(router.state.location.key).toBe(key)      // no navigation, no history entry
+    expect(locationStoreFor(router).getSnapshot().location.key).toBe(key)      // no navigation, no history entry
   })
 
   it('jumps with Reduce Motion on', async () => {
@@ -68,7 +68,7 @@ describe('tapping the tab you are on', () => {
   })
 
   it('at the top of another tab does nothing', async () => {
-    await act(async () => router.navigate('/plan'))
+    await act(async () => locationStoreFor(router).navigate('/plan'))
     await tap('Plan')
     expect(window.scrollTo).not.toHaveBeenCalled()
     expect(document.activeElement).not.toBe(page.querySelector('.search input'))
@@ -85,14 +85,14 @@ describe('tapping the tab you are on', () => {
 it('a tap on another tab switches as before and does not scroll', async () => {
   at(3000)
   await tap('Stats')
-  expect(router.state.location.pathname).toBe('/stats')
+  expect(locationStoreFor(router).getSnapshot().location.pathname).toBe('/stats')
   expect(window.scrollTo).not.toHaveBeenCalled()
 })
 
 it('History lights Stats, and a tap there goes to Stats rather than up History', async () => {
-  await act(async () => router.navigate('/history'))
+  await act(async () => locationStoreFor(router).navigate('/history'))
   at(3000)
   await tap('Stats')
-  expect(router.state.location.pathname).toBe('/stats')
+  expect(locationStoreFor(router).getSnapshot().location.pathname).toBe('/stats')
   expect(window.scrollTo).not.toHaveBeenCalled()
 })

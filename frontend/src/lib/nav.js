@@ -8,7 +8,11 @@ export const nav = (to, opts) => (opts ? _nav(to, opts) : _nav(to))
 // back button that walks history (Settings) can say where it goes: the edge swipe back shows that
 // page underneath while the finger moves (lib/edge-swipe-back.js).
 const pathAt = new Map()
-const idxNow = () => { try { return Number(globalThis.history?.state?.idx) || 0 } catch { return 0 } }
+/** This history entry's number (0 for the first of the session), as the router numbers entries
+ *  (TanStack Router's `__TSR_index`; a sheet's own entry carries one too, Modals.jsx). A page whose
+ *  number is above 0 has a page to go back to. */
+export const historyIndex = () => { try { return Number(globalThis.history?.state?.__TSR_index) || 0 } catch { return 0 } }
+const idxNow = historyIndex
 export const notePath = (path, key) => { pathAt.set(idxNow(), { path, key: key || null }) }
 export const pathBefore = () => (idxNow() > 0 ? pathAt.get(idxNow() - 1)?.path || null : null)
 /** The router key of the entry before this one, when it showed `path`: the page underneath an

@@ -7,7 +7,8 @@
    anchors. */
 import { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter, useLocation, useNavigate } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
+import { useLocation, useNavigate } from '../router/hooks.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
@@ -70,7 +71,7 @@ function Sheets() {
 }
 const render = async (props = {}, at = '/home') => {
   await act(async () => {
-    root.render(<MemoryRouter initialEntries={[at]}><Screens {...props} /><Sheets /><Tour /></MemoryRouter>)
+    root.render(<TestRouter initialEntries={[at]}><Screens {...props} /><Sheets /><Tour /></TestRouter>)
   })
   await settle()
 }

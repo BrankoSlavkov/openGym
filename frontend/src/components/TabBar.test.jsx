@@ -9,7 +9,7 @@ import TabBar from './TabBar.jsx'
 import { DEF, useStore } from '../store/useStore.js'
 
 const where = vi.hoisted(() => ({ loc: { pathname: '/home' } }))
-vi.mock('react-router-dom', () => ({
+vi.mock('../router/hooks.tsx', () => ({
   useNavigate: () => () => {},
   useLocation: () => where.loc,
 }))

@@ -2,7 +2,7 @@
 // Settings → About & updates → Network log (views/NetworkLog.jsx): the count, who, the latest.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import NetworkLogPage, { NetworkLogRow } from './NetworkLog.jsx'
 import { logRequest, _resetNetLog } from '../lib/net-log.js'
@@ -13,7 +13,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true
 let host, root
 beforeEach(() => { _resetNetLog(); host = document.createElement('div'); document.body.append(host); root = createRoot(host) })
 afterEach(() => { act(() => root.unmount()); host.remove(); setOfflineBuild(false) })
-const draw = el => act(() => root.render(<MemoryRouter>{el}</MemoryRouter>))
+const draw = el => act(() => root.render(<TestRouter>{el}</TestRouter>))
 
 describe('Network log', () => {
   it('says 0 on a phone that talked to nobody, and why in openGym Offline', () => {

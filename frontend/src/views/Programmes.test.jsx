@@ -25,7 +25,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = () => api
   return { useUI }
 })
-vi.mock('react-router-dom', () => ({ useNavigate: () => to => mocks.navs.push(to), useParams: () => mocks.params }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => to => mocks.navs.push(to), useParams: () => mocks.params }))
 vi.mock('../sheets.jsx', () => ({ confirmSheet: o => { mocks.confirm = o }, exportProgrammeFile: vi.fn() }))
 
 const { default: Programmes, ProgrammeEdit } = await import('./Programmes.jsx')

@@ -17,7 +17,7 @@
 // picture only goes where the person sends it from the share sheet.
 import { CheckinReminderRow } from '../components/CheckinReminder.jsx'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t, tn } from '../lib/i18n.js'

@@ -64,10 +64,55 @@ Phases, each ending with green tests and a working image (branch `migrate/vite-p
 1. Bun and Vite+ for the frontend (`vp dev`, `vp build`, `vp test`, `vp check`).
 2. TypeScript base: `tsconfig`, type checks in `vp check`, JS and TS side by side (pilot:
    `lib/onerm.ts`).
-3. TanStack Router in place of react-router-dom.
+3. TanStack Router in place of react-router-dom (done; see "Routing" below).
 4. TypeScript conversion by layer: `lib/`, `store/`, `components/`, `views/`, then `sheets.jsx`.
+5. The api on Bun and Hono (below).
 
-`api/` and `mcp/` stay upstream-shaped JavaScript.
+`mcp/` stays upstream-shaped JavaScript on Node. `api/` stays upstream-shaped JavaScript too, but
+runs on Bun and routes through Hono.
+
+### The api on Bun and Hono
+
+- **Runtime:** Bun (`oven/bun` Alpine image, `bun.lock`, `bun server.js`). Tests are upstream's
+  `node:test` files run by Bun's runner: `cd api && bun run test` (`--parallel` gives each file its
+  own process, which the tests rely on for their `DATA_DIR`).
+- **Router:** `api/http-app.js` turns the route table into a Hono app. The table and the modules
+  beside it keep upstream's shape, `'METHOD /path': async (req, res) => {}` with `{name}`
+  parameters, and handlers still get node's `req`/`res` (through `@hono/node-server`). That is
+  what keeps upstream's api commits portable: they touch handlers, and handlers did not change.
+  A path parameter needs its pattern in `PARAMS` there (a new one is refused at start).
+- **What changed in server.js:** only the dispatcher at the bottom, cut into `cors`,
+  `routePathOf`, `guard` and `fail` for `createApi`. An upstream commit that edits upstream's
+  dispatcher block is ported into those functions by hand.
+- **Hono-native routes:** wrap a handler in `native()` from `http-app.js`; it gets the Hono context
+  and returns a Response, behind the same guard and error answer. Convert a route only when the
+  fork needs to change it anyway; a converted route stops taking upstream's edits verbatim.
+- **Behaviour kept on purpose:** HEAD is still a 404 (Hono would answer it with the GET route),
+  the path check and body deadline still run on the raw request before Hono, and preflights are
+  answered for any target. New: a request whose Host header is not a valid host is a 400.
+- **Gone:** undici. Bun's fetch has no 300-second headers timeout, so `coach/node-fetch.js` is a
+  plain fetch with an abort budget; the coach target carries Alpine's `nodejs` only for the Codex
+  launcher.
+
+### Routing
+
+`frontend/src/router/`: TanStack Router (hash history, `#/home` as before).
+
+- `routes.ts` is the route table: path, the screen it shows (`view`) and who may see it (`gate`:
+  a module, signed in, admin). App.jsx maps each view to its lazily loaded screen (`VIEWS`).
+- App.jsx draws the page itself rather than through `<Outlet>`: during an edge swipe back the
+  page underneath is drawn at its own location next to the current one (`Page`, `RoutePage`).
+- `hooks.tsx` keeps react-router's call shapes, backed by TanStack: `useNavigate()` (`navigate('/x')`,
+  `navigate(path, { replace, state })`, `navigate(-1)`), `useLocation()`, `useParams()`,
+  `useSearchParams()`, `useNavigationType()`, `<Navigate>`. A view converted to TypeScript can use
+  TanStack's typed `router.navigate({ to: '/plan/r/$id', params })` (`useAppRouterInstance()`).
+- Only navigations made through these hooks, and the browser's back and forward, move the app; a
+  raw `history.pushState` (a sheet's own entry, Modals.jsx) does not, as with react-router.
+  History entries are numbered by `__TSR_index` (`lib/nav.js historyIndex()`).
+- Tests wrap a screen in `<TestRouter initialEntries={['/plan/r/r1']}>` (`router/testing.tsx`) and
+  mock `router/hooks.tsx` where they mocked `react-router-dom`.
+- Porting an upstream route change: a `<Route>` added in upstream's App.jsx becomes a line in
+  `routes.ts` plus its entry in `VIEWS`; `react-router-dom` imports become `router/hooks.tsx`.
 
 ### Converting a file to TypeScript
 
@@ -105,4 +150,4 @@ swaps in upstream's prebuilt images, which lack this fork's changes.
 ## Dependencies
 
 Every `package.json` pins exact versions. To upgrade, set the new version and run `npm install`
-in that folder; in `frontend/` use `bun add <pkg>@<version>` (Bun, `bun.lock`). Read the package's migration guide before a major version bump.
+in that folder; in `frontend/` and `api/` use `bun add --exact <pkg>@<version>` (Bun, `bun.lock`). Read the package's migration guide before a major version bump.

@@ -35,7 +35,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = snap
   return { useUI }
 })
-vi.mock('react-router-dom', () => ({ useNavigate: () => mocks.nav }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => mocks.nav }))
 // The row itself has its own test (components/AppIconRow.test.jsx); here only where it shows.
 vi.mock('../components/AppIconRow.jsx', () => ({ default: () => <div className="app-icon-stub" /> }))
 vi.mock('../lib/api.js', () => ({

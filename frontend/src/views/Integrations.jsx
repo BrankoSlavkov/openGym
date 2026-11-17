@@ -1,6 +1,6 @@
 import { offlineBuild } from '../lib/build-caps.js'
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'

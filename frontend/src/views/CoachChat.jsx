@@ -13,7 +13,7 @@
 // or no never makes it disappear. Turning the Coach off is the admin's decision, not a control
 // on this screen.
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '../router/hooks.tsx'
 import { closeThenNav } from '../lib/nav.js'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'

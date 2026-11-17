@@ -11,7 +11,7 @@
  */
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from './router/testing.tsx'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('./lib/sound.js', () => ({ beep: vi.fn(), vibrate: vi.fn(), alertBuzz: vi.fn(), unlock: vi.fn(), restOver: vi.fn() }))
@@ -51,7 +51,7 @@ const render = el => {
   document.body.appendChild(host)
   const root = createRoot(host)
   mounted.push(root)
-  act(() => root.render(<MemoryRouter>{el}</MemoryRouter>))
+  act(() => root.render(<TestRouter>{el}</TestRouter>))
   return host
 }
 // The store reads the saved copy when it is first imported, as on an app start: once, for all.

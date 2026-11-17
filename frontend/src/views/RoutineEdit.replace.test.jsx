@@ -3,7 +3,7 @@
 // the picker chooses the new exercise, and the slot keeps its place and its numbers.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const sheets = vi.hoisted(() => ({
@@ -34,7 +34,7 @@ function mount(workouts = [], routines = []) {
   host = document.createElement('div')
   document.body.appendChild(host)
   root = createRoot(host)
-  act(() => root.render(<MemoryRouter initialEntries={['/plan/r/r1']}><Routes><Route path="/plan/r/:id" element={<RoutineEdit />} /></Routes></MemoryRouter>))
+  act(() => root.render(<TestRouter initialEntries={['/plan/r/r1']}><RoutineEdit /></TestRouter>))
 }
 const slots = () => useStore.getState().S.routines[0].ex
 // Tap the first row, then Replace on its settings sheet: the picker it opens is returned.

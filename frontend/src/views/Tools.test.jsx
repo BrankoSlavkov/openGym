@@ -2,7 +2,7 @@
 // gm-tools (1.4.5): Stats → More → Tools, filled in from the log.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import Tools from './Tools.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -26,7 +26,7 @@ function mount(patch = {}) {
   container = document.createElement('div')
   document.body.appendChild(container)
   root = createRoot(container)
-  act(() => root.render(<MemoryRouter><Tools /></MemoryRouter>))
+  act(() => root.render(<TestRouter><Tools /></TestRouter>))
 }
 
 describe('Tools page', () => {

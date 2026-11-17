@@ -22,7 +22,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = snap
   return { useUI }
 })
-vi.mock('react-router-dom', () => ({ useNavigate: () => (...a) => mocks.navs.push(a), useLocation: () => ({ pathname: '/settings/integrations', search: mocks.search || '' }) }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => (...a) => mocks.navs.push(a), useLocation: () => ({ pathname: '/settings/integrations', search: mocks.search || '' }) }))
 vi.mock('../lib/api.js', () => ({
   api: vi.fn(async (path, opts) => {
     const body = opts?.body ? JSON.parse(opts.body) : null

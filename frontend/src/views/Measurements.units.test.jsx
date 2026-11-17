@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Measurements, { manageMeasurementsSheet, measurementLogSheet } from './Measurements.jsx'
 import { DEF, useStore } from '../store/useStore.js'
@@ -95,7 +95,7 @@ describe('custom measurement units in the app (#699)', () => {
       { d: '2026-10-01', other: [{ id: 'Muscle ratio', value: 40 }] },
       { d: '2026-10-02', other: [{ id: 'Muscle ratio', value: 40.5 }] },
     ] })
-    const host = render(<MemoryRouter><Measurements /></MemoryRouter>)
+    const host = render(<TestRouter><Measurements /></TestRouter>)
     expect(host.querySelector('.big').textContent).toBe('40.5 %')
     expect(host.textContent).toContain('+0.5 % since previous')
     expect(host.querySelector('.measure-preview b').textContent).toBe('40.5 %')

@@ -193,8 +193,11 @@ export default function Modals() {
         // Numbered one past the page's, as the router numbers a push: a page that takes this
         // entry over (closeThenNav) or is pushed after it gets its index from it, and Settings'
         // back reads that index to tell whether there is a page to go back to.
-        const idx = history.state?.idx
-        history.pushState(typeof idx === 'number' ? { openGymSheet: true, idx: idx + 1 } : { openGymSheet: true }, '')
+        // TanStack Router reads the number from `__TSR_index` (router/hooks.tsx) and tells a
+        // back from a jump by it, so the sheet's entry gets one, and a key like the router's own.
+        const idx = history.state?.__TSR_index
+        const key = Math.random().toString(36).slice(2, 10)
+        history.pushState(typeof idx === 'number' ? { openGymSheet: true, __TSR_index: idx + 1, key, __TSR_key: key } : { openGymSheet: true }, '')
         pushedEntries.current++
       }
     } else if (sheets.length < prev) {

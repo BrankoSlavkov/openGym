@@ -1,5 +1,5 @@
 import { isFavRoutine, toggleFavRoutine } from '../lib/routine-favs.js'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from '../router/hooks.tsx'
 import { useEffect, useRef, useState } from 'react'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'

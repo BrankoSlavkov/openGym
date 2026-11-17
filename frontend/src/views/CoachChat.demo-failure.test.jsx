@@ -36,7 +36,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = mocks.uiSnapshot
   return { useUI }
 })
-vi.mock('react-router-dom', () => ({ useNavigate: () => mocks.nav }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => mocks.nav }))
 vi.mock('../lib/demo.js', () => ({ DEMO: true, DEMO_SEEDED: 'gym_demo_seeded_v1', REPO: '' }))
 vi.mock('../sheets.jsx', () => ({ startFlow: vi.fn(), confirmSheet: vi.fn() }))
 vi.mock('../lib/api.js', () => ({

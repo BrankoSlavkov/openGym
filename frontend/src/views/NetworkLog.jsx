@@ -3,7 +3,7 @@
 // anyone can check that here instead of taking our word for it. openGym Offline adds why it can
 // only ever be 0: Android does not give it the internet permission.
 import { useSyncExternalStore } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '../router/hooks.tsx'
 import { t, tn, dateLocale } from '../lib/i18n.js'
 import { netLog, subscribeNetLog, hostsOf } from '../lib/net-log.js'
 import { useOfflineBuild } from '../lib/use-offline-build.js'

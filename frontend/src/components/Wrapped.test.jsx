@@ -10,7 +10,7 @@ import { NOW_KEY } from '../lib/wrapped.js'
 import { WrappedHomeCard } from './WrappedEntry.jsx'
 import Wrapped from './Wrapped.jsx'
 
-vi.mock('react-router-dom', () => ({ useNavigate: () => vi.fn(), useLocation: () => ({ pathname: '/home', search: '' }) }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => vi.fn(), useLocation: () => ({ pathname: '/home', search: '' }) }))
 
 const clone = v => JSON.parse(JSON.stringify(v))
 const W = (d, hh = '18:00') => {

@@ -18,7 +18,7 @@ vi.mock('../lib/sound.js', async importOriginal => ({
 vi.mock('../lib/api.js', () => ({
   api: vi.fn(() => Promise.resolve({})), IS_APPLE: false, IS_ANDROID: false, BIO: 'biometrics',
 }))
-vi.mock('react-router-dom', () => ({ useNavigate: () => () => {} }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => () => {} }))
 vi.mock('../components/Media.jsx', () => ({ default: () => null }))
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true

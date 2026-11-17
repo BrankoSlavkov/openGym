@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter, Routes, Route } from 'react-router-dom'
+import { TestRouter } from '../router/testing.tsx'
 
 const calls = []
 vi.mock('../lib/api.js', () => ({
@@ -21,7 +21,7 @@ const { default: Connect } = await import('./Connect.jsx')
 let host, root
 beforeEach(() => { calls.length = 0; host = document.createElement('div'); document.body.appendChild(host); root = createRoot(host) })
 afterEach(() => { act(() => root.unmount()); host.remove() })
-const mount = async id => { await act(async () => { root.render(<MemoryRouter initialEntries={['/connect/' + id]}><Routes><Route path="/connect/:id" element={<Connect />} /></Routes></MemoryRouter>) }); await act(async () => {}) }
+const mount = async id => { await act(async () => { root.render(<TestRouter initialEntries={['/connect/' + id]}><Connect /></TestRouter>) }); await act(async () => {}) }
 const btn = text => [...host.querySelectorAll('.btn')].find(b => b.textContent.trim() === text)
 
 describe('the connector consent screen', () => {

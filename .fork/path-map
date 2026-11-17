@@ -6,3 +6,6 @@
 #   - anything matched by .fork/removed-paths (reported as removed).
 # Add a line when a file is renamed beyond that, split, or merged into another; use "-" as the
 # fork path for a file whose job is gone here without being in removed-paths.
+#
+# Not a file move, but worth knowing: upstream's <Routes> in frontend/src/App.jsx live in
+# frontend/src/router/routes.ts here (+ VIEWS in App.jsx); see FORK.md "Routing".

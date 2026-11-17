@@ -22,7 +22,7 @@ vi.mock('../store/useStore.js', () => {
   useStore.getState = mocks.snapshot
   return { useStore, DEF: { reminder: { time: '17:30' } }, hasData: () => false }
 })
-vi.mock('react-router-dom', () => ({ useNavigate: () => (...a) => mocks.nav(...a) }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => (...a) => mocks.nav(...a) }))
 vi.mock('../lib/mobile.js', () => ({ MOBILE: false, isAndroid: () => Promise.resolve(false), shareExport: vi.fn(), syncReminder: vi.fn() }))
 vi.mock('../sheets.jsx', () => ({ starterPlanSheet: vi.fn(), dayAssignSheet: vi.fn() }))
 

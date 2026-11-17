@@ -16,9 +16,9 @@
   },
   "license": "AGPL-3.0-or-later",
   "dependencies": {
+    "@tanstack/react-router": "1.170.46",
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "react-router-dom": "7.18.5",
     "zustand": "5.1.0"
   },
   "devDependencies": {

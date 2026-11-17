@@ -2,7 +2,7 @@
 // suggestion, a new connection, a changed sharing), one tap away. A trainer gets a line to their
 // dashboard when someone wants to connect. Nothing at all without TRAINERS on and a session.
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { t } from '../lib/i18n.js'
 import { getInbox, getOverview, showsDashboard, trainerRoles } from '../lib/trainer-api.js'

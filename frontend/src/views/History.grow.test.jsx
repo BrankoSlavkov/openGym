@@ -5,8 +5,8 @@
 import React, { act } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
-let DEF, useStore
+// Imported after vi.resetModules() with the view, so both see the same router context.
+let DEF, useStore, TestRouter
 
 const clone = v => JSON.parse(JSON.stringify(v))
 let observers = []
@@ -32,7 +32,7 @@ function mount(History) {
   document.body.appendChild(host)
   const root = createRoot(host)
   roots.push(root)
-  act(() => root.render(<MemoryRouter><History /></MemoryRouter>))
+  act(() => root.render(<TestRouter><History /></TestRouter>))
   return host
 }
 const rows = host => host.querySelectorAll('.list .item').length
@@ -46,6 +46,7 @@ describe('History grows as it is scrolled', () => {
     window.IntersectionObserver = FakeIO
     ;({ DEF, useStore } = await import('../store/useStore.js'))
     ;({ default: History, HISTORY_PAGE: PAGE } = await import('./History.jsx'))
+    ;({ TestRouter } = await import('../router/testing.tsx'))
   })
   afterEach(() => {
     for (const r of roots.splice(0)) act(() => r.unmount())

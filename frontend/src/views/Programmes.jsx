@@ -1,7 +1,7 @@
 // Plan → Programmes (#159): the list, a programme's weeks, and the running one's controls. The
 // model is lib/programmes.js; this screen only ever writes through it.
 import { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t, tn } from '../lib/i18n.js'

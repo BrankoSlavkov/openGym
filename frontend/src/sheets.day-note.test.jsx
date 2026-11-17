@@ -5,7 +5,7 @@
 import React, { act } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createRoot } from 'react-dom/client'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter } from './router/testing.tsx'
 import { DEF, useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
 import { dayOverrideSheet, dayNoteSheet, calendarSheet } from './sheets.jsx'
@@ -165,7 +165,7 @@ describe('where a noted day shows', () => {
       dayNotes: { ...notes, ...withDayNote({}, '2026-09-15', { tag: 'rest' }, 6), '2026-09-12': { _ts: 7 } },
     })
     expect(historyRows(S()).map(r => r.w ? r.w.id : 'note ' + r.d)).toEqual(['c', 'b', 'note 2026-09-14', 'a'])
-    const host = mount(<MemoryRouter><History /></MemoryRouter>)
+    const host = mount(<TestRouter><History /></TestRouter>)
     const row = host.querySelector('.day-note-row')
     expect(row.textContent).toContain('Sick')
     expect(row.textContent).toContain('Flu')

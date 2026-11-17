@@ -57,7 +57,7 @@ cd frontend && vp test run                                  # the whole suite
 cd frontend && vp test run src/lib/progression.test.js      # one file
 cd frontend && vp test run -t "some test name"              # one test by name
 cd frontend && vp check                                     # format (TS only), lint, types
-cd api && npm test                               # node --test
+cd api && bun run test                           # fork: Bun's runner over the node:test files
 cd mcp && npm test
 
 # Checks besides the suites
@@ -116,7 +116,8 @@ machine, never in CI (see "Exercise media" below and docs/APP_STORES.md).
   Once values exist, the unit selector permits cm/in or kg/lb conversions within the recorded
   type; a different type needs a new field. The body CSV names a custom column with its unit,
   "Muscle ratio (%)", and the importer reads those columns back (only from our own header).
-- **`views/`**: one file per screen, routed by `react-router-dom` from `App.jsx`.
+- **`views/`**: one file per screen. Fork: routed by TanStack Router (`src/router/routes.ts`,
+  hooks in `src/router/hooks.tsx`; App.jsx draws the pages). See FORK.md "Routing".
 - **`sheets.jsx`**: the bottom sheets (exercise picker, exercise config, workout detail, plan
   import...). It is large; a new sheet can go into `components/` as its own file.
 - **`components/`**: shared UI (charts, modals, timers, media).
@@ -126,7 +127,8 @@ machine, never in CI (see "Exercise media" below and docs/APP_STORES.md).
 
 ### API (`api/server.js`)
 
-Plain `node:http`, no framework. Requests are dispatched through a `routes` object keyed by
+Fork: runs on Bun, routed by Hono (`api/http-app.js`, FORK.md "The api on Bun and Hono"); the
+handlers still take node's `req`/`res`. Requests are dispatched through a `routes` object keyed by
 `'METHOD /path'` (e.g. `routes['GET /api/health']`); add an endpoint by adding a key and its entry
 in `openapi.yaml` (`openapi-routes.test.js` compares them). State is JSON under `DATA_DIR`:
 `db.json` (users, credentials, push subscriptions, invites) and `state-<uid>.json` per user,
@@ -191,7 +193,8 @@ never feed the media to an AI tool.
 ## Guidelines from CONTRIBUTING.md worth knowing before changing code
 
 - **Dependency-light is a hard constraint.** Frontend: React + Router + Zustand (plus Capacitor
-  plugins). `api/`: three dependencies. New dependencies are a hard sell either side.
+  plugins). `api/`: four dependencies in this fork (`hono` and `@hono/node-server` in, undici out).
+  New dependencies are a hard sell either side.
 - Don't commit `data/`. Don't add or replace anything in `catalogue/media/`.
 - Training-logic changes (progression, 1RM, session read-back) need a unit test in `src/lib`
   beside the code.

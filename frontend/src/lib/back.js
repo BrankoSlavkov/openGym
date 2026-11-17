@@ -66,7 +66,7 @@ export async function initBackButton() {
       getSheets: () => useUI.getState().sheets,
       getLocation: () => ({
         pathname: window.location.hash.slice(1).split('?')[0] || '/',
-        key: window.history.state?.key ?? window.location.hash,
+        key: window.history.state?.__TSR_key ?? window.history.state?.key ?? window.location.hash,
       }),
       closeSheet: id => useUI.getState().closeSheet(id),
       toast: msg => useUI.getState().toast(msg),

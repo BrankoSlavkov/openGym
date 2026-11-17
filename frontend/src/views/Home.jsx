@@ -1,6 +1,6 @@
 import TrainerNotice from '../components/TrainerNotice.jsx'
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { effectiveRoutines, effectiveRoutineIds, nextTrainingDay, lastBW, setsDoneActive } from '../lib/history.js'
 import { streakInfo } from '../lib/streak.js'

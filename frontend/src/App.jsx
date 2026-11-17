@@ -3,7 +3,9 @@ import { DEMO } from './lib/demo.js'
 import { useDailyWebdav } from './lib/use-daily-webdav.js'
 import { offlineBuild } from './lib/build-caps.js'
 import { hideBoot } from './lib/boot.js'
-import { HashRouter, Routes, Route, Navigate, useNavigate, useLocation, useNavigationType } from 'react-router-dom'
+import { AppRouterProvider, PageProvider, Navigate, useNavigate, useLocation, useNavigationType, useAppRouterInstance } from './router/hooks.tsx'
+import { matchPath } from './router/routes.ts'
+import { createHashAppRouter } from './router/app-router.ts'
 import { useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
 import { bindUI } from './components/ui.jsx'
@@ -115,6 +117,12 @@ const Muscles = lazyView(() => import('./views/Muscles.jsx'))
 // The community library of the server (views/Community.jsx): only with LIBRARY=on and the module on.
 const Community = lazyView(() => import('./views/Community.jsx'))
 const SettingsRoute = lazyView(() => import('./views/Settings.jsx').then(m => ({ default: m.SettingsRoute })))
+// What each route in router/routes.ts draws.
+const VIEWS = {
+  Home, Plan, RoutineEdit, Programmes, ProgrammeEdit, Workout, Stats, History, Library, Muscles, Community,
+  StructuralBalance, Tools, Journal, ProgressPhotos, Measurements, Connect, Assistants, Settings: SettingsRoute,
+  CoachChat, CoachIntake, CoachSetup, Admin, Trainer,
+}
 // The app tour's overlay (components/Tour.jsx): fetched when it opens, never before.
 const loadTour = () => import('./components/Tour.jsx')
 const Tour = lazy(loadTour)
@@ -393,46 +401,7 @@ function Shell() {
   )
 
   const view = l => (!authed ? <Login /> : needsMobileOnboarding ? <MobileOnboarding /> : permSteps ? <PermissionSteps /> : (
-    <Routes location={l}>
-      <Route path="/home" element={<Home />} />
-      {/* A module switched off (Settings → Modules, lib/modules.js) takes its screens with it: the
-          route falls through to the catch-all redirect below. The data stays where it is. */}
-      <Route path="/plan" element={<Plan />} />
-      <Route path="/plan/r/:id" element={<RoutineEdit />} />
-      <Route path="/plan/programmes" element={<Programmes />} />
-      <Route path="/plan/prog/:id" element={<ProgrammeEdit />} />
-      <Route path="/workout" element={<Workout />} />
-      <Route path="/stats" element={<Stats />} />
-      <Route path="/history" element={<History />} />
-      <Route path="/library" element={<Library />} />
-      <Route path="/muscles" element={<Muscles />} />
-      {isOn(S, 'community') && <Route path="/community" element={<Community />} />}
-      <Route path="/structural-balance" element={<StructuralBalance />} />
-      <Route path="/tools" element={<Tools />} />
-      <Route path="/journal" element={<Journal />} />
-      {isOn(S, 'body') && <Route path="/progress-photos" element={<ProgressPhotos />} />}
-      {isOn(S, 'body') && <Route path="/measurements" element={<Measurements />} />}
-      {/* The MCP connector's consent screen (api/oauth.js): an assistant sent the browser here. */}
-      <Route path="/connect/:id" element={<Connect />} />
-      {/* Use your subscription: openGym as a connector in Claude, ChatGPT or Gemini (sub-connect-146). */}
-      <Route path="/assistants" element={<Assistants />} />
-      <Route path="/settings" element={<SettingsRoute />} />
-      <Route path="/settings/:page" element={<SettingsRoute />} />
-      {/* The Coach screens gate themselves on the instance config; the routes exist whenever the
-          AI Coach module is on, so a deep link from a notification lands somewhere sane rather
-          than on the catch-all. With the module off, Home is the sane place. */}
-      {isOn(S, 'coach') && <Route path="/coach" element={<CoachChat />} />}
-      {isOn(S, 'coach') && <Route path="/coach/intake" element={<CoachIntake />} />}
-      {isOn(S, 'coach') && <Route path="/coach/proposal" element={<Navigate to="/coach" replace />} />}
-      {isOn(S, 'coach') && <Route path="/coach/setup" element={<CoachSetup />} />}
-      {/* Until boot has asked /api/me, the cached user may be from before an admin grant (or there is
-          none yet): a reload on /admin waits for the answer instead of bouncing to Home. */}
-      <Route path="/admin" element={user?.admin ? <Admin /> : ready ? <Navigate to="/home" replace /> : null} />
-      {/* The dashboard decides for itself once the config is in, so a deep link survives the boot. */}
-      {user && <Route path="/trainer" element={<Trainer />} />}
-      {user && <Route path="/trainer/m/:id" element={<Trainer />} />}
-      <Route path="*" element={<Navigate to="/home" replace />} />
-    </Routes>
+    <RoutePage pathname={l.pathname} S={S} user={user} ready={ready} />
   ))
   const showPreview = !!preview && preview !== loc.pathname && authed && !needsMobileOnboarding && !permSteps
 
@@ -469,6 +438,26 @@ function Shell() {
   )
 }
 
+/* What one location shows (router/routes.ts). A module switched off (Settings → Modules,
+   lib/modules.js) takes its screens with it: the address falls back to Home, as does one that
+   matches nothing. The data stays where it is. Until boot has asked /api/me, the cached user may
+   be from before an admin grant (or there is none yet): a reload on /admin waits for the answer
+   instead of bouncing to Home. */
+function RoutePage({ pathname, S, user, ready }) {
+  const router = useAppRouterInstance()
+  const m = matchPath(router, pathname)
+  const home = <Navigate to="/home" replace />
+  if (!m) return home
+  if (m.gate === 'admin') {
+    if (!user?.admin) return ready ? home : null
+  } else if (m.gate === 'user') {
+    if (!user) return home
+  } else if (m.gate && !isOn(S, m.gate)) return home
+  if (m.redirect) return <Navigate to={m.redirect} replace />
+  const View = VIEWS[m.view]
+  return <PageProvider pathname={pathname} params={m.params}><View /></PageProvider>
+}
+
 // The location the page underneath renders with: the entry it will be, when history knows it.
 const previewLoc = pathname => ({ pathname, search: '', hash: '', state: null, key: keyBefore(pathname) || 'back-preview' })
 
@@ -498,6 +487,9 @@ function Page({ loc, render, under = false, scrollY = 0, motion = 'fade' }) {
 }
 
 export default function App() {
+  // One router per mount, reading the address as it is then (the hash history's listeners go with it).
+  const [router] = useState(createHashAppRouter)
+  useEffect(() => () => router.history.destroy(), [router])
   const boot = useStore(s => s.boot)
   const ready = useStore(s => s.ready)
   useEffect(() => { boot() }, [boot])
@@ -624,5 +616,5 @@ export default function App() {
       autoGymHere()
     })
   }, [])
-  return <HashRouter><Shell /></HashRouter>
+  return <AppRouterProvider router={router}><Shell /></AppRouterProvider>
 }

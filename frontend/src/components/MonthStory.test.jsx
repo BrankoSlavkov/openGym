@@ -9,7 +9,7 @@ import { useWrappedUI, openMonthStory } from '../lib/wrapped-ui.js'
 import Wrapped from './Wrapped.jsx'
 import DailyFormCard from './DailyFormCard.jsx'
 
-vi.mock('react-router-dom', () => ({ useNavigate: () => vi.fn(), useLocation: () => ({ pathname: '/home', search: '' }) }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => vi.fn(), useLocation: () => ({ pathname: '/home', search: '' }) }))
 
 const clone = v => JSON.parse(JSON.stringify(v))
 const W = (d, w = 60) => {

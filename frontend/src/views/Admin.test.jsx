@@ -28,7 +28,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = snap
   return { useUI }
 })
-vi.mock('react-router-dom', () => ({ useNavigate: () => (...a) => mocks.navs.push(a), useLocation: () => ({ state: null }) }))
+vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => (...a) => mocks.navs.push(a), useLocation: () => ({ state: null }) }))
 vi.mock('../sheets.jsx', () => ({ confirmSheet: vi.fn() }))
 vi.mock('./AdminCoach.jsx', () => ({ default: () => null }))
 
@@ -158,7 +158,7 @@ describe('Admin back button', () => {
   afterEach(() => window.history.replaceState(null, ''))
 
   it('steps back the way it came', async () => {
-    window.history.replaceState({ idx: 2 }, '')
+    window.history.replaceState({ __TSR_index: 2 }, '')
     const page = render(<Admin />)
     await settle()
     act(() => page.querySelector('[aria-label="Back"]').click())

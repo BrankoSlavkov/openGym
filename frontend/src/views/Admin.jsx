@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { api } from '../lib/api.js'
 import { fmtDate, fmtNum, fmtVol, fmtDur } from '../lib/format.js'
 import { auditCat, auditLine, fmtWhen } from '../lib/audit.js'
 import { workoutVolume, setsDone } from '../lib/history.js'
-import { pathBefore } from '../lib/nav.js'
+import { pathBefore, historyIndex } from '../lib/nav.js'
 import { confirmSheet } from '../sheets.jsx'
 import Icon from '../components/Icon.jsx'
 import { Button } from '../components/ui.jsx'
@@ -453,7 +453,7 @@ export default function Admin() {
   const activeCount = (users || []).filter(u => u.lastSync && Date.now() - u.lastSync < 7 * 86400000).length
   const disabledCount = (users || []).filter(u => u.disabled).length
 
-  const hasBack = (window.history.state?.idx || 0) > 0
+  const hasBack = historyIndex() > 0
   return <div className="narrow">
     <div className="hdr">
       {/* Back the way it came, like a Settings page: pushing Settings › Account made that page's own back land here again. */}

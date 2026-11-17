@@ -1,5 +1,5 @@
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '../router/hooks.tsx'
 import { Section, Row, Switch, Segmented, Button } from './ui.jsx'
 import { GlanceLock, GlanceIsland, GlanceNotification, GlanceStrip, buttonWords } from './LiveGlance.jsx'
 import { t } from '../lib/i18n.js'

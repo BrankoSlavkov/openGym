@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from '../router/hooks.tsx'
 import { api } from '../lib/api.js'
 import { t } from '../lib/i18n.js'
 import { TOKEN_CATEGORIES, TOKEN_DAYS } from '../lib/api-tokens.js'

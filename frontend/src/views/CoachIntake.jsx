@@ -9,7 +9,7 @@
 // `?edit=1` reuses every screen as the profile editor: consent is skipped, answers are
 // prefilled, and the last button saves instead of building.
 import { useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
