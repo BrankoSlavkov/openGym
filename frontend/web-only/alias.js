@@ -4,9 +4,14 @@
 import { fileURLToPath } from 'node:url'
 
 const dir = fileURLToPath(new URL('./capacitor/', import.meta.url))
+const gym = fileURLToPath(new URL('./gym/', import.meta.url))
 
 export const webOnlyAlias = [
   { find: /^@capacitor\/(core|app|filesystem|local-notifications|share|splash-screen)$/, replacement: dir + '$1.js' },
   { find: /^@capacitor-mlkit\/barcode-scanning$/, replacement: dir + 'barcode-scanning.js' },
   { find: /^@aparajita\/capacitor-secure-storage$/, replacement: dir + 'secure-storage.js' },
+  // The gym reminder's map and place search are removed (.fork/removed-paths); the upstream files
+  // that still import them get these stand-ins.
+  { find: /^(?:\.{1,2}\/)+(?:views\/)?GymReminder\.jsx$/, replacement: gym + 'GymReminder.jsx' },
+  { find: /^(?:\.{1,2}\/)+(?:lib\/)?gym-places\.js$/, replacement: gym + 'gym-places.js' },
 ]

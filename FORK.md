@@ -20,6 +20,8 @@ The full list is [.fork/removed-paths](.fork/removed-paths). In short:
 - the 25 translation packs (`frontend/src/locales`) and the checks that compared them
 - the website, `docs/`, Helm, Kubernetes, Nix, Cloudflare and upstream's GitHub workflows
 - the Capacitor packages (phone-only)
+- the gym reminder's map and place search (Leaflet, OpenStreetMap; phone-only), with stand-ins
+  in `frontend/web-only/gym/` for the upstream files that still import them
 
 Kept: the `api` and `web` containers, the optional `mcp` container, the AI Coach, integrations
 and the exercise catalogue.

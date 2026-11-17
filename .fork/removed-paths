@@ -65,3 +65,13 @@ package-lock.json
 ROADMAP.md
 CLA.md
 renovate.json
+
+# Gym reminder map (Leaflet + OpenStreetMap place search; phone-only). Stand-ins in
+# frontend/web-only/gym/, wired in frontend/web-only/alias.js.
+frontend/src/components/GymMap.jsx
+frontend/src/components/GymMap.test.js
+frontend/src/views/GymReminder.jsx
+frontend/src/views/GymReminder.test.jsx
+frontend/src/lib/gym-places.js
+frontend/src/lib/gym-places.test.js
+

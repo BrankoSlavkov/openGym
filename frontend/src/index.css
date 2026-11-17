@@ -3636,55 +3636,6 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
   box-shadow:0 0 28px rgba(0,0,0,.28);
 }
 
-/* Gym reminder (#614, views/GymReminder.jsx; redrawn again in 1.4.4 to work like Apple Maps).
-   Plain grouped rows everywhere; a switched-off gym's row fades but stays readable. */
-.gym-row .lrow-s{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.gym-row .lrow-m{min-width:0}
-.gym-row.off .lrow-i,.gym-row.off .lrow-m{opacity:.5}
-.gym-add-row .lrow-t{color:var(--acc-ink)}
-/* The search: the app's own search field (.searchf, as in Settings and the Library). */
-.gym-find-bar{margin:0 0 6px}
-.gym-find-note{font-size:var(--fs-caption);color:var(--label-2);line-height:1.35;margin:0 4px 14px}
-.gym-hit .lrow-m{min-width:0}
-.gym-hit .lrow-t{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.gym-hit .lrow-s{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.gym-hit.busy{opacity:.55}
-.gym-hit-none .lrow-t{font-size:var(--fs-subhead);color:var(--label-2)}
-/* The editor's map: a rounded card about 40% of the screen, the pin fixed in the middle while the
-   map moves under it. The pin lifts a little while you drag. */
-.gmap{position:relative;height:clamp(200px,40dvh,380px);border-radius:var(--r-card);overflow:hidden;background:var(--surface-2);isolation:isolate}
-.gym-map{position:absolute;inset:0;z-index:0;background:var(--surface-2)}
-:root:not([data-theme="light"]) .gym-map .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.88) saturate(.7)}
-.gym-map.leaflet-container{font:inherit}
-.gym-map.leaflet-container .leaflet-control-attribution{font-size:.625rem;line-height:1.5;background:var(--surface);color:var(--label-2);opacity:.9;border-radius:8px 0 0 0;padding:1px 7px}
-.gym-map.leaflet-container .leaflet-control-attribution a{color:var(--label)}
-.gym-radius{stroke:var(--acc);fill:var(--acc);fill-opacity:.14;stroke-width:2}
-.gmap-pin{position:absolute;z-index:1000;left:50%;top:50%;width:30px;height:30px;margin:-30px 0 0 -15px;pointer-events:none;transition:transform var(--fast) var(--ease)}
-.gmap-pin>span{position:absolute;inset:0;border-radius:50% 50% 50% 0;background:var(--acc);transform:rotate(-45deg);box-shadow:0 3px 8px rgba(0,0,0,.35);border:3px solid #fff}
-.gmap-pin>span::after{content:'';position:absolute;inset:7px;border-radius:50%;background:#fff}
-.gmap-pin::after{content:'';position:absolute;left:50%;bottom:-3px;width:8px;height:4px;margin-left:-4px;border-radius:50%;background:rgba(0,0,0,.35);transition:transform var(--fast) var(--ease)}
-.gmap.moving .gmap-pin{transform:translateY(-8px)}
-.gmap.moving .gmap-pin::after{transform:translateY(8px) scale(1.4)}
-@media (prefers-reduced-motion:reduce){.gmap-pin,.gmap-pin::after{transition:none}}
-.gmap-locate{position:absolute;z-index:1000;top:10px;inset-inline-end:10px;width:40px;height:40px;display:grid;place-items:center;border-radius:10px;background:var(--surface);color:var(--acc-ink);font-size:1.1875rem;box-shadow:0 1px 6px rgba(0,0,0,.25);cursor:pointer}
-.gmap-locate:active{background:var(--surface-2)}
-.gmap-locate:disabled{opacity:.6}
-.gmap-hint{display:flex;flex-direction:column;gap:2px;margin:0 4px 20px}
-.gmap-addr{color:var(--label);font-size:var(--fs-subhead)}
-/* Rows with their own text input, like iOS's: the label on the start, the text on the end. */
-.gym-in-row{cursor:text}
-.lrow-in{flex:1 1 60%;min-width:0;background:none;border:0;outline:none;padding:0;font:inherit;font-size:var(--fs-body);letter-spacing:-.012em;color:var(--label);text-align:end}
-.lrow-in::placeholder{color:var(--label-3)}
-.lrow-in.full{text-align:start}
-.gym-radius{padding-block:8px}
-.gym-radius .seg{flex:1}
-.gym-size{display:flex;flex-direction:column;align-items:center;line-height:1.15}
-.gym-size b{font-weight:inherit}
-.gym-size small{font-size:var(--fs-caption2);color:var(--label-2);font-variant-numeric:tabular-nums}
-.gym-radius .seg button{min-height:42px}
-.gym-actions{display:flex;flex-direction:column;gap:10px;margin:0 0 22px}
-.gym-remove{justify-content:center}
-.gym-remove .lrow-m{flex:none;align-items:center}
 .youtube-video{width:100%;min-width:0;margin:8px 0}
 .youtube-video iframe{display:block;width:100%;min-height:200px;aspect-ratio:16/9;border:0;border-radius:12px;background:#000}
 .youtube-actions{display:flex;justify-content:space-between;gap:8px;margin-top:8px}
