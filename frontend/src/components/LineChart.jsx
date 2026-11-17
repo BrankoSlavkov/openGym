@@ -18,7 +18,9 @@ const W = 340   // viewBox width; the svg stretches to its container, height com
 //   series draws several lines instead of one: [{ points, color }] (issue #145, one per set
 //   number). `points` then only anchors the hover — one per date, its `note` the tooltip — and
 //   the y axis spans every series.
-export default function LineChart({ points, h = 150, unit = '', color = 'var(--acc)', axes = true, goal = null, invert = false, series = null, yHint = null, tickPrefix = '' }) {
+//   overlay draws one more line over the main one, { points: [{ t, y }], color } (the body-weight
+//   average): no dots, no fill, no hover of its own, but the y axis spans it too.
+export default function LineChart({ points, h = 150, unit = '', color = 'var(--acc)', axes = true, goal = null, invert = false, series = null, yHint = null, tickPrefix = '', overlay = null }) {
   const svgRef = useRef(null)
   const wrapRef = useRef(null)
   const tipRef = useRef(null)
@@ -55,7 +57,9 @@ export default function LineChart({ points, h = 150, unit = '', color = 'var(--a
   const single = points.length === 1
   const pts = single ? [points[0], points[0]] : points
   const multi = Array.isArray(series) && series.length > 0
+  const over = !multi && overlay?.points?.length > 1 ? overlay : null
   const ys = multi ? series.flatMap(s => s.points.map(p => p.y)) : pts.map(p => p.y)
+  if (over) ys.push(...over.points.map(p => p.y))
   let ymin = Math.min(...ys), ymax = Math.max(...ys)
   if (goal != null && isFinite(goal)) { ymin = Math.min(ymin, goal); ymax = Math.max(ymax, goal) }
   if (ymin === ymax) { ymin -= 1; ymax += 1 }
@@ -166,6 +170,8 @@ export default function LineChart({ points, h = 150, unit = '', color = 'var(--a
           {marked && pts.map((p, i) => (p.m == null ? null :
             <circle key={'m' + i} cx={X(p.t)} cy={Y(p.y)} r={2.4 + p.m * 3} fill={color} opacity={0.3 + p.m * 0.7} />))}
           <circle cx={X(last.t)} cy={Y(last.y)} r="4" fill={color} />
+          {over && <polyline className="chart-overlay" points={over.points.map(p => X(p.t).toFixed(1) + ',' + Y(p.y).toFixed(1)).join(' ')}
+            fill="none" stroke={over.color || 'var(--label-2)'} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />}
         </>}
         {hover && <g>
           <line className="cvl" x1={hover.x} y1={P.t} x2={hover.x} y2={H - P.b} stroke="var(--label-3)" strokeWidth="1" strokeDasharray="3 3" />

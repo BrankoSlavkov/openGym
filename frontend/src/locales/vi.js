@@ -3694,6 +3694,8 @@ export default {
   'This month’s challenges': 'Thử thách tháng này',
   'Hide until next month': 'Ẩn đến tháng sau',
   'Gold month. Take a bow.': 'Tháng vàng. Cúi chào nhận vỗ tay đi.',
+  "{0}-day average": "Trung bình {0} ngày",
+  'None yet. Any exercise you log for the first time this month counts.': 'Chưa có. Mọi bài tập bạn ghi lần đầu trong tháng này đều được tính.',
   'New month, new challenges.': 'Tháng mới, thử thách mới.',
   'Trophy shelf': 'Kệ cúp',
   'Gold month': 'Tháng vàng',

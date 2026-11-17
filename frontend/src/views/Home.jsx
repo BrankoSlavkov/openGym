@@ -27,7 +27,7 @@ import { Button } from '../components/ui.jsx'
 import { tappable } from '../lib/use-sheet-keyboard.js'
 import { glyphOf } from '../lib/glyphs.js'
 import { dayNoteOf } from '../lib/day-notes.js'
-import { weighInAt } from '../lib/bodyweight.js'
+import { weighInAt, recentAverage, rollingAverage } from '../lib/bodyweight.js'
 import WeightRate from '../components/WeightRate.jsx'
 import { programmeChip } from '../lib/programmes.js'
 import { SeasonDeco } from '../components/Seasonal.jsx'
@@ -61,6 +61,8 @@ export default function Home() {
   const bw = lastBW(S)
   const prevBW = S.bodyweight.length > 1 ? S.bodyweight[S.bodyweight.length - 2] : null
   const delta = bw && prevBW ? bw.w - prevBW.w : null
+  // the mean of the last five weigh-in days, each day's first reading (lib/bodyweight.js)
+  const bwAvg = recentAverage(S.bodyweight)
 
   const ws = weekStartOf(S)
   // The first day of the shown week. Named for the role, not for Monday — which day that is
@@ -121,7 +123,14 @@ export default function Home() {
   const streak = useMemo(() => streakInfo(S, todayKey), [S.workouts, S.weekStart, S.streakRule, S.recoverySessions, S.recoveryStreak, S.activities, S.activityStreak, todayKey]) // eslint-disable-line react-hooks/exhaustive-deps
   // Settings → Modules (lib/modules.js): what a module switched off hides here.
   const on = id => isOn(S, id)
-  const bwPoints = S.bodyweight.slice(-30).map(b => ({ t: weighInAt(b), y: b.w, d: b.d }))
+  // the chart's 30 days, each with its 5-day average beside it (drawn as a second line, and in
+  // the tooltip); the average is worked out over every weigh-in, so the first ones shown have one
+  const bwAvgByDay = new Map(rollingAverage(S.bodyweight).map(a => [a.d, a]))
+  const bwPoints = S.bodyweight.slice(-30).map(b => {
+    const a = bwAvgByDay.get(b.d)
+    return { t: weighInAt(b), y: b.w, d: b.d, note: a ? t('{0}-day average', a.n) + ' ' + fmtNum(a.avg) : undefined }
+  })
+  const bwAvgLine = { color: 'var(--bw-avg)', points: bwPoints.filter(p => bwAvgByDay.has(p.d)).map(p => ({ t: p.t, y: bwAvgByDay.get(p.d).avg })) }
 
   // today's session shown right under the week strip
   const onToday = () => { if (S.active) nav('/workout'); else if (todayRoutines.length) startOrPreview(effectiveRoutineIds(S, todayISO())); else dayOverrideSheet(todayISO()) }
@@ -275,18 +284,22 @@ export default function Home() {
           )}
           <span className="dim small" style={{ marginInlineStart: 'auto' }}>{fmtDate(bw.d, true)}</span>
         </div>
-        {S.targetW && (
-          <div className="small row" style={{ color: 'var(--gold-ink)', marginTop: 4, gap: 5 }}>
-            <Icon name="target" style={{ fontSize: 'var(--fs-footnote)' }} />
-            <span>{t('Goal')} {fmtNum(S.targetW)} {S.unit} · {Math.abs(S.targetW - bw.w) < 0.05 ? t('reached!') : t(S.targetW > bw.w ? '{0} to gain' : '{0} to lose', fmtNum(Math.abs(S.targetW - bw.w)) + ' ' + S.unit)}</span>
+        {bwAvg && (
+          <div className="small muted bw-avg row" style={{ marginTop: 2, gap: 6 }}>
+            {/* the swatch is the legend of the average line on the chart below */}
+            <span className="bw-avg-m" aria-hidden="true" />
+            {t('{0}-day average', bwAvg.n)} <b style={{ color: 'var(--label)' }}>{fmtNum(bwAvg.avg)} {S.unit}</b>
           </div>
         )}
-        <div className="chart" style={{ marginTop: 8 }}><LineChart points={bwPoints} h={130} unit={S.unit} goal={S.targetW} /></div>
+        <div className="chart" style={{ marginTop: 8 }}><LineChart points={bwPoints} h={130} unit={S.unit} goal={S.targetW} overlay={bwAvgLine} /></div>
         {/* the weekly rate and, with one set, how it sits in its corridor (#759) */}
         <WeightRate S={S} />
         {/* every weigh-in, week by week with its average (Discord 'Weight') */}
         <div className="row between" style={{ marginTop: 4 }}>
-          <Button size="sm" variant="ghost" icon="target" className="bw-goal" style={S.targetW ? { color: 'var(--gold-ink)' } : undefined} onClick={goalSheet}>{S.targetW ? fmtNum(S.targetW) : t('Goal')}</Button>
+          {/* the goal and how far it is, at the foot of the card; a tap changes it */}
+          <Button size="sm" variant="ghost" icon="target" className="bw-goal" style={S.targetW ? { color: 'var(--gold-ink)' } : undefined} onClick={goalSheet}>
+            {S.targetW ? <>{t('Goal')} {fmtNum(S.targetW)} {S.unit} · {Math.abs(S.targetW - bw.w) < 0.05 ? t('reached!') : t(S.targetW > bw.w ? '{0} to gain' : '{0} to lose', fmtNum(Math.abs(S.targetW - bw.w)) + ' ' + S.unit)}</> : t('Goal')}
+          </Button>
           <Button size="sm" variant="ghost" trailingIcon="chevronRight" data-tour="home-weighins" onClick={weighInsSheet}>{t('All weigh-ins')}</Button>
         </div>
       </> : <>

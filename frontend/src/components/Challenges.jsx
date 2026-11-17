@@ -8,27 +8,47 @@ import {
   monthKeyOf, shiftMonth, monthChallenges, progressOf, newlyDone, savePicks, markDone, isGold,
   cleanChallenges, storedMonth, shelfOf, challengesOn, hiddenFor, factsFor,
 } from '../lib/challenges.js'
+import { EXIDX } from '../lib/exercises.js'
+import { fmtDate, exerciseNameText } from '../lib/format.js'
 import { challengeTitle, challengeCount, monthLabel, doneLine } from '../lib/challenge-copy.js'
 
 /* The monthly challenges (lib/challenges.js): Home's card with the month's three and their
    progress, a small party when one is done, and Stats' card with the trophy shelf. */
 
+// An exercise's name as the app shows it, else the one saved with the workout.
+const exName = (id, saved) => (EXIDX[id] ? exerciseNameText(EXIDX[id]) : saved || id)
+
 // The first days of a month say why the goals changed.
 const NEW_MONTH_DAYS = 3
 
-/** The month's three as rows with a bar each; a done one turns green with a check by its count. */
+/** The month's three as rows with a bar each; a done one turns green with a check by its count.
+    A challenge with a list behind it (the new exercises) opens to show what counted. */
 export function ChallengeRows({ progress, unit }) {
+  const [open, setOpen] = useState(null)
   return <div className="ch-list">
     {progress.map(p => {
       const title = challengeTitle(p, unit)
-      return <div key={p.id} className={'ch-row' + (p.done ? ' done' : '')} data-challenge={p.id}>
+      const list = Array.isArray(p.items) ? p.items : null
+      const shown = !!list && open === p.id
+      const body = <>
         <span className="ch-ic" aria-hidden="true"><Icon name={p.done ? 'checkCircle' : p.icon} /></span>
         <div className="ch-body">
-          <div className="ch-t"><span className="ch-name">{title}</span><span className="ch-n pbar-n">{p.done && <Icon name="check" className="ch-ok" />}{challengeCount(p, unit)}</span></div>
+          <div className="ch-t"><span className="ch-name">{title}</span><span className="ch-n pbar-n">{p.done && <Icon name="check" className="ch-ok" />}{challengeCount(p, unit)}{list && <Icon name={shown ? 'chevronUp' : 'chevronDown'} className="ch-chev" />}</span></div>
           <div className="pbar ch-bar" role="progressbar" aria-label={title} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(p.pct * 100)}>
             <i style={{ '--p': Math.min(1, Math.max(0, p.pct)) }} />
           </div>
         </div>
+      </>
+      if (!list) return <div key={p.id} className={'ch-row' + (p.done ? ' done' : '')} data-challenge={p.id}>{body}</div>
+      return <div key={p.id} className="ch-item" data-challenge={p.id}>
+        <button type="button" className={'ch-row ch-open' + (p.done ? ' done' : '')} aria-expanded={shown}
+          onClick={() => setOpen(o => (o === p.id ? null : p.id))}>{body}</button>
+        {shown && (list.length
+          ? <ul className="ch-items">{list.map(x => <li key={x.id}>
+            <span className="ch-item-n">{exName(x.id, x.name)}</span>
+            <span className="ch-item-d">{fmtDate(x.d)}</span>
+          </li>)}</ul>
+          : <p className="ch-items-none small muted">{t('None yet. Any exercise you log for the first time this month counts.')}</p>)}
       </div>
     })}
   </div>

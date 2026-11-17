@@ -576,8 +576,10 @@ export function bestWeightFor(S, exId, as) {
  * are thin wrappers. `[]` — a stray empty array, or a key that is absent — all mean rest, so
  * "is this a rest day?" is `effectiveRoutineIds(S, iso).length === 0`.
  *
- * `S.dayPlan[iso]` stays scalar (a routine id, the `'rest'` sentinel, or undefined): the
- * per-date override and Start-time are single-pick. All array-tolerance is on `S.week`.
+ * `S.dayPlan[iso]` is a routine id, the `'rest'` sentinel, or undefined: the per-date override
+ * picked in the app is single-pick. An importer may plan several separate sessions on one date
+ * as a list of ids (lib/day-sessions.js gives each its own row on a weekday set apart); the ones that still exist are
+ * the day, and a list naming none of them falls back to the weekly plan.
  *
  * A coach week (`S.queue`, lib/queue.js) has no weekdays: its sessions are done in order, and
  * the first undone one is today's session — so it goes in front of whatever the weekday
@@ -592,6 +594,12 @@ export function bestWeightFor(S, exId, as) {
 export function effectiveRoutineIds(S, iso, today = todayISO()) {
   const ov = S.dayPlan[iso]
   if (ov === 'rest') return []
+  // A list on one date (written by an importer, never by the app): those routines, in order.
+  // Whether they are one workout or separate ones is the weekday's choice (lib/day-sessions.js).
+  if (Array.isArray(ov)) {
+    const ids = [...new Set(ov)].filter(id => S.routines.some(r => r.id === id))
+    if (ids.length) return ids
+  }
   const pin = pinState(S, ov, today)
   if (!pin && ov && S.routines.some(r => r.id === ov)) return [ov]
   const wd = new Date(iso + 'T12:00:00').getDay()

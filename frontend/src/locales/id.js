@@ -3682,6 +3682,8 @@ export default {
   "This month’s challenges": "Tantangan bulan ini",
   "Hide until next month": "Sembunyikan sampai bulan depan",
   "Gold month. Take a bow.": "Bulan emas. Angkat topi untukmu.",
+  "{0}-day average": "Rata-rata {0} hari",
+  "None yet. Any exercise you log for the first time this month counts.": "Belum ada. Setiap latihan yang Anda catat untuk pertama kali bulan ini dihitung.",
   "New month, new challenges.": "Bulan baru, tantangan baru.",
   "Trophy shelf": "Rak trofi",
   "Gold month": "Bulan emas",

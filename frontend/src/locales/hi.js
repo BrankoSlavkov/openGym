@@ -3724,6 +3724,8 @@ export default {
   "This month’s challenges": "इस महीने के चैलेंज",
   "Hide until next month": "अगले महीने तक छिपाएँ",
   "Gold month. Take a bow.": "गोल्ड महीना। तालियाँ आपके लिए।",
+  "{0}-day average": "{0} दिन का औसत",
+  "None yet. Any exercise you log for the first time this month counts.": "अभी कोई नहीं। इस महीने पहली बार लॉग की गई कोई भी एक्सरसाइज़ गिनी जाएगी।",
   "New month, new challenges.": "नया महीना, नए चैलेंज।",
   "Trophy shelf": "ट्रॉफ़ी शेल्फ़",
   "Gold month": "गोल्ड महीना",

@@ -2880,6 +2880,13 @@ button.mchip{border:none;font:inherit;font-size:var(--fs-caption);cursor:pointer
 .ch-row.done .ch-n{color:var(--win-ink)}
 .ch-ok{font-size:var(--fs-caption);--icon-stroke:2.6}
 .ch-bar{margin-top:7px}
+.ch-open{width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:start;cursor:pointer}
+.ch-chev{font-size:var(--fs-caption);margin-inline-start:4px;color:var(--label-3)}
+.ch-items{list-style:none;margin:10px 0 0;padding:0;padding-inline-start:44px;display:flex;flex-direction:column;gap:6px}
+.ch-items li{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:var(--fs-footnote)}
+.ch-item-n{min-width:0;overflow-wrap:anywhere}
+.ch-item-d{flex:none;color:var(--label-2);font-variant-numeric:tabular-nums}
+.ch-items-none{margin:8px 0 0;padding-inline-start:44px}
 .ch-row.done .pbar i,.ch-mini .done i{background:var(--win-ink)}
 .ch-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
 .ch-mini .pbar{height:5px}
@@ -4661,3 +4668,9 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 
 /* Add set / Warm-up / Remove: 44px tall, the leading glyph on the card's content edge; wrapped siblings share the same edge */
 .wk-add{min-height:44px;margin-inline-start:-14px}
+
+/* Home body-weight card: the 5-day average, a line on the chart and its swatch beside the number.
+   Teal, unless teal is the accent the weight line itself is drawn in. */
+:root{--bw-avg:var(--teal)}
+:root[data-accent="teal"]{--bw-avg:var(--indigo)}
+.bw-avg-m{flex:none;width:14px;height:3px;border-radius:2px;background:var(--bw-avg)}

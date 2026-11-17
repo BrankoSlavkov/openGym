@@ -3771,6 +3771,8 @@ export default {
   "This month’s challenges": "Månadens utmaningar",
   "Hide until next month": "Dölj till nästa månad",
   "Gold month. Take a bow.": "Guldmånad. Ta en bugning.",
+  "{0}-day average": "Snitt över {0} dagar",
+  "None yet. Any exercise you log for the first time this month counts.": "Inga än. Varje övning du loggar för första gången den här månaden räknas.",
   "New month, new challenges.": "Ny månad, nya utmaningar.",
   "Trophy shelf": "Pokalhylla",
   "Gold month": "Guldmånad",

@@ -58,4 +58,6 @@ if (!MOBILE && 'serviceWorker' in navigator && location.protocol === 'https:') {
   // The plan's exercise media, kept by the worker for a workout opened without a network (#281).
   // It only fetches ahead while the page runs as the installed app; a tab keeps what it has shown.
   import('./lib/media-prefetch.js').then(m => m.startMediaPrefetch(useStore)).catch(() => {})
+  // A deploy reaches an app left open too, not just the next fresh start (lib/app-refresh.js).
+  import('./lib/app-refresh.js').then(m => m.startAppRefresh()).catch(() => {})
 }

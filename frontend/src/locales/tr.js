@@ -3724,6 +3724,8 @@ export default {
   "This month’s challenges": "Bu ayın görevleri",
   "Hide until next month": "Gelecek aya kadar gizle",
   "Gold month. Take a bow.": "Altın ay. Bir reverans hakkın var.",
+  "{0}-day average": "{0} günlük ortalama",
+  "None yet. Any exercise you log for the first time this month counts.": "Henüz yok. Bu ay ilk kez kaydettiğin her egzersiz sayılır.",
   "New month, new challenges.": "Yeni ay, yeni görevler.",
   "Trophy shelf": "Kupa rafı",
   "Gold month": "Altın ay",

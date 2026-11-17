@@ -3717,6 +3717,8 @@ export default {
   "This month’s challenges": "本月挑戰",
   "Hide until next month": "隱藏到下個月",
   "Gold month. Take a bow.": "黃金月。為自己鼓個掌。",
+  "{0}-day average": "{0} 天平均",
+  "None yet. Any exercise you log for the first time this month counts.": "還沒有。這個月第一次記錄的任何動作都算數。",
   "New month, new challenges.": "新的一月，新的挑戰。",
   "Trophy shelf": "獎盃架",
   "Gold month": "黃金月",

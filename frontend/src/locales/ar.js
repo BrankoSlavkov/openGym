@@ -3779,6 +3779,8 @@ export default {
   "This month’s challenges": "تحديات هذا الشهر",
   "Hide until next month": "إخفاء حتى الشهر القادم",
   "Gold month. Take a bow.": "شهر ذهبي. تستحق التصفيق.",
+  "{0}-day average": "متوسط {0} أيام",
+  "None yet. Any exercise you log for the first time this month counts.": "لا شيء بعد. أي تمرين تسجّله لأول مرة هذا الشهر يُحتسب.",
   "New month, new challenges.": "شهر جديد، تحديات جديدة.",
   "Trophy shelf": "رف الجوائز",
   "Gold month": "شهر ذهبي",

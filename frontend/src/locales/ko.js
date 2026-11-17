@@ -3724,6 +3724,8 @@ export default {
   "This month’s challenges": "이번 달 챌린지",
   "Hide until next month": "다음 달까지 숨기기",
   "Gold month. Take a bow.": "골드 달. 박수 받을 만해요.",
+  "{0}-day average": "{0}일 평균",
+  "None yet. Any exercise you log for the first time this month counts.": "아직 없어요. 이번 달에 처음 기록하는 운동은 모두 포함돼요.",
   "New month, new challenges.": "새 달, 새 챌린지.",
   "Trophy shelf": "트로피 진열장",
   "Gold month": "골드 달",

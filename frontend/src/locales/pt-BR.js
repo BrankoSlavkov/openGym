@@ -3153,6 +3153,8 @@ export const PT_BR_OVERRIDES = {
   "Challenge done: {0}. New badge!": "Desafio concluído: {0}. Nova medalha!",
   "Hide until next month": "Ocultar até o próximo mês",
   "Gold month. Take a bow.": "Mês de ouro. Pode agradecer os aplausos.",
+  "{0}-day average": "Média de {0} dias",
+  "None yet. Any exercise you log for the first time this month counts.": "Nenhum ainda. Conta qualquer exercício que você registrar pela primeira vez neste mês.",
   "Every challenge you finish puts a badge here, one shelf per month.": "Cada desafio concluído deixa uma medalha aqui, uma prateleira por mês.",
   "Three goals a month on Home, sized to how you train.": "Três metas por mês no Início, sob medida para você.",
   // --- v1.4.4: LAN http for the phone Coach (#913), freestyle progression (#910), watch idle finish (#904) ---

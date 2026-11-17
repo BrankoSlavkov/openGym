@@ -3724,6 +3724,8 @@ export default {
   "This month’s challenges": "Wyzwania miesiąca",
   "Hide until next month": "Ukryj do następnego miesiąca",
   "Gold month. Take a bow.": "Złoty miesiąc. Ukłoń się.",
+  "{0}-day average": "Średnia z {0} dni",
+  "None yet. Any exercise you log for the first time this month counts.": "Jeszcze żadne. Liczy się każde ćwiczenie, które zapiszesz w tym miesiącu po raz pierwszy.",
   "New month, new challenges.": "Nowy miesiąc, nowe wyzwania.",
   "Trophy shelf": "Półka z trofeami",
   "Gold month": "Złoty miesiąc",

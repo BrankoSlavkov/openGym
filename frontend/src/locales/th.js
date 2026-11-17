@@ -3735,6 +3735,8 @@ export default {
   "This month’s challenges": "ชาเลนจ์เดือนนี้",
   "Hide until next month": "ซ่อนจนถึงเดือนหน้า",
   "Gold month. Take a bow.": "เดือนทองคำ ปรบมือให้ตัวเองหน่อย",
+  "{0}-day average": "ค่าเฉลี่ย {0} วัน",
+  "None yet. Any exercise you log for the first time this month counts.": "ยังไม่มี ท่าที่คุณบันทึกเป็นครั้งแรกในเดือนนี้จะนับทั้งหมด",
   "New month, new challenges.": "เดือนใหม่ ชาเลนจ์ใหม่",
   "Trophy shelf": "ชั้นวางถ้วยรางวัล",
   "Gold month": "เดือนทองคำ",

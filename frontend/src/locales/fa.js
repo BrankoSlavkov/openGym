@@ -3694,6 +3694,8 @@ export default {
   'This month’s challenges': 'چالش‌های این ماه',
   'Hide until next month': 'تا ماه بعد پنهان کن',
   'Gold month. Take a bow.': 'ماه طلایی. تعظیم کنید.',
+  "{0}-day average": "میانگین {0} روز",
+  'None yet. Any exercise you log for the first time this month counts.': 'هنوز هیچ. هر تمرینی که این ماه برای اولین بار ثبت کنید حساب می‌شود.',
   'New month, new challenges.': 'ماه جدید، چالش‌های جدید.',
   'Trophy shelf': 'قفسه جام‌ها',
   'Gold month': 'ماه طلایی',

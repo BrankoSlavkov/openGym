@@ -83,6 +83,8 @@ const nameOf = e => {
   const ex = EXIDX[e?.id]
   return String(ex?.n || e?.exercise?.n || e?.ex?.n || e?.name || '').toLowerCase()
 }
+// The name saved with the entry (a custom exercise, or one since removed), for showing it back.
+const savedName = e => { const n = e?.exercise?.n || e?.ex?.n || e?.name; return typeof n === 'string' && n ? n : null }
 const PULLUP = /\b(pull|chin)[\s-]?ups?\b/
 const PUSHUP = /\bpush[\s-]?ups?\b/
 const workRows = e => (Array.isArray(e?.sets) ? e.sets : []).filter(s => s && !isWarmupRow(s))
@@ -120,7 +122,7 @@ function monthFacts(S, key, ws, months, firstSeen) {
   const lb = S?.unit === 'lb'
   const weeks = weeksOfMonth(key, ws)
   const trainedWeeks = new Set()
-  const exDone = new Set()
+  const exDone = new Map()
   const groups = new Set()
   let volume = 0, prs = 0, pullups = 0, pushups = 0, cardio = 0
   for (const w of list) {
@@ -138,13 +140,15 @@ function monthFacts(S, key, ws, months, firstSeen) {
       cardio += cardioMinOf(e)
       const k = exKey(e.id)
       if (!workRows(e).some(s => doneUnits(s) > 0)) continue
-      if (k) exDone.add(k)
+      if (k && !exDone.has(k)) exDone.set(k, savedName(e))
       for (const g of mainGroupsOf(e)) groups.add(g)
     }
   }
   const from = key + '-01', to = key + '-' + pad(daysIn(key))
-  let newEx = 0
-  for (const k of exDone) { const f = firstSeen.get(k); if (f && f >= from && f <= to) newEx++ }
+  // The new ones themselves, in the order they were first done: the challenge's list (newExList).
+  const newExList = []
+  for (const [k, name] of exDone) { const f = firstSeen.get(k); if (f && f >= from && f <= to) newExList.push({ id: k, d: f, name }) }
+  newExList.sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0))
   const weighDays = new Set((Array.isArray(S?.bodyweight) ? S.bodyweight : [])
     .filter(b => b && typeof b.d === 'string' && b.d.startsWith(key + '-') && Number(b.w) > 0).map(b => b.d)).size
   return {
@@ -157,7 +161,8 @@ function monthFacts(S, key, ws, months, firstSeen) {
     pushups,
     cardioMin: cardio,
     weighDays,
-    newEx,
+    newEx: newExList.length,
+    newExList,
     groups: groups.size,
   }
 }
@@ -273,7 +278,9 @@ export const CHALLENGES = [
   { id: 'cardio', kind: 'effort', icon: 'figureRun', fits: L => L.cardioMin > 0,
     target: L => ({ n: stretch(L.cardioMin, { min: 30, max: 3000, step: 15 }) }), have: F => Math.floor(F.cardioMin) },
   { id: 'newex', kind: 'explore', icon: 'sparkles', fits: () => true,
-    target: L => ({ n: L.fresh ? 3 : L.perWeek < 2 ? 2 : L.perWeek < 4 ? 3 : 4 }), have: F => F.newEx },
+    target: L => ({ n: L.fresh ? 3 : L.perWeek < 2 ? 2 : L.perWeek < 4 ? 3 : 4 }), have: F => F.newEx,
+    // What counted, to open from the card: [{ id, d, name }], first done first.
+    items: F => F.newExList },
   { id: 'muscles', kind: 'explore', icon: 'figureStrength', fits: L => L.fresh || L.groups < GROUP_IDS.length - 0.01,
     target: () => ({ n: GROUP_IDS.length }), have: F => F.groups },
   // Daily weighers have nothing to stretch here.
@@ -395,8 +402,9 @@ export function markDone(s, key, ids, picked, now = Date.now()) {
 /* ---------- progress ---------- */
 
 /**
- * Where each of the month's challenges stands: [{ id, icon, n, u, have, pct, done }]. `done` once
- * the goal is reached or it was ever completed (a deleted workout does not take a badge back).
+ * Where each of the month's challenges stands: [{ id, icon, n, u, have, pct, done, items? }].
+ * `done` once the goal is reached or it was ever completed (a deleted workout does not take a
+ * badge back). `items`, for a challenge that has them, is what counted so far (the new exercises).
  * `facts` can be handed in when the caller has them already.
  */
 export function progressOf(S, month, facts = factsFor(S, [month.key])[month.key]) {
@@ -405,7 +413,9 @@ export function progressOf(S, month, facts = factsFor(S, [month.key])[month.key]
     const have = c ? Math.max(0, Number(c.have(facts, p)) || 0) : 0
     const reached = have >= p.n
     const done = reached || month.done.includes(p.id)
-    return { id: p.id, icon: c?.icon || 'star', n: p.n, u: p.u, have, pct: done ? 1 : Math.min(1, have / p.n), done, known: !!c }
+    const out = { id: p.id, icon: c?.icon || 'star', n: p.n, u: p.u, have, pct: done ? 1 : Math.min(1, have / p.n), done, known: !!c }
+    if (c?.items) out.items = Array.isArray(c.items(facts)) ? c.items(facts) : []
+    return out
   })
 }
 

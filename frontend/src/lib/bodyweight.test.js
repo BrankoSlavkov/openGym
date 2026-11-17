@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { weeklyWeights, weighInAt, logWeighIn } from './bodyweight.js'
+import { weeklyWeights, weighInAt, logWeighIn, recentAverage, rollingAverage } from './bodyweight.js'
 
 // Discord 'Weight': every weigh-in, week by week, with the week's mean.
 describe('weeklyWeights', () => {
@@ -97,5 +97,68 @@ describe('logWeighIn', () => {
       expect(logWeighIn(S, w, at('2026-10-15T07:00:00')), String(w)).toBe(false)
       expect(S.bodyweight).toEqual([{ d: '2026-10-15', w: 82 }])
     }
+  })
+})
+
+// The Home card's average of the last few weigh-in days, each day's first reading.
+describe('recentAverage', () => {
+  it('averages the last five days that have a weigh-in, skipping days without one', () => {
+    const log = [
+      { d: '2026-11-01', w: 90 },
+      { d: '2026-11-03', w: 81 },
+      { d: '2026-11-04', w: 80 },
+      { d: '2026-11-08', w: 80.5 },
+      { d: '2026-11-09', w: 79.5 },
+      { d: '2026-11-12', w: 79 },
+    ]
+    expect(recentAverage(log)).toEqual({ avg: 80, n: 5, from: '2026-11-03', to: '2026-11-12' })
+  })
+
+  it('takes the first reading of a day with several, whatever the day\'s value says', () => {
+    const log = [
+      { d: '2026-11-10', w: 80 },
+      { d: '2026-11-11', w: 83, ins: [
+        { id: 'c', at: '21:00', w: 83, t: 3 },
+        { id: 'a', at: '07:00', w: 81, t: 1 },
+        { id: 'b', at: '12:00', w: 82, t: 2 },
+      ] },
+    ]
+    expect(recentAverage(log)).toMatchObject({ avg: 80.5, n: 2 })
+  })
+
+  it('does not rely on the stored order and honours a custom window', () => {
+    const log = [{ d: '2026-11-12', w: 78 }, { d: '2026-11-10', w: 82 }, { d: '2026-11-11', w: 80 }]
+    expect(recentAverage(log, 2)).toMatchObject({ avg: 79, n: 2, from: '2026-11-11', to: '2026-11-12' })
+  })
+
+  it('uses what there is below five days, and nothing below two', () => {
+    expect(recentAverage([{ d: '2026-11-10', w: 80 }, { d: '2026-11-11', w: 81 }])).toMatchObject({ avg: 80.5, n: 2 })
+    expect(recentAverage([{ d: '2026-11-10', w: 80 }])).toBeNull()
+    expect(recentAverage([{ d: '2026-11-10', w: 80 }, { d: '2026-11-11', w: 0 }, { w: 81 }])).toBeNull()
+    expect(recentAverage(undefined)).toBeNull()
+  })
+})
+
+describe('rollingAverage', () => {
+  it('gives every weigh-in day after the first the mean of it and up to four days before', () => {
+    const log = [80, 81, 82, 83, 84, 85].map((w, i) => ({ d: '2026-11-0' + (i + 1), w }))
+    expect(rollingAverage(log)).toEqual([
+      { d: '2026-11-02', avg: 80.5, n: 2 },
+      { d: '2026-11-03', avg: 81, n: 3 },
+      { d: '2026-11-04', avg: 81.5, n: 4 },
+      { d: '2026-11-05', avg: 82, n: 5 },
+      { d: '2026-11-06', avg: 83, n: 5 },
+    ])
+  })
+
+  it('ends on the same value as recentAverage, first readings and all', () => {
+    const log = [
+      { d: '2026-11-08', w: 79 },
+      { d: '2026-11-10', w: 80 },
+      { d: '2026-11-11', w: 83, ins: [{ id: 'b', at: '21:00', w: 83, t: 2 }, { id: 'a', at: '07:00', w: 81, t: 1 }] },
+    ]
+    const line = rollingAverage(log)
+    expect(line[line.length - 1].avg).toBe(recentAverage(log).avg)
+    expect(rollingAverage([{ d: '2026-11-10', w: 80 }])).toEqual([])
   })
 })

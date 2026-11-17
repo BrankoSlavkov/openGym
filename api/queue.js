@@ -158,6 +158,12 @@ export function pinState(S, id, today = dayIn(Date.now(), S.reminder?.tz)) {
 export function effectiveRoutineId(S, iso) {
   const ov = S.dayPlan?.[iso];
   if (ov === 'rest') return null;
+  // Several separate sessions planned on one date (an importer's list, frontend lib/history.js):
+  // the first that still exists is the day's.
+  if (Array.isArray(ov)) {
+    const first = ov.find(id => S.routines?.some(r => r?.id === id));
+    if (first) return first;
+  }
   const pin = pinState(S, ov, iso);
   if (pin === 'open') return ov;
   if (!pin && ov && S.routines?.some(r => r?.id === ov)) return ov;

@@ -3727,6 +3727,8 @@ export default {
   "This month’s challenges": "A hónap kihívásai",
   "Hide until next month": "Elrejtés jövő hónapig",
   "Gold month. Take a bow.": "Arany hónap. Meghajolhatsz.",
+  "{0}-day average": "{0} napos átlag",
+  "None yet. Any exercise you log for the first time this month counts.": "Még egy sincs. Minden gyakorlat számít, amit ebben a hónapban először rögzítesz.",
   "New month, new challenges.": "Új hónap, új kihívások.",
   "Trophy shelf": "Trófeapolc",
   "Gold month": "Arany hónap",

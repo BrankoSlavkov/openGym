@@ -3719,6 +3719,8 @@ export default {
   "This month’s challenges": "Šio mėnesio iššūkiai",
   "Hide until next month": "Slėpti iki kito mėnesio",
   "Gold month. Take a bow.": "Auksinis mėnuo. Pasilenkite.",
+  "{0}-day average": "{0} d. vidurkis",
+  "None yet. Any exercise you log for the first time this month counts.": "Kol kas nėra. Skaičiuojamas kiekvienas pratimas, kurį šį mėnesį užregistruojate pirmą kartą.",
   "New month, new challenges.": "Naujas mėnuo – nauji iššūkiai.",
   "Trophy shelf": "Taurių lentyna",
   "Gold month": "Auksinis mėnuo",

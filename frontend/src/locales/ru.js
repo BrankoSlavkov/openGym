@@ -3728,6 +3728,8 @@ export default {
   "This month’s challenges": "Челленджи месяца",
   "Hide until next month": "Скрыть до следующего месяца",
   "Gold month. Take a bow.": "Золотой месяц. Можно и поклониться.",
+  "{0}-day average": "Среднее за {0} дн.",
+  "None yet. Any exercise you log for the first time this month counts.": "Пока ни одного. Засчитывается любое упражнение, которое вы впервые запишете в этом месяце.",
   "New month, new challenges.": "Новый месяц, новые челленджи.",
   "Trophy shelf": "Полка трофеев",
   "Gold month": "Золотой месяц",

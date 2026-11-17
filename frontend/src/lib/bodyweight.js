@@ -2,7 +2,7 @@
 // moves with water, salt and the last meal by more than it moves in a month, so the number worth
 // following is the week's mean — the one a single weigh-in on the card cannot give you.
 import { isoOf, weekKey } from './format.js'
-import { addWeighIn, readingsOf, readingAt, timeOf } from './weigh-ins.js'
+import { addWeighIn, dailyValue, readingsOf, readingAt, timeOf } from './weigh-ins.js'
 
 /**
  * The weigh-ins grouped into weeks, newest week first. Each week carries its mean, how many
@@ -26,6 +26,48 @@ export function weeklyWeights(bodyweight, ws) {
   })
   weeks.forEach((week, i) => { week.delta = i ? week.avg - weeks[i - 1].avg : null })
   return weeks.reverse()
+}
+
+// ---- Recent average -------------------------------------------------------------------------
+// The mean of the last few days you weighed in, beside the latest weigh-in on the Home card.
+// One value per day, and always the day's first reading (the morning's, before food and water
+// move it), whatever the "Daily value" setting picks for the charts: ten weigh-ins on one day
+// still count once, and as the first of them.
+export const RECENT_AVG_DAYS = 5
+
+/**
+ * The mean of the first weigh-in of each of the last `n` days that have one. Days with no
+ * weigh-in are skipped, not counted as gaps, and the stored order is not relied on.
+ * Returns { avg, n, from, to } (`n` the days it averaged, `from`/`to` their iso dates), or null
+ * with fewer than two such days, where an average would only repeat the one weigh-in.
+ */
+export function recentAverage(bodyweight, n = RECENT_AVG_DAYS) {
+  const days = firstOfDays(bodyweight).slice(-Math.max(1, n))
+  if (days.length < 2) return null
+  return { avg: days.reduce((s, b) => s + b.w, 0) / days.length, n: days.length, from: days[0].d, to: days[days.length - 1].d }
+}
+
+/**
+ * The same average drawn as a line: for every weigh-in day, the mean of the first weigh-in of
+ * it and the `n - 1` weigh-in days before it. The very first day has nothing to average with
+ * and is left out, as recentAverage leaves out a single day. Returns [{ d, avg, n }], oldest first.
+ */
+export function rollingAverage(bodyweight, n = RECENT_AVG_DAYS) {
+  const days = firstOfDays(bodyweight), size = Math.max(1, n), out = []
+  for (let i = 1; i < days.length; i++) {
+    const win = days.slice(Math.max(0, i - size + 1), i + 1)
+    out.push({ d: days[i].d, avg: win.reduce((s, b) => s + b.w, 0) / win.length, n: win.length })
+  }
+  return out
+}
+
+// One { d, w } per day with a weigh-in, `w` its first reading, sorted by day.
+function firstOfDays(bodyweight) {
+  return (Array.isArray(bodyweight) ? bodyweight : [])
+    .filter(b => b?.d)
+    .map(b => ({ d: b.d, w: dailyValue(readingsOf(b), 'first') }))
+    .filter(b => b.w > 0)
+    .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0))
 }
 
 /**

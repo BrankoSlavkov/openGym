@@ -3728,6 +3728,8 @@ export default {
   "This month’s challenges": "Sfide del mese",
   "Hide until next month": "Nascondi fino al mese prossimo",
   "Gold month. Take a bow.": "Mese d’oro. Inchinati pure.",
+  "{0}-day average": "Media di {0} giorni",
+  "None yet. Any exercise you log for the first time this month counts.": "Ancora nessuno. Conta qualsiasi esercizio che registri per la prima volta questo mese.",
   "New month, new challenges.": "Nuovo mese, nuove sfide.",
   "Trophy shelf": "Bacheca dei trofei",
   "Gold month": "Mese d’oro",

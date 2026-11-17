@@ -3689,6 +3689,8 @@ export default {
   "This month’s challenges": "Månedens udfordringer",
   "Hide until next month": "Skjul til næste måned",
   "Gold month. Take a bow.": "Guldmåned. Tag et buk.",
+  "{0}-day average": "Gennemsnit over {0} dage",
+  "None yet. Any exercise you log for the first time this month counts.": "Ingen endnu. Enhver øvelse, du logger for første gang i denne måned, tæller.",
   "New month, new challenges.": "Ny måned, nye udfordringer.",
   "Trophy shelf": "Pokalhylde",
   "Gold month": "Guldmåned",

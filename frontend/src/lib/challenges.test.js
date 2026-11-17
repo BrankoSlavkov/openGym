@@ -200,6 +200,22 @@ describe('progress, per challenge', () => {
     expect(F(S).newEx).toBe(1)
   })
 
+  it('lists the new exercises, first done first, with the name saved for one the catalogue lacks', () => {
+    const S = state({
+      workouts: [
+        lift('2026-10-01'),
+        wo('2026-11-09', [{ id: ROW, sets: sets(1, 50, 10) }, { id: BENCH, sets: sets(1, 50, 10) }]),
+        wo('2026-11-04', [{ id: 'cx_sled', exercise: { n: 'Sled push' }, sets: sets(2, 80, 1) }, { id: ROW, sets: [{ w: 50, r: 10, done: false }] }]),
+      ],
+    })
+    expect(F(S).newExList).toEqual([{ id: 'cx_sled', d: '2026-11-04', name: 'Sled push' }, { id: ROW, d: '2026-11-09', name: null }])
+    const [p] = progressOf(S, { key: '2026-11', picked: [{ id: 'newex', n: 3 }], done: [] })
+    expect(p.have).toBe(2)
+    expect(p.items.map(x => x.id)).toEqual(['cx_sled', ROW])
+    // the other challenges carry no list
+    expect(progressOf(S, { key: '2026-11', picked: [{ id: 'workouts', n: 3 }], done: [] })[0].items).toBeUndefined()
+  })
+
   it('ticks off a muscle group from a set that trains it, not from a helper muscle', () => {
     const S = state({ workouts: [wo('2026-11-04', [{ id: BENCH, sets: sets(3, 60, 10) }, { id: SQUAT, sets: sets(3, 60, 10) }])] })
     // chest and legs: the squat's helpers (lower back, abs) and the press's (shoulders, triceps) do not count
