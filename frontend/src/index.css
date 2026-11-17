@@ -256,10 +256,7 @@ a{color:var(--acc-ink);text-decoration:none}
 :focus-visible{outline:2.5px solid var(--acc-ink);outline-offset:2px;border-radius:6px}
 button,.chip,.tile,.item,.wday,.cal-d,.swatch,.hm-c,.lrow,.seg button,.stp button,.sld
 {-webkit-user-select:none;user-select:none}
-/* Text inside a row that gets typed somewhere else (the Zepp pairing code and address): a long
-   press selects it, the copy button beside it is the quick way. */
-.lrow .zepp-copyable{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
-.lrow .zepp-copyable+.btn.sm,.lrow-m+.btn.sm{margin-inline-start:8px;flex:none}
+.lrow-m+.btn.sm{margin-inline-start:8px;flex:none}
 
 /* icons inherit colour and optical size from their context */
 .icn{

@@ -98,7 +98,6 @@ import IntegrationsPage from './Integrations.jsx'
 import ApiTokensPage from './ApiTokens.jsx'
 import MyTrainerPage from './MyTrainer.jsx'
 import { libraryOn } from '../lib/shared-api.js'
-import ZeppSettingsPage from './ZeppSettings.jsx'
 import ModulesPage from './Modules.jsx'
 import { isOn, presetOf } from '../lib/modules.js'
 import { presetCopy } from '../lib/modules-copy.js'
@@ -512,7 +511,6 @@ export default function Settings({ page = null, find = null, via = null, entryKe
     watch: () => '',
     wear: () => '',
     garmin: () => '',
-    zepp: () => '',
   }
 
   const open = id => {
@@ -596,7 +594,6 @@ export default function Settings({ page = null, find = null, via = null, entryKe
     'health-connect': () => <HealthPage key="health-connect" S={S} toast={toast} android />,
     wear: () => <WearSettingsPage />,
     garmin: () => <GarminSettingsPage />,
-    zepp: () => <ZeppSettingsPage />,
     gym: () => <GymReminderPage />,
     network: () => <NetworkLogPage />,
     voice: () => <VoiceSettings />,

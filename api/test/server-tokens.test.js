@@ -86,7 +86,7 @@ test('a token is no session: every other route refuses it', async t => {
   const { body: { token } } = await h.call('POST', '/api/tokens', { headers: page('u_t_1'), body: { scopes: { workouts: 'apply', plans: 'apply', bodyweight: 'apply', measurements: 'apply', notes: 'view' } } });
   for (const [m, p, body] of [['GET', '/api/me'], ['GET', '/api/data'], ['GET', '/api/data/rev'], ['PUT', '/api/data', { state: { unit: 'lb' } }],
     ['GET', '/api/admin/users'], ['POST', '/api/logout/all'], ['POST', '/api/pair/create'], ['GET', '/api/account/passkeys'],
-    ['POST', '/api/watch/pair'], ['GET', '/api/sharing'], ['POST', '/api/account/delete', { name: 'One' }]]) {
+    ['GET', '/api/sharing'], ['POST', '/api/account/delete', { name: 'One' }]]) {
     const r = await h.call(m, p, { headers: bearer(token), body });
     assert.ok([401, 404].includes(r.status), `${m} ${p} answered ${r.status}`);
   }

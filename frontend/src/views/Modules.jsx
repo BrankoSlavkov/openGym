@@ -37,7 +37,6 @@ function useConnections() {
       if (readWatchStatus() || readGarminLink()) put({ watch: true })
     }
     if (user && !DEMO) {
-      import('../lib/watch-relay.js').then(m => m.relayLinks()).then(links => { if (links.length) put({ watch: true }) }).catch(() => {})
       if ((config?.integrations?.providers || []).includes('webhook')) {
         api('/api/integrations').then(d => {
           const n = (d?.connections || []).filter(c => c.provider === 'webhook' && !c.paused).length

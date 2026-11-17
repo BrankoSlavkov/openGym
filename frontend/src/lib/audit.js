@@ -39,10 +39,6 @@ const LABELS = {
   'auth.oidc.fail': 'Identity provider sign-in failed',
   'auth.oidc.denied': 'Identity provider sign-in refused',
   'admin.oidc.check': 'Checked the identity provider',
-  'auth.watch.pair': 'Created a watch pairing code',
-  'auth.watch.ok': 'Paired a Zepp OS watch',
-  'auth.watch.fail': 'Watch pairing failed',
-  'auth.watch.unlink': 'Unpaired a watch',
   // Scoped tokens (Settings → API tokens). `msg` is the token's name, never the token; on a write,
   // also the categories it changed. A refused token is throttled like other anonymous failures.
   'auth.token.create': 'Made an API token',

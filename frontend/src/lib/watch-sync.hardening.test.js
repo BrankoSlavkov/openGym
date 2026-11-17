@@ -104,8 +104,7 @@ describe('a set for a row the running workout does not have', () => {
   })
 })
 
-// An Apple Watch and a second watch (a Garmin in the same native queue, a Zepp watch over the
-// relay) on one phone. Each numbers its own events from 1, so their `seq` collide.
+// An Apple Watch and a second watch (a Garmin in the same native queue) on one phone. Each numbers its own events from 1, so their `seq` collide.
 describe('two watches on one phone', () => {
   const NOW = 1_800_000_000_000
   function phone (active) {

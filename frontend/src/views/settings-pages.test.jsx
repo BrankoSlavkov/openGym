@@ -156,14 +156,12 @@ describe('the root', () => {
     expect(host.querySelector('.sp-acct .lrow-t').textContent).toBe('This phone')
   })
 
-  // #1105: one Watches row on the phones; the web has only Zepp, so its row stays on the root.
-  it('groups the watches on a phone, and keeps Zepp on the root on the web', () => {
+  // #1105: one Watches row on the phones; the web has no watch page.
+  it('groups the watches on a phone, and shows none on the web', () => {
     const phone = { mobile: true, ios: true, android: false }
     expect(pageVisible('watches', phone)).toBe(true)
     expect(pageVisible('watches', { ...phone, mod: id => id !== 'watch' })).toBe(false)
     expect(pageVisible('watches', { user: { id: 'u' } })).toBe(false)
-    expect(onRoot('zepp', phone)).toBe(false)
-    expect(onRoot('zepp', { user: { id: 'u' } })).toBe(true)
     expect(pageTrail('garmin')).toBe('Watches › Garmin')
     // The Wear OS watch (1.4.5) joins the others under Watches on Android, never a row of its own.
     const android = { mobile: true, ios: false, android: true }
@@ -174,16 +172,15 @@ describe('the root', () => {
     mocks.MOBILE = true
     mount()
     expect(titles()).toContain('Watches')
-    for (const w of ['Apple Watch', 'Garmin', 'Zepp OS watch']) expect(titles()).not.toContain(w)
+    for (const w of ['Apple Watch', 'Garmin']) expect(titles()).not.toContain(w)
     mount('watches')
     // this test phone is not known to be an iPhone, so no Apple Watch (pageVisible above covers it)
-    expect(titles()).toEqual(['Garmin', 'Zepp OS watch'])
+    expect(titles()).toEqual(['Garmin'])
     act(() => rowTitled('Garmin').click())
     expect(mocks.navs).toEqual([['/settings/garmin']])
     mocks.MOBILE = false
     mocks.user = { id: 'u1', name: 'Dana' }
     mount()
-    expect(titles()).toContain('Zepp OS watch')
     expect(titles()).not.toContain('Watches')
   })
 
@@ -300,12 +297,11 @@ describe('the search lands on a row', () => {
     'gym: Checking…', // the page loading
     'gym-find: Current location', // a search result, not a setting
     'voice: Try it', // plays a sample
-    'zepp: Install the watch app', // a link to the install guide
     'integrations: Strava', 'integrations: openNutrition', // brand names, not translated: the Integrations page's own words find them
     'live: Effort', // reads "Effort (RIR)" once effort is on; "Effort per set" answers the word
   ])
   // The other way round (#1105): every row a page shows can be found, so a new row cannot slip
-  // past the search. A row that opens a page (a sub-page, or Zepp inside Watches) counts through
+  // past the search. A row that opens a page (a sub-page) counts through
   // that page's own entry.
   for (const [name, setUp] of Object.entries(scenarios)) it(`${name}: every row on a page is in the search`, async () => {
     setUp()

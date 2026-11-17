@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 // Settings → Modules on the phone app with a Garmin on the watch link (docs/GARMIN.md): switching
-// Watch off asks once, as it does for an Apple Watch, a Wear OS or a Zepp watch, and says the watch
+// Watch off asks once, as it does for an Apple Watch or a Wear OS watch, and says the watch
 // stays paired. Without one it just switches.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'

@@ -3,8 +3,6 @@
 //                          watch app ios/App/Watch
 //   Android + Wear OS      native android/app/.../WatchBridgePlugin.java (the Wearable Data
 //                          Layer), the watch app android/wear (docs/WEAR_OS.md)
-//   any + Zepp OS          lib/watch-relay.js: the same calls over the user's own server (the
-//                          watch's Side Service lives in the Zepp app), watch-zepp/ (docs/ZEPP_OS.md)
 // Both plugins are called WatchBridge and answer the same calls, and both watches read the same
 // snapshot and send the same events, so everything below is the same for either.
 //
@@ -932,15 +930,12 @@ export function drainWatchEvents () {
       const native = await watchPlugin()
       if (!getStateRef || !storeReady()) return []
       const all = []
-      // The native link first, then the others (the Zepp watches' relay), each on its own: one
-      // that cannot be reached keeps nobody else's events waiting.
-      for (const p of [native, ...extraLinks]) {
-        if (!p) continue
+      if (native) {
         try {
-          const { events = [] } = (await p.WatchBridge.drain()) || {}
+          const { events = [] } = (await native.WatchBridge.drain()) || {}
           const done = applyEvents(events, getStateRef)
           if (done.length) await getStateRef()?.saveNow?.()
-          if (done.length) await p.WatchBridge.ack({ ids: done })
+          if (done.length) await native.WatchBridge.ack({ ids: done })
           all.push(...done)
         } catch { /* not now: the next drain tries again */ }
       }
@@ -1138,23 +1133,6 @@ export async function startWatchSync ({ useStore, useUI }) {
   const p = await watchPlugin()
   if (!p) return () => {}
   return runLink(p, { useStore, useUI }, { garmin: true })
-}
-
-// Links besides the phone's own WatchBridge, with the same calls (lib/watch-relay.js). Their
-// events are drained with the native queue's.
-const extraLinks = new Set()
-
-/**
- * Runs the sync below over another link than the native one: `plugin` answers WatchBridge's calls
- * (status, sendSnapshot, drain, ack, addListener). `health: false` for a watch that has no Apple
- * Health, `clips: false` for one that gets no animations. Returns the stop.
- */
-export async function startLinkSync (plugin, { useStore, useUI }, opts = {}) {
-  const p = { WatchBridge: plugin }
-  extraLinks.add(p)
-  let stop = () => {}
-  try { stop = await runLink(p, { useStore, useUI }, opts) } catch { /* the link failed to start: nothing runs */ }
-  return () => { extraLinks.delete(p); stop() }
 }
 
 async function runLink (p, { useStore, useUI }, { health = true, clips: withClips = true, garmin: withGarmin = false } = {}) {
@@ -1375,7 +1353,7 @@ async function runLink (p, { useStore, useUI }, { health = true, clips: withClip
 
 // Test seams.
 export function _setWatchPluginForTest (plugin, getState) { pluginP = Promise.resolve(plugin ? { WatchBridge: plugin } : null); getStateRef = getState || null }
-export function _resetWatchSync () { restClock = null; uiRef = null; extraLinks.clear(); ackListeners.clear(); startedOnWatch.clear(); claimedByWatch.clear(); handlers = null; appHandlers = null; pluginP = null; getStateRef = null; draining = null; drainAgain = false; rerunSoon = false; clearTimeout(rerunTm); rerunTm = null; failedTries.clear(); editedHere = { wid: null, at: 0 }; openedHere = { wid: null, at: 0 }; applyingWatch = false }
+export function _resetWatchSync () { restClock = null; uiRef = null; ackListeners.clear(); startedOnWatch.clear(); claimedByWatch.clear(); handlers = null; appHandlers = null; pluginP = null; getStateRef = null; draining = null; drainAgain = false; rerunSoon = false; clearTimeout(rerunTm); rerunTm = null; failedTries.clear(); editedHere = { wid: null, at: 0 }; openedHere = { wid: null, at: 0 }; applyingWatch = false }
 
 /**
  * Writes `fields` (heart rate) onto one set: in the running session when it is that workout, else in

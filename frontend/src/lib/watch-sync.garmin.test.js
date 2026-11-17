@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('./health-sync.js', () => ({ loadHealth: async () => ({ on: false }), onHealthChange: () => () => {} }))
 
-import { startWatchSync, startLinkSync, _setWatchPluginForTest, _resetWatchSync } from './watch-sync.js'
+import { startWatchSync, _setWatchPluginForTest, _resetWatchSync } from './watch-sync.js'
 import { readGarminLink, writeWatchPrefs } from './watch-settings.js'
 import { GARMIN_SNAPSHOT_VERSION } from './garmin-snapshot.js'
 
@@ -38,11 +38,11 @@ const active = { id: 'w-1', start: 1, cur: 0, entries: [{ id: '0025', sets: [{ w
 const ui = store({ timer: null })
 const lastCall = b => b.sendSnapshot.mock.calls.at(-1)[0]
 
-async function run(b, S, link = false) {
+async function run(b, S) {
   _setWatchPluginForTest(b)
   const st = store({ S })
   _setWatchPluginForTest(b, () => st.getState())
-  const stop = link ? await startLinkSync(b, { useStore: st, useUI: ui }, { health: false, clips: false }) : await startWatchSync({ useStore: st, useUI: ui })
+  const stop = await startWatchSync({ useStore: st, useUI: ui })
   st.setState({ S: { ...S } })
   await vi.runAllTimersAsync()
   return { st, stop }
@@ -90,14 +90,6 @@ describe('a Garmin on the watch link', () => {
     localStorage.setItem('gym_garmin_link_v1', 'true')
     const b = bridge({ paired: true, installed: true })
     const { stop } = await run(b, { ...S0, active })
-    expect(lastCall(b).garmin).toBeUndefined()
-    expect(readGarminLink()).toBe(false)
-    stop()
-  })
-
-  it('the Zepp relay never makes one, whatever its status says', async () => {
-    const b = bridge()
-    const { stop } = await run(b, { ...S0, active }, true)
     expect(lastCall(b).garmin).toBeUndefined()
     expect(readGarminLink()).toBe(false)
     stop()

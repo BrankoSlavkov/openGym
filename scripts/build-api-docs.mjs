@@ -133,7 +133,6 @@ const TAGS = {
   auth: { title: 'Auth', side: 'Passkeys &amp; sessions' },
   pairing: { title: 'Pairing', side: 'Connect the mobile app' },
   oidc: { title: 'OIDC', side: 'Sign in with your identity provider' },
-  watch: { title: 'Watch relay', side: 'Zepp OS watches' },
   password: { title: 'Password', side: 'Optional name &amp; password (PASSWORD_LOGIN)' },
   passkeys: { title: 'Passkeys', side: 'More passkeys &amp; device links' },
   data: { title: 'Data', side: 'State sync' },
