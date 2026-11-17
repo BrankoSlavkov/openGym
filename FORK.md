@@ -53,6 +53,10 @@ there), keeps our lockfiles aside, and stops if real conflicts remain. Expect th
   dependency bump conflicts. Keep our pinned versions (bump one by hand if upstream needs a
   newer version), keep Capacitor out, then run `npm install` to refresh the lockfile.
 - **Files we edited** (see `git log upstream/main..main`): resolve by hand.
+- **`LANGS` in `frontend/src/lib/i18n-core.js`** when upstream adds a language: keep our
+  English-only line.
+- **A new upstream test that fails** because it checks a removed part (a translation, a native
+  file): add it to `frontend/web-only/test-skips.js`. Any other failure is a real bug.
 - **A new `@capacitor/...` import** breaks the frontend build: add a stand-in to
   `frontend/web-only/capacitor/` and its name to `frontend/web-only/alias.js`.
 
