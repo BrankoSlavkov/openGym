@@ -49,28 +49,27 @@ docs/       Guides indexed in docs/README.md; docs/dev/ holds feature design not
 cp .env.example .env
 docker compose up -d --build
 
-# Frontend dev server (hot reload), proxies /api to :3000
-cd frontend && npm install && npm run dev
+# Frontend (fork: Bun + Vite+, the `vp` CLI). Dev server with hot reload, proxies /api to :3000
+cd frontend && bun install && vp dev
 
-# Tests (Node 22, the version CI and the Dockerfiles use)
-cd frontend && npm test                          # vitest run, the whole suite
-cd frontend && npx vitest run src/lib/progression.test.js   # one file
-cd frontend && npx vitest run -t "some test name"           # one test by name
+# Tests
+cd frontend && vp test run                                  # the whole suite
+cd frontend && vp test run src/lib/progression.test.js      # one file
+cd frontend && vp test run -t "some test name"              # one test by name
+cd frontend && vp check                                     # format (TS only), lint, types
 cd api && npm test                               # node --test
 cd mcp && npm test
 
-# Checks CI runs besides the suites (run `npm ci` in the repo root once, for js-yaml)
-cd frontend && node scripts/check-locales.mjs && node scripts/check-source-strings.mjs --strict
+# Checks besides the suites
 node scripts/catalogue/build.mjs --check
 node scripts/build-coach-assets.mjs --check
-node scripts/build-api-docs.mjs --check
 
-# Builds
-cd frontend && npm run build
-cd frontend && npm run build:mobile   # VITE_MOBILE build + 180 px media from catalogue/media + cap sync
+# Build
+cd frontend && vp build
 ```
 
-There is no linter/formatter config and no TypeScript; match the existing style by hand.
+Frontend config is `frontend/vite.config.ts` (Vite+: `lint`, `fmt`, `test` blocks). Oxfmt formats
+TypeScript only; the JavaScript keeps upstream's hand-set style until each file is converted.
 
 GitHub (`github.com/DuarteSantos8/openGym`) is the home of the project; `.github/workflows/mirror.yml`
 pushes `main` and `v*` tags to the GitLab mirror (fast-forward only, never push or merge there).

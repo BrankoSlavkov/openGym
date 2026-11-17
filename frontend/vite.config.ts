@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { defineConfig } from 'vite'
+import { defineConfig, lazyPlugins } from 'vite-plus'
 import react from '@vitejs/plugin-react'
 import { lazyAssets, stampSw } from './scripts/sw-stamp.mjs'
 import { mobileViewport } from './src/lib/viewport-zoom.js'
@@ -26,16 +26,19 @@ const catalogueMedia = {
     const dirs = { '/exercise-media/still/': ['still', '.webp'], '/exercise-media/clip/': ['clip', '.mp4'] }
     const root = resolve(fileURLToPath(new URL('.', import.meta.url)), '../catalogue/media')
     server.middlewares.use((req, res, next) => {
-      const prefix = Object.keys(dirs).find(p => req.url.startsWith(p))
+      const prefix = Object.keys(dirs).find((p) => req.url.startsWith(p))
       if (!prefix) return next()
       const [dir, ext] = dirs[prefix]
       const name = decodeURIComponent(req.url.slice(prefix.length).split('?')[0])
       const file = join(root, dir, name)
-      if (!/^\d{4,5}\.(webp|mp4)$/.test(name) || !name.endsWith(ext) || !existsSync(file)) { res.statusCode = 404; return res.end() }
+      if (!/^\d{4,5}\.(webp|mp4)$/.test(name) || !name.endsWith(ext) || !existsSync(file)) {
+        res.statusCode = 404
+        return res.end()
+      }
       res.setHeader('Content-Type', ext === '.mp4' ? 'video/mp4' : 'image/webp')
       res.end(readFileSync(file))
     })
-  }
+  },
 }
 
 // Optional web analytics (Umami). Injected only when BOTH vars are set at build time,
@@ -48,12 +51,14 @@ const umami = {
   name: 'opengym-umami',
   transformIndexHtml() {
     if (!umamiSrc || !umamiId) return
-    return [{
-      tag: 'script',
-      attrs: { defer: true, src: umamiSrc, 'data-website-id': umamiId },
-      injectTo: 'head'
-    }]
-  }
+    return [
+      {
+        tag: 'script',
+        attrs: { defer: true, src: umamiSrc, 'data-website-id': umamiId },
+        injectTo: 'head',
+      },
+    ]
+  },
 }
 
 // The service worker's cache is named after the build (public/sw.js carries a `__BUILD__`
@@ -69,14 +74,19 @@ let lazy = []
 const swStamp = {
   name: 'opengym-sw-stamp',
   apply: 'build',
-  configResolved(config) { outDir = resolve(config.root, config.build.outDir) },
-  generateBundle(_, bundle) { lazy = lazyAssets(bundle) },
+  configResolved(config) {
+    outDir = resolve(config.root, config.build.outDir)
+  },
+  generateBundle(_, bundle) {
+    lazy = lazyAssets(bundle)
+  },
   closeBundle() {
-    const html = join(outDir, 'index.html'), sw = join(outDir, 'sw.js')
+    const html = join(outDir, 'index.html'),
+      sw = join(outDir, 'sw.js')
     if (!existsSync(html) || !existsSync(sw)) return
     const stamp = createHash('sha256').update(readFileSync(html)).digest('hex').slice(0, 10)
     writeFileSync(sw, stampSw(readFileSync(sw, 'utf8'), { stamp, lazy }))
-  }
+  },
 }
 
 // The phone flavour says so in its index.html. A web build that ran into the same dist/ between
@@ -89,8 +99,11 @@ const flavor = {
   name: 'opengym-flavor',
   transformIndexHtml(html) {
     if (process.env.VITE_MOBILE !== '1') return
-    return { html: mobileViewport(html), tags: [{ tag: 'meta', attrs: { name: 'opengym-flavor', content: 'mobile' }, injectTo: 'head' }] }
-  }
+    return {
+      html: mobileViewport(html),
+      tags: [{ tag: 'meta', attrs: { name: 'opengym-flavor', content: 'mobile' }, injectTo: 'head' }],
+    }
+  },
 }
 
 // The version people are asked for in #install-help and on every bug report. Read from
@@ -108,8 +121,12 @@ const appVersion = process.env.APP_BUILD ? `${pkgVersion}+${process.env.APP_BUIL
 export default defineConfig({
   // __SEASON_CLOCK__: the seasonal QA date hook (src/lib/season-clock.js), only in a build made
   // with VITE_SEASON_CLOCK=1 for screenshots. false everywhere else, so the hook is compiled out.
-  define: { __APP_VERSION__: JSON.stringify(appVersion), __SEASON_CLOCK__: JSON.stringify(process.env.VITE_SEASON_CLOCK === '1') },
-  plugins: [react(), umami, flavor, swStamp, catalogueMedia],
+  define: {
+    __APP_VERSION__: JSON.stringify(appVersion),
+    __SEASON_CLOCK__: JSON.stringify(process.env.VITE_SEASON_CLOCK === '1'),
+  },
+  // lazyPlugins: `vp check`/`vp lint`/`vp fmt` read this config without running the plugins.
+  plugins: lazyPlugins(() => [react(), umami, flavor, swStamp, catalogueMedia]),
   resolve: { alias: webOnlyAlias },
   base: './',
   server: {
@@ -119,10 +136,12 @@ export default defineConfig({
     fs: { allow: ['..'] },
     proxy: {
       '/api': { target: backend, changeOrigin: true, headers: { Origin: apiOrigin } },
-      ...(media ? {
-        '/exercise-media': { target: media, changeOrigin: true }
-      } : {})
-    }
+      ...(media
+        ? {
+            '/exercise-media': { target: media, changeOrigin: true },
+          }
+        : {}),
+    },
   },
   // The iOS app's deployment target is 15.5 (ios/App), so its WebView is Safari 15.5, and the web
   // app follows the same floor. Vite's own default is Safari 16.4: syntax newer than 15.5 went out
@@ -130,5 +149,28 @@ export default defineConfig({
   // lower, scripts/check-bundle-syntax.mjs catches (its test builds the bundle).
   build: { chunkSizeWarningLimit: 1500, target: ['safari15', 'chrome100', 'firefox100', 'edge100'] },
   // Gives happy-dom tests a working localStorage on Node 24+ (#733).
-  test: { setupFiles: ['./src/test-setup.js'], ...webOnlyTestConfig }
+  test: { setupFiles: ['./src/test-setup.js'], ...webOnlyTestConfig },
+  // Fork (FORK.md, migration phase 1): Oxfmt formats TypeScript only. The JavaScript is upstream's
+  // hand-set style; each file is formatted when it is converted to TypeScript, not all at once.
+  fmt: {
+    ignorePatterns: ['dist/**', '**/*.{js,jsx,mjs,cjs,json,css,md,html}'],
+    singleQuote: true,
+    semi: false,
+    printWidth: 120,
+  },
+  lint: {
+    ignorePatterns: [
+      'dist/**',
+      'coverage/**',
+      'src/lib/exercises-data.js',
+      'src/lib/instr/**',
+      'src/lib/exercise-names/**',
+      'src/lib/exercise-desc/**',
+    ],
+    rules: {
+      // `ok && run()` and `cond ? a() : b()` as statements are the house style.
+      'no-unused-expressions': ['warn', { allowShortCircuit: true, allowTernary: true }],
+      'unicorn/no-useless-fallback-in-spread': 'off',
+    },
+  },
 })

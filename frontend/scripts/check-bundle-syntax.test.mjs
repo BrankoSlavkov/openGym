@@ -52,7 +52,7 @@ describe('the built web bundle', () => {
   it('has nothing Safari 15.5, the iOS deployment target, cannot run', () => {
     const out = mkdtempSync(join(tmpdir(), 'og-bundle-syntax-'))
     try {
-      execFileSync(process.execPath, [join(frontend, 'node_modules/vite/bin/vite.js'), 'build', '--outDir', out, '--emptyOutDir', '--logLevel', 'error'],
+      execFileSync(process.execPath, [join(frontend, 'node_modules/vite-plus/bin/vp'), 'build', '--outDir', out, '--emptyOutDir', '--logLevel', 'error'],
         { cwd: frontend, stdio: 'pipe', env: { ...process.env, NODE_ENV: 'production' } })
       expect(checkBundle(out)).toEqual([])
     } finally { rmSync(out, { recursive: true, force: true }) }

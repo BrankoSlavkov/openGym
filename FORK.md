@@ -80,4 +80,4 @@ swaps in upstream's prebuilt images, which lack this fork's changes.
 ## Dependencies
 
 Every `package.json` pins exact versions. To upgrade, set the new version and run `npm install`
-in that folder (`bun install` in `frontend/` once phase 1 is in). Read the package's migration guide before a major version bump.
+in that folder; in `frontend/` use `bun add <pkg>@<version>` (Bun, `bun.lock`). Read the package's migration guide before a major version bump.

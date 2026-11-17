@@ -4,11 +4,11 @@
   "version": "1.4.5",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "dev": "vp dev",
+    "build": "vp build",
+    "preview": "vp preview",
+    "test": "vp test run",
+    "test:watch": "vp test",
     "test:fatigue-probe": "node scripts/fatigue-monotonic-probe.mjs",
     "pdf:check": "node scripts/pdf/render-samples.mjs --out pdf-samples --langs en --paper A4,Letter --check"
   },
@@ -25,7 +25,13 @@
     "fast-check": "4.10.2",
     "happy-dom": "21.0.4",
     "linkedom": "0.18.15",
-    "vite": "8.3.8",
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.6.0",
+    "vitest": "5.1.0",
+    "vite-plus": "1.6.0"
+  },
+  "packageManager": "bun@1.4.4",
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.6.0",
     "vitest": "5.1.0"
   }
 }

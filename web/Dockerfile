@@ -13,18 +13,20 @@ FROM --platform=$BUILDPLATFORM node:26-alpine AS build
 # have to keep the same relative position they have in the repository. Copying frontend/ alone
 # is exactly what made the v1.2.15 web image fail to build.
 WORKDIR /app/frontend
-COPY frontend/package.json frontend/package-lock.json* ./
-# --ignore-scripts: the web image only needs `vite build`, and no postinstall should be able to
-# break it (@capacitor/assets' sharp download once timed out on the shared runners; the icon
-# tool is now run with npx, docs/MOBILE.md, and not installed here).
-RUN npm ci --ignore-scripts
+# Fork: the frontend installs with Bun (bun.lock) and builds with Vite+ (`vp build`, which runs
+# on this image's Node). Bun is copied in as a single binary from its official image.
+COPY --from=oven/bun:1.4.4-alpine /usr/local/bin/bun /usr/local/bin/bun
+COPY frontend/package.json frontend/bun.lock ./
+# --ignore-scripts: the web image only needs the build, and no postinstall should be able to
+# break it (@capacitor/assets' sharp download once timed out on the shared runners).
+RUN bun install --frozen-lockfile --ignore-scripts
 COPY api/coach/core/ /app/api/coach/core/
 COPY frontend/ ./
 # Which build this is, shown in the app as "1.3.8+<build>" next to the version. Without it every
 # image built between two releases calls itself the same thing, and "which build are you running?"
 # cannot be answered from the phone. Unset, the app reports package.json's version as before.
 ARG APP_BUILD=""
-RUN APP_BUILD="$APP_BUILD" npm run build
+RUN APP_BUILD="$APP_BUILD" bun run build
 
 FROM nginxinc/nginx-unprivileged:1-alpine
 # Same reason as in api/Dockerfile: alpine fixes land faster than the nginx image is rebuilt.
