@@ -2203,6 +2203,49 @@ paths:
                   wid: { type: string, description: 'The write id (`_wid`) of the stored document; absent before its first write.' }
         '401': { $ref: '#/components/responses/Unauthorized' }
 
+  /api/live:
+    get:
+      tags: [data]
+      summary: The workout running now on any of the caller's devices
+      description: |
+        The in-progress session (`active`), which `PUT /api/data` leaves out, kept on its own so a
+        workout started on one device can be carried on from another. `at` is the stamp of the
+        last write; `active` is null when none is running (or the last one was finished).
+      responses:
+        '200':
+          description: The shared running workout.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/LiveSession' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+    put:
+      tags: [data]
+      summary: Replace the shared running workout
+      description: |
+        The newest stamp wins. A write whose `at` is not newer than the stored one is refused with
+        409 and the stored copy, which the device then takes as its own.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LiveSession' }
+      responses:
+        '200':
+          description: Stored.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  at: { type: number }
+        '400': { description: A malformed body or a stamp too far in the future. }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '409':
+          description: A newer copy is stored; it is returned.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/LiveSession' }
+
   /api/nudge-check:
     get:
       tags: [data]
@@ -5960,6 +6003,15 @@ components:
           example: { error: "that code is wrong, used or expired", code: "link-invalid" }
 
   schemas:
+    LiveSession:
+      type: object
+      required: [at]
+      properties:
+        active:
+          type: [object, 'null']
+          description: The session as the app holds it (`entries` and the rest), or null.
+        unit: { type: string, enum: [kg, lb], description: The unit the session's numbers are in. }
+        at: { type: number, description: The writer's stamp (milliseconds); the newest wins. }
     IntegrationEvent:
       type: string
       enum: [workout.finished, workout.pr, weighin.logged]

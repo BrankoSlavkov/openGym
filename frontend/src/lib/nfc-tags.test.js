@@ -12,17 +12,14 @@ const known = id => ['0025', '0032', 'mine1'].includes(id)
 describe('tagUrl / parseTagUrl', () => {
   it('round-trips every kind of sticker', () => {
     for (const tag of [
-      { kind: 'checkin', start: true, card: null },
-      { kind: 'checkin', start: false, card: null },
-      { kind: 'checkin', start: false, card: 'lq3k2abcd' },
+      { kind: 'start' },
       { kind: 'exercise', id: '0025' },
       { kind: 'exercise', id: 'mk9x1z_custom-2' },
     ]) expect(parseTagUrl(tagUrl(tag))).toEqual(tag)
   })
 
   it('writes short https links on opengym.ch', () => {
-    expect(tagUrl({ kind: 'checkin', start: true })).toBe('https://opengym.ch/nfc?do=start')
-    expect(tagUrl({ kind: 'checkin', start: false, card: 'c1' })).toBe('https://opengym.ch/nfc?do=checkin&card=c1')
+    expect(tagUrl({ kind: 'start' })).toBe('https://opengym.ch/nfc?do=start')
     expect(tagUrl({ kind: 'exercise', id: '0025' })).toBe('https://opengym.ch/nfc?ex=0025')
     // NTAG213 holds 137 bytes of NDEF: even a long custom id stays far below.
     expect(tagUrl({ kind: 'exercise', id: 'x'.repeat(64) }).length).toBeLessThan(110)
@@ -32,22 +29,24 @@ describe('tagUrl / parseTagUrl', () => {
     expect(() => tagUrl({ kind: 'exercise', id: '../etc' })).toThrow()
     expect(() => tagUrl({ kind: 'exercise', id: '' })).toThrow()
     expect(() => tagUrl({ kind: 'nope' })).toThrow()
-    // A card id that is not one is left off, not written.
-    expect(tagUrl({ kind: 'checkin', card: 'a b' })).toBe('https://opengym.ch/nfc?do=checkin')
+    // No gym check-in in this fork: nothing writes a check-in sticker.
+    expect(() => tagUrl({ kind: 'checkin' })).toThrow()
+    expect(() => tagUrl({ kind: 'open' })).toThrow()
   })
 
   it('reads the opengym:// forms, from opengym.ch/nfc and written by hand', () => {
-    expect(parseTagUrl('opengym://nfc?do=start')).toEqual({ kind: 'checkin', start: true, card: null })
+    expect(parseTagUrl('opengym://nfc?do=start')).toEqual({ kind: 'start' })
     expect(parseTagUrl('opengym://nfc?ex=0032')).toEqual({ kind: 'exercise', id: '0032' })
-    expect(parseTagUrl('opengym://checkin')).toEqual({ kind: 'checkin', start: false, card: null })
-    expect(parseTagUrl('opengym://checkin?start=1&card=c1')).toEqual({ kind: 'checkin', start: true, card: 'c1' })
-    expect(parseTagUrl('opengym://start')).toEqual({ kind: 'checkin', start: true, card: null })
+    expect(parseTagUrl('opengym://checkin')).toEqual({ kind: 'open' })
+    expect(parseTagUrl('opengym://checkin?start=1&card=c1')).toEqual({ kind: 'start' })
+    expect(parseTagUrl('https://opengym.ch/nfc?do=checkin&card=c1')).toEqual({ kind: 'open' })
+    expect(parseTagUrl('opengym://start')).toEqual({ kind: 'start' })
     expect(parseTagUrl('opengym://exercise/0025')).toEqual({ kind: 'exercise', id: '0025' })
     expect(parseTagUrl('OPENGYM://exercise/0025/')).toEqual({ kind: 'exercise', id: '0025' })
   })
 
   it('takes www, a trailing slash and the .html page', () => {
-    expect(parseTagUrl('https://www.opengym.ch/nfc/?do=start')).toEqual({ kind: 'checkin', start: true, card: null })
+    expect(parseTagUrl('https://www.opengym.ch/nfc/?do=start')).toEqual({ kind: 'start' })
     expect(parseTagUrl('https://opengym.ch/nfc.html?ex=0025')).toEqual({ kind: 'exercise', id: '0025' })
   })
 
@@ -64,30 +63,23 @@ describe('tagUrl / parseTagUrl', () => {
 
 describe('routeTag', () => {
   it('a start sticker starts today’s planned session', () => {
-    expect(routeTag(plan(), { kind: 'checkin', start: true }, { today: TODAY })).toEqual({ do: 'start', ids: ['push'] })
+    expect(routeTag(plan(), { kind: 'start' }, { today: TODAY })).toEqual({ do: 'start', ids: ['push'] })
   })
 
   it('never starts a second workout: a running one opens instead', () => {
     const S = plan({ active: { id: 'a', start: 1, entries: [] } })
-    expect(routeTag(S, { kind: 'checkin', start: true }, { today: TODAY })).toEqual({ do: 'open-workout' })
+    expect(routeTag(S, { kind: 'start' }, { today: TODAY })).toEqual({ do: 'open-workout' })
   })
 
   it('nothing planned, or only an empty routine: the Start screen', () => {
-    expect(routeTag(plan({ week: {} }), { kind: 'checkin', start: true }, { today: TODAY })).toEqual({ do: 'open-start' })
-    expect(routeTag(plan({ week: { 2: ['empty'] } }), { kind: 'checkin', start: true }, { today: TODAY })).toEqual({ do: 'open-start' })
-    expect(routeTag({}, { kind: 'checkin', start: true }, { today: TODAY })).toEqual({ do: 'open-start' })
+    expect(routeTag(plan({ week: {} }), { kind: 'start' }, { today: TODAY })).toEqual({ do: 'open-start' })
+    expect(routeTag(plan({ week: { 2: ['empty'] } }), { kind: 'start' }, { today: TODAY })).toEqual({ do: 'open-start' })
+    expect(routeTag({}, { kind: 'start' }, { today: TODAY })).toEqual({ do: 'open-start' })
   })
 
-  it('a check-in sticker shows the membership code, on its card while that exists', () => {
-    const S = plan({ gymCards: [{ id: 'c1' }, { id: 'c2' }] })
-    expect(routeTag(S, { kind: 'checkin', start: false, card: 'c2' }, { today: TODAY })).toEqual({ do: 'checkin', card: 'c2' })
-    expect(routeTag(S, { kind: 'checkin', start: false, card: 'gone' }, { today: TODAY })).toEqual({ do: 'checkin', card: null })
-  })
-
-  it('a check-in sticker with no code to show (none saved, or check-in off) opens Start, never starts', () => {
-    expect(routeTag(plan(), { kind: 'checkin', start: false }, { today: TODAY })).toEqual({ do: 'open-start' })
-    expect(routeTag(plan({ checkIn: false, gymCards: [{ id: 'c1' }] }), { kind: 'checkin', start: false }, { today: TODAY })).toEqual({ do: 'open-start' })
-    expect(routeTag(plan({ active: { entries: [] } }), { kind: 'checkin', start: false }, { today: TODAY })).toEqual({ do: 'open-workout' })
+  it('an upstream check-in sticker opens Start or the running workout, never starts', () => {
+    expect(routeTag(plan(), { kind: 'open' }, { today: TODAY })).toEqual({ do: 'open-start' })
+    expect(routeTag(plan({ active: { entries: [] } }), { kind: 'open' }, { today: TODAY })).toEqual({ do: 'open-workout' })
   })
 
   it('a machine sticker jumps to its exercise in the running workout', () => {
@@ -111,7 +103,7 @@ describe('routeTag', () => {
 
   it('ignores what it does not know', () => {
     expect(routeTag(plan(), null)).toEqual({ do: 'ignore' })
-    expect(routeTag(null, { kind: 'checkin', start: true })).toEqual({ do: 'ignore' })
+    expect(routeTag(null, { kind: 'start' })).toEqual({ do: 'ignore' })
     expect(routeTag(plan(), { kind: 'weird' })).toEqual({ do: 'ignore' })
   })
 })

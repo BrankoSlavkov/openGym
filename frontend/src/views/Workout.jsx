@@ -6,6 +6,8 @@ import { useStore } from '../store/useStore.js'
 import { workoutControls } from '../lib/workout-controls.js'
 import { useUI } from '../store/useUI.js'
 import { autoHoldsFor, forecastHolds, nextAutoHold } from '../lib/auto-holds.js'
+import { autoRunRestSec } from '../lib/auto-run.js'
+import AutoRunRow from '../components/AutoRunButton.jsx'
 import { EXIDX, exOr, betterWeight, isAssisted } from '../lib/exercises.js'
 import { bestsFor, lastRowFor, oddValues } from '../lib/typo-check.js'
 import { usesBar } from '../lib/bar.js'
@@ -958,7 +960,7 @@ function ExerciseBlock({ entryIdx, compact, listed, dense, editing, onToggle, on
       {onNoProg && <button type="button" className="chip" onClick={() => onNoProg(false)}>{t('Undo')}</button>}
     </div>}
     {/* compact view keeps the plan line: it is what the rows are measured against */}
-    {dense && planLine}
+    {dense && <AutoRunRow show={timed && !editing} target={entry.target}>{planLine}</AutoRunRow>}
     {wc.pairButtons && !compact && !dense && (onPairPrev || onPairNext) && <div className="row" style={{ gap: 6, flexWrap: 'wrap', marginBottom: 8 }}>
       {onPairPrev && <Button size="xs" variant="tinted" icon="link" title={t('Make superset with previous')} aria-label={several ? inEx(t('Make superset with previous')) : undefined} onClick={onPairPrev}>{t('Make superset with previous')}</Button>}
       {onPairNext && <Button size="xs" variant="tinted" icon="link" title={t('Make superset with next')} aria-label={several ? inEx(t('Make superset with next')) : undefined} onClick={onPairNext}>{t('Make superset with next')}</Button>}
@@ -995,7 +997,7 @@ function ExerciseBlock({ entryIdx, compact, listed, dense, editing, onToggle, on
     {/* Rows set for this one workout by a coach or planner (#972, lib/session-targets.js). */}
     {entry.sessionTarget && <div className="exnote" style={{ display: 'flex', gap: 6, alignItems: 'baseline' }}><Icon name="calendar" style={{ fontSize: 'var(--fs-footnote)', flex: 'none', transform: 'translateY(1px)' }} />
       <span>{entry.sessionTarget.by ? t('Today’s rows come from {0}. Your routine stays as it is.', entry.sessionTarget.by) : t('Today’s rows were planned for this day. Your routine stays as it is.')}</span></div>}
-    {planLine}
+    <AutoRunRow show={timed && !editing} target={entry.target}>{planLine}</AutoRunRow>
     {refLine}
     {guidance && onProgressionSettings && <button type="button" className={'progline' + (plan.kind === 'deload' ? ' warn' : '')}
       aria-label={inEx(t('Open exercise settings'))} onClick={onProgressionSettings}>
@@ -2309,6 +2311,9 @@ function ActiveWorkout() {
         const into = transitionRestFor(fresh.entries, freshUnit || [idx], useStore.getState().S.nextRestSec)
         if (into !== null) restAfter = into
       }
+      // Fork: the card's Auto button pauses 15 s before the next hold (lib/auto-run.js).
+      const autoRest = autoRunRestSec(useStore.getState().S, { unit: freshUnit || [idx], ownSetRest: ownRest, next: nextAutoHold(useStore.getState().S, timedAt) })
+      if (autoRest != null) restAfter = autoRest
 
       // A re-check of finished work must not navigate or reopen a sheet, but it may still owe
       // you a rest — see restOnRecheck, and the other half of issue #3. A rest that already ran

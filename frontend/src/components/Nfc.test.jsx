@@ -54,7 +54,7 @@ const EX_A = Object.keys(EXIDX)[0]
 const EX_B = Object.keys(EXIDX)[1]
 
 beforeEach(() => {
-  m.S = { routines: [{ id: 'r1', name: 'Push', ex: [{ id: EX_A }] }], week: { [today()]: ['r1'] }, dayPlan: {}, workouts: [], queue: { ids: [] }, gymCards: [], customEx: [] }
+  m.S = { routines: [{ id: 'r1', name: 'Push', ex: [{ id: EX_A }] }], week: { [today()]: ['r1'] }, dayPlan: {}, workouts: [], queue: { ids: [] }, customEx: [] }
   m.sheets = []; m.toasts = []; m.navs = []
   m.write = () => Promise.resolve(true)
   _resetNfcRunForTests()
@@ -69,23 +69,11 @@ describe('setting up a sticker', () => {
     nfcStickerSheet()
     await openSheet()
     expect(host.textContent).toContain('Set up an NFC sticker')
-    // Without a membership code there is nothing to check in with: only the start choice shows.
+    // No gym check-in in this fork: the start choice is the only one.
     expect(host.textContent).not.toContain('Just check in')
     await click(button('Write sticker'))
     expect(writeTag).toHaveBeenCalledWith('https://opengym.ch/nfc?do=start', expect.objectContaining({ alert: expect.any(String) }))
     expect(host.textContent).toContain('Sticker ready')
-  })
-
-  it('a check-in sticker carries the chosen code when there are several', async () => {
-    m.S.gymCards = [{ id: 'c1', label: 'City' }, { id: 'c2', label: 'Uni' }]
-    m.S.lastGymCardId = 'c2'
-    nfcStickerSheet()
-    await openSheet()
-    await click(button('Just check in'))
-    expect(host.textContent).toContain('Which code')
-    await click(button('City'))
-    await click(button('Write sticker'))
-    expect(writeTag).toHaveBeenCalledWith('https://opengym.ch/nfc?do=checkin&card=c1', expect.anything())
   })
 
   it('a failed write says why and offers to try again; a cancel goes quietly back', async () => {
@@ -137,11 +125,10 @@ describe('a tapped sticker', () => {
     expect(startFlow).toHaveBeenCalledTimes(1)
   })
 
-  it('a check-in sticker opens the code screen on its card', () => {
-    m.S.gymCards = [{ id: 'c1' }, { id: 'c2' }]
+  it('an upstream check-in sticker opens the workout screen and starts nothing', () => {
     handleTagLink('https://opengym.ch/nfc?do=checkin&card=c2', 1000)
-    expect(m.S.lastGymCardId).toBe('c2')
-    expect(m.navs).toEqual(['/checkin'])
+    expect(startFlow).not.toHaveBeenCalled()
+    expect(m.navs).toEqual(['/workout'])
   })
 
   it('a machine sticker jumps to its exercise in the session', () => {

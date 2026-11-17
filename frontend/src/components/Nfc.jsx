@@ -7,7 +7,7 @@ import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
 import { todayISO, exerciseNameText } from '../lib/format.js'
 import { EXIDX } from '../lib/exercises.js'
-import { nav, navToWorkout } from '../lib/nav.js'
+import { navToWorkout } from '../lib/nav.js'
 import { platformNow } from '../lib/platform-now.js'
 import { tagUrl, parseTagUrl, routeTag, tagDebouncer } from '../lib/nfc-tags.js'
 import { nfcSupport, writeTag, cancelWrite, onTagLink } from '../lib/nfc.js'
@@ -74,27 +74,16 @@ export function WriteSticker({ url, close }) {
 }
 
 function StickerSetup({ close }) {
-  const S = useStore(s => s.S)
-  const cards = S.checkIn !== false && Array.isArray(S.gymCards) ? S.gymCards : []
-  const [mode, setMode] = useState('start')
-  const [card, setCard] = useState(() => (cards.some(c => c.id === S.lastGymCardId) ? S.lastGymCardId : cards[0]?.id) || null)
-  const checkin = mode === 'checkin' && cards.length > 0
-  const url = tagUrl({ kind: 'checkin', start: !checkin, card: checkin && cards.length > 1 ? card : null })
+  const url = tagUrl({ kind: 'start' })
   return <>
     <h3>{t('Set up an NFC sticker')}</h3>
     <div className="small muted" style={{ marginBottom: 10 }}>{t('Put it on your locker, your bag or the gym door. One tap with your phone and you’re in.')}</div>
     <Section title={t('When you tap it')}>
       <Row icon="play" iconTint="var(--green)" title={t('Start today’s workout')}
         subtitle={t('Starts what’s planned for today, or opens the one already running.')}
-        accessory={mode === 'start' || !cards.length ? 'check' : 'none'} onClick={() => setMode('start')} />
-      {cards.length > 0 && <Row icon="qr" iconTint="var(--blue)" title={t('Just check in')}
-        subtitle={t('Shows your gym membership code, ready for the scanner.')}
-        accessory={checkin ? 'check' : 'none'} onClick={() => setMode('checkin')} />}
+        accessory="check" />
     </Section>
-    {checkin && cards.length > 1 && <Section title={t('Which code')}>
-      {cards.map(c => <Row key={c.id} title={c.label || t('Gym card')} accessory={card === c.id ? 'check' : 'none'} onClick={() => setCard(c.id)} />)}
-    </Section>}
-    <WriteSticker key={url} url={url} close={close} />
+    <WriteSticker url={url} close={close} />
   </>
 }
 export const nfcStickerSheet = () => ui().openSheet(close => <StickerSetup close={close} />)
@@ -148,17 +137,13 @@ export function handleTagLink(url, now = Date.now()) {
   if (now < quietUntil || !fresh(url, now)) return true
   const S = useStore.getState().S
   const r = routeTag(S, tag, { today: todayISO(), hasExercise: id => !!EXIDX[id] })
-  // A check-in sticker at a place linked to an equipment profile switches to that gym (#808). A
-  // start sticker gets there through beginWorkout, which does the same.
-  if (tag.kind === 'checkin' && r.do !== 'start') autoGymHere()
+  // A sticker at a place linked to an equipment profile switches to that gym (#808) even when it
+  // starts nothing. One that starts a workout gets there through beginWorkout, which does the same.
+  if ((tag.kind === 'start' || tag.kind === 'open') && r.do !== 'start') autoGymHere()
   switch (r.do) {
     case 'start': startFlow(r.ids); break
     case 'open-workout':
     case 'open-start': toWorkout(); break
-    case 'checkin':
-      if (r.card && r.card !== S.lastGymCardId) useStore.getState().update(s => { s.lastGymCardId = r.card })
-      nav('/checkin')
-      break
     case 'jump':
       useStore.getState().update(s => { if (s.active?.entries?.[r.idx]) s.active.cur = r.idx })
       toWorkout()

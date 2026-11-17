@@ -5,6 +5,7 @@ import { useStore } from '../store/useStore.js'
 import { countedS } from '../lib/counted-log.js'
 import { dayPhotosOf, serverTakesDayPhotos } from '../lib/day-photos.js'
 import { EXIDX, matchExercise, betterWeight, isAssisted } from '../lib/exercises.js'
+import BodyWeightNow, { bwAvgOverlay } from '../components/BodyWeightNow.jsx'
 import { lastBW, setLabel, modeOf, effortOf, entriesForExercise, metricEntriesForExercise, metricModeForEntry, bestWeightForEntry, completedRepsOf, workoutDay, workoutAt, lifetimeVolume } from '../lib/history.js'
 import { fmtNum, fmtDate, fmtVol, fmtDur, todayISO, isoOf, weekKey, weekStartOf, exerciseNameText } from '../lib/format.js'
 import { entryTimes, exerciseTimeRows } from '../lib/exercise-time.js'
@@ -979,7 +980,8 @@ export default function Stats() {
       </div>
       <Segmented className="seg-range" of={t('Body weight')} value={range} onChange={setRange}
         options={rangeOptions()} />
-      <div className="chart"><LineChart points={bwPts} h={160} unit={S.unit} goal={S.targetW} /></div>
+      <BodyWeightNow S={S} />
+      <div className="chart"><LineChart points={bwPts} h={160} unit={S.unit} goal={S.targetW} overlay={bwAvgOverlay(S, bwPts)} /></div>
       {/* the weekly rate and, with one set, how it sits in its corridor (#759) */}
       {S.bodyweight.length > 0 && <WeightRate S={S} />}
       {/* every weigh-in, week by week with its average (Discord 'Weight') */}

@@ -4,6 +4,7 @@ import App from './App.jsx'
 import { MOBILE } from './lib/mobile.js'
 import { useStore } from './store/useStore.js'
 import { startMediaSync } from './lib/media-sync.js'
+import { startLiveSync } from './store/live-sync.js'
 import { startNativeKeyboard } from './lib/native-keyboard.js'
 import { registerDailyFormSource } from './lib/daily-form.js'
 // The Coach's and the admin dashboard's styles stay in the main stylesheet, in the place they
@@ -45,6 +46,8 @@ else render()
 // The photos and videos of custom exercises, in every build (the phone and the demo included):
 // uploads of what the server lacks, the local clean-up, and the plan's files kept offline.
 startMediaSync(useStore)
+// The running workout on every device of the profile (fork feature, store/live-sync.js).
+startLiveSync(useStore)
 
 // Android 15 does not resize the page for the soft keyboard; the app says how much it covers and
 // this keeps the focused field above it. Idle everywhere else.

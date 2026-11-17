@@ -60,6 +60,7 @@ import { currentConsent } from './consent.js';
 import { oidcConfig } from './oidc/config.js';
 import { createProvider } from './oidc/provider.js';
 import { oidcRoutes } from './oidc/routes.js';
+import { liveStore, liveSessionRoutes } from './live-session.js';
 
 const PORT = +(process.env.PORT || 3000);
 const DATA = process.env.DATA_DIR || '/data';
@@ -238,6 +239,8 @@ function atomicWrite(file, content, mode) { durableWrite(file, content, mode); }
 // synced more writes ago than this merges on its next pull instead of taking the server's copy.
 const WID_KEEP = 50;
 const stateFile = uid => path.join(DATA, 'state-' + uid.replace(/[^a-zA-Z0-9_-]/g, '') + '.json');
+// The workout running now, shared between a profile's devices (live-session.js, fork feature).
+const LIVE = liveStore(DATA);
 // When a profile last fetched its document (GET /api/data). The document's own `_ts` moves only
 // on a push, so a device that only ever read — a second phone, a profile that trains elsewhere
 // and just looks — showed "last sync never" in the admin dashboard (QA 1.3.9). Kept on the user
@@ -1557,6 +1560,7 @@ function removeAccount(u) {
   presence.delete(u.id);
   // The training history and any Coach credential of theirs, both outside db.json.
   try { fs.unlinkSync(stateFile(u.id)); } catch { /* already gone */ }
+  LIVE.removeUser(u.id);
   try { coachConfig.clearProfileAuth(u.id); } catch { /* nothing stored */ }
   // The Coach's own record of them: plans waiting for a yes, the job history, the cohort switch.
   try { coachJobs.removeUser(u.id); } catch (e) { console.error('coach: could not remove the record of', u.id, e.message); }
@@ -3003,6 +3007,7 @@ const routes = {
 
   // Always there: more passkeys and device links need nothing an instance has to switch on.
   ...passkeyRoutes,
+  ...liveSessionRoutes(LIVE, { readSession, json, readBody }),
   ...(oidcApi ? oidcApi.routes : {}),
 
   // `rev` is the server's own count of writes to this profile (also stored inside the document as

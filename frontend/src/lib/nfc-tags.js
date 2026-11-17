@@ -4,15 +4,18 @@
 // in Chrome on Android). Two kinds:
 //
 //   https://opengym.ch/nfc?do=start            start today's workout (or open the one running)
-//   https://opengym.ch/nfc?do=checkin&card=ID  show the gym membership code (views/CheckIn.jsx)
 //   https://opengym.ch/nfc?ex=ID               a machine: jump to that exercise in the workout
+//
+// Upstream also writes do=checkin stickers (show the gym membership code). This fork has no gym
+// check-in, so one of those reads as { kind: 'open' }: it opens the workout or the Start screen
+// and starts nothing (with start=1 it is a start sticker).
 //
 // An https link and not only our own scheme, because that is what a phone reads with the app
 // closed: Android hands the tag to the app through the NDEF_DISCOVERED filter in the manifest,
 // and iOS background tag reading only routes web links (custom schemes are not supported there);
 // until opengym.ch is an associated domain of the iPhone app, the link opens opengym.ch/nfc in
 // Safari, which hands it on as opengym://nfc?... A phone without openGym lands on that page too.
-// The short opengym:// forms (opengym://checkin, opengym://exercise/ID) are read as well.
+// The short opengym:// forms (opengym://start, opengym://exercise/ID) are read as well.
 //
 // Only our own stickers: nothing here reads, copies or emulates a gym's access card.
 import { effectiveRoutineIds, effectiveRoutines } from './history.js'
@@ -24,17 +27,15 @@ export const SCHEME = 'opengym'
 const ID_RE = /^[A-Za-z0-9_-]{1,64}$/
 const cleanId = v => (typeof v === 'string' && ID_RE.test(v) ? v : null)
 
-/** The link a sticker gets: { kind: 'checkin', start, card } or { kind: 'exercise', id }. */
+/** The link a sticker gets: { kind: 'start' } or { kind: 'exercise', id }. */
 export function tagUrl(tag) {
   const q = new URLSearchParams()
   if (tag?.kind === 'exercise') {
     const id = cleanId(String(tag.id ?? ''))
     if (!id) throw new Error('bad exercise id')
     q.set('ex', id)
-  } else if (tag?.kind === 'checkin') {
-    q.set('do', tag.start ? 'start' : 'checkin')
-    const card = cleanId(tag.card)
-    if (card && !tag.start) q.set('card', card)
+  } else if (tag?.kind === 'start') {
+    q.set('do', 'start')
   } else {
     throw new Error('unknown tag')
   }
@@ -45,8 +46,8 @@ const fromQuery = q => {
   const ex = q.get('ex')
   if (ex != null) { const id = cleanId(ex); return id ? { kind: 'exercise', id } : null }
   const what = q.get('do')
-  if (what === 'start') return { kind: 'checkin', start: true, card: null }
-  if (what === 'checkin') return { kind: 'checkin', start: q.get('start') === '1', card: cleanId(q.get('card')) }
+  if (what === 'start') return { kind: 'start' }
+  if (what === 'checkin') return { kind: q.get('start') === '1' ? 'start' : 'open' }
   return null
 }
 
@@ -70,8 +71,8 @@ export function parseTagUrl(raw) {
   const host = (u.hostname || '').toLowerCase()
   const rest = u.pathname.replace(/^\/+/, '').replace(/\/+$/, '')
   if (host === 'nfc' && !rest) return fromQuery(u.searchParams)
-  if (host === 'start' && !rest) return { kind: 'checkin', start: true, card: null }
-  if (host === 'checkin' && !rest) return { kind: 'checkin', start: u.searchParams.get('start') === '1', card: cleanId(u.searchParams.get('card')) }
+  if (host === 'start' && !rest) return { kind: 'start' }
+  if (host === 'checkin' && !rest) return { kind: u.searchParams.get('start') === '1' ? 'start' : 'open' }
   if (host === 'exercise') { const id = cleanId(rest); return id ? { kind: 'exercise', id } : null }
   return null
 }
@@ -83,7 +84,6 @@ const liveSession = S => !!S?.active && !S.active.editingWorkoutId && !S.active.
  *   { do: 'start', ids }       today's planned session, through the usual Start (weigh-in first)
  *   { do: 'open-workout' }     a workout is running already: open it, never start a second one
  *   { do: 'open-start' }       nothing planned today: the Start screen to pick from
- *   { do: 'checkin', card }    the membership code, on that card when it still exists
  *   { do: 'jump', idx }        a machine whose exercise is in the running session
  *   { do: 'offer-add', id }    a machine whose exercise is not in it: ask before adding
  *   { do: 'details', id }      a machine outside a workout: the exercise's details
@@ -93,13 +93,9 @@ const liveSession = S => !!S?.active && !S.active.editingWorkoutId && !S.active.
  */
 export function routeTag(S, tag, { today, hasExercise = () => false } = {}) {
   if (!tag || !S) return { do: 'ignore' }
-  if (tag.kind === 'checkin') {
-    if (!tag.start) {
-      const cards = S.checkIn !== false && Array.isArray(S.gymCards) ? S.gymCards : []
-      if (cards.length) return { do: 'checkin', card: cards.some(c => c?.id === tag.card) ? tag.card : null }
-      // No code to show: the same as a start sticker, minus starting anything on its own.
-      return { do: S.active ? 'open-workout' : 'open-start' }
-    }
+  // An upstream check-in sticker: the same as a start sticker, minus starting anything on its own.
+  if (tag.kind === 'open') return { do: S.active ? 'open-workout' : 'open-start' }
+  if (tag.kind === 'start') {
     if (S.active) return { do: 'open-workout' }
     // The Start tab's rule (TabBar): a day whose routines have no exercises is no session.
     const st = { ...S, routines: S.routines || [], week: S.week || {}, dayPlan: S.dayPlan || {} }

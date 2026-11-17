@@ -105,7 +105,6 @@ const ProgressPhotos = lazyView(() => import('./views/ProgressPhotos.jsx'))
 const Trainer = lazyView(() => import('./views/Trainer.jsx'))
 // The tabs and screens past Home (Stats, History, the Library, Settings, ...) as well: a start
 // only needs Home, and these are fetched right behind it the same way.
-const CheckIn = lazyView(() => import('./views/CheckIn.jsx'))
 const RoutineEdit = lazyView(() => import('./views/RoutineEdit.jsx'))
 const Programmes = lazyView(() => import('./views/Programmes.jsx'))
 const ProgrammeEdit = lazyView(() => import('./views/Programmes.jsx').then(m => ({ default: m.ProgrammeEdit })))
@@ -398,7 +397,6 @@ function Shell() {
       <Route path="/home" element={<Home />} />
       {/* A module switched off (Settings → Modules, lib/modules.js) takes its screens with it: the
           route falls through to the catch-all redirect below. The data stays where it is. */}
-      {isOn(S, 'checkin') && <Route path="/checkin" element={<CheckIn />} />}
       <Route path="/plan" element={<Plan />} />
       <Route path="/plan/r/:id" element={<RoutineEdit />} />
       <Route path="/plan/programmes" element={<Programmes />} />

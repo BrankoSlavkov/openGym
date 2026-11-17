@@ -33,6 +33,7 @@ export const DEFAULT_HOLD_SEC = 45
 export function autoHoldsFor (S, target) {
   const A = S && S.active
   if (!A || A.autoHoldsOff === true || A.editingWorkoutId || A.backfill) return false
+  if (A.autoRun === true) return true   // fork: the card's Auto button (lib/auto-run.js)
   if (target && target.autoHold === true) return true
   if (target && target.autoHold === false) return false
   return S.autoHolds === true

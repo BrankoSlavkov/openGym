@@ -140,10 +140,10 @@ export function SettingsRoute() {
   // that did not know yet sent every visit to it straight back to the root.
   // (Unknown counts as yes inside the phone app: the page itself then says there is no watch.)
   // The modules (lib/modules.js): a page of a module that is off goes back to the root too.
-  const modules = useStore(s => s.S.modules), checkIn = useStore(s => s.S.checkIn)
+  const modules = useStore(s => s.S.modules)
   const trainers = useStore(s => !!s.config?.trainers?.on)
   const apiTokens = useStore(s => !!s.config?.api_tokens)
-  const ctx = { user: useStore(s => s.user), mobile: MOBILE, offline: offlineBuild(), demo: DEMO, trainers, apiTokens, ios: MOBILE && platformNow() !== 'android', android: MOBILE && platformNow() !== 'ios', mod: id => isOn({ modules, checkIn }, id) }
+  const ctx = { user: useStore(s => s.user), mobile: MOBILE, offline: offlineBuild(), demo: DEMO, trainers, apiTokens, ios: MOBILE && platformNow() !== 'android', android: MOBILE && platformNow() !== 'ios', mod: id => isOn({ modules }, id) }
   if (page && (!PAGES[page] || !pageVisible(PAGES[page].parent || page, ctx) || !pageVisible(page, ctx))) return <Navigate to="/settings" replace />
   if (page === 'coach') return <Navigate to="/coach/setup" replace />
   return <Settings key={page || 'root'} page={page || null} find={loc.state?.find || null} via={loc.state?.via || null} entryKey={loc.key} />
@@ -1141,10 +1141,9 @@ export default function Settings({ page = null, find = null, via = null, entryKe
           value={activeSeasonTitle(S)} accessory="chevron" onClick={() => open('themes')} />
       </Section>}
       <Section title={t('On Home')}>
-        {/* The gym check-in's own switch moved to Settings → Modules (1.4.4, lib/modules.js). */}
         {/* NFC stickers (components/Nfc.jsx): only where the phone or the browser can write one. */}
-        {nfcOK && on('checkin') && <Row icon="nfc" iconTint="var(--blue)" title={t('Set up an NFC sticker')}
-          subtitle={t('Tap it at the gym to start your workout or show your code.')} accessory="chevron" onClick={nfcStickerSheet} />}
+        {nfcOK && <Row icon="nfc" iconTint="var(--blue)" title={t('Set up an NFC sticker')}
+          subtitle={t('Tap it at the gym to start your workout.')} accessory="chevron" onClick={nfcStickerSheet} />}
         {/* Siri & Shortcuts / Assistant (components/VoiceShortcuts.jsx): the phone app only. */}
         {MOBILE && platformNow() && <Row icon="chat" iconTint="var(--purple)" title={voiceRowTitle()}
           subtitle={platformNow() === 'android' ? t('Start a workout or log your weight from the app icon.') : t('Start a workout or log your weight by voice.')} accessory="chevron" onClick={voiceShortcutsSheet} />}
