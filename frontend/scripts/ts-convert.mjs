@@ -23,7 +23,7 @@ const dry = args.includes('--dry')
 const files = args.filter(a => a !== '--dry').map(f => resolve(process.cwd(), f))
 if (!files.length) { console.error('usage: node scripts/ts-convert.mjs [--dry] <file.js|file.jsx>...'); process.exit(1) }
 
-const SCAN_ROOTS = ['frontend/src', 'frontend/web-only', 'frontend/scripts', 'frontend/vite.config.ts', 'api', 'mcp'].map(p => join(repo, p))
+const SCAN_ROOTS = ['frontend/src', 'frontend/web-only', 'frontend/scripts', 'frontend/vite.config.ts', 'api', 'mcp', 'packages'].map(p => join(repo, p))
 const CODE = /\.(m?js|jsx|ts|tsx|mts)$/
 function* walk(p) {
   if (!existsSync(p)) return

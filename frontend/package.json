@@ -13,7 +13,8 @@
     "typecheck": "node scripts/api-client.mjs && tsc -p .",
     "test:fatigue-probe": "node scripts/fatigue-monotonic-probe.mjs",
     "pdf:check": "node scripts/pdf/render-samples.mjs --out pdf-samples --langs en --paper A4,Letter --check",
-    "api:generate": "orval --config orval.config.ts"
+    "api:generate": "orval --config orval.config.ts",
+    "typecheck:tests": "node scripts/api-client.mjs && tsc -p tsconfig.test.json"
   },
   "license": "AGPL-3.0-or-later",
   "dependencies": {

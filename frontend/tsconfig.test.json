@@ -1,0 +1,13 @@
+{
+  // Tests are TypeScript too, checked with looser rules than the app: fixtures are partial
+  // documents and mocks, so indexing is not checked for undefined here.
+  // JavaScript tests not yet converted stay unchecked (checkJs is off).
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "noUncheckedIndexedAccess": false,
+    "types": ["vite-plus/client", "vitest/globals", "node"]
+  },
+  "include": ["src", "web-only", "scripts"],
+  "exclude": []
+}
