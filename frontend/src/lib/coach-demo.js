@@ -15,7 +15,7 @@
 import { EXIDX, EXDB } from './exercises.js'
 import { modeOf, workoutVolume, workoutAt } from './history.js'
 import { isWarmupRow } from './workout-model.js'
-import { best1RM } from './onerm.js'
+import { best1RM } from './onerm.ts'
 import { fmtNum } from './format.js'
 import { planHash } from './coach.js'
 import { waitingProposal } from '../../../api/coach/core/pending.js'

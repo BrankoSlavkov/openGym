@@ -1,0 +1,29 @@
+{
+  // Fork (FORK.md, migration phase 2): JavaScript and TypeScript side by side. JS files are part of
+  // the program (so TS files get their inferred types) but are not checked; each file is held to
+  // the strict settings once it is converted to .ts/.tsx.
+  "compilerOptions": {
+    "target": "es2022",
+    "lib": ["es2023", "dom", "dom.iterable"],
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    // api/ and mcp/ run frontend/src/lib under plain Node, which strips types but cannot
+    // transform enums, namespaces or parameter properties.
+    "erasableSyntaxOnly": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "types": ["vite-plus/client", "node"]
+  },
+  "include": ["src", "web-only", "vite.config.ts", "../api/coach/core"]
+}

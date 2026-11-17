@@ -2,7 +2,7 @@ import { EXIDX, isAssisted } from './exercises.js'
 import { modeOf, workoutAt } from './history.js'
 import { MUSCLES, musclesOf } from './muscles.js'
 import { isWarmupRow, dropsOf, isSideSet } from './workout-model.js'
-import { estimate1RM, REP_CAP } from './onerm.js'
+import { estimate1RM, REP_CAP } from './onerm.ts'
 import { rirOf, HARD_RIR } from './effort.js'
 
 // Fatigue stimulus in effective hard sets, not tonnage: hypertrophy dose-response

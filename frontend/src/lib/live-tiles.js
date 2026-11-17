@@ -24,7 +24,7 @@ import { TILES } from './live-layout.js'
 import { recordBaseline, recordHint, recordHintText, recordHintsOn } from './set-records.js'
 import { sessionHistory } from './backfill.js'
 import { entryDbLoad } from './dumbbells.js'
-import { formulaOf } from './onerm.js'
+import { formulaOf } from './onerm.ts'
 import { setBandsOf, bandText, bandsOf } from './bands.js'
 
 export const TEXT_MAX = 40

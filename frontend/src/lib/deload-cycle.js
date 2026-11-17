@@ -28,7 +28,7 @@
 // With form data: a low fortnight plus numbers that did not climb suggests a deload. Without it,
 // falling numbers alone do. Never more often than once in MIN_GAP weeks, and only as a question.
 import { weekKey, weekStartOf, todayISO } from './format.js'
-import { estimate1RM } from './onerm.js'
+import { estimate1RM } from './onerm.ts'
 import { isWarmupRow, isSideSet } from './workout-model.js'
 import { isAssisted } from './exercises.js'
 

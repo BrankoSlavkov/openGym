@@ -13,7 +13,7 @@
 import { sessionVolume, workoutDuration, workoutDay, workoutAt, doneUnits, streakWeeks } from './history.js'
 import { isWarmupRow } from './workout-model.js'
 import { loadOfWorkouts, rankOf, MUSCLE_NAME } from './muscles.js'
-import { e1rmSeries, bestSetOf, formulaOf } from './onerm.js'
+import { e1rmSeries, bestSetOf, formulaOf } from './onerm.ts'
 import { isAssisted } from './exercises.js'
 import { weighInAt } from './bodyweight.js'
 import { isoOf, todayISO, weekKey, weekStartOf } from './format.js'

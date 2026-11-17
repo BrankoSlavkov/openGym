@@ -2,7 +2,7 @@
 // app for. Pure and unit-free in, kilograms and centimetres inside; the page converts lb and in at
 // its edges. Every formula names where it comes from, and the tests check each against published
 // values.
-import { estimate1RM, DEFAULT_FORMULA } from './onerm.js'
+import { estimate1RM, DEFAULT_FORMULA } from './onerm.ts'
 import { repFactor } from './set-records.js'
 import { snapDown } from './warmup-snap.js'
 

@@ -62,11 +62,36 @@ Phases, each ending with green tests and a working image (branch `migrate/vite-p
 
 0. Porting workflow (this section, the skill, the script). Upstream base `e4a68a9`.
 1. Bun and Vite+ for the frontend (`vp dev`, `vp build`, `vp test`, `vp check`).
-2. TypeScript base: `tsconfig`, type checks in `vp check`, JS and TS side by side.
+2. TypeScript base: `tsconfig`, type checks in `vp check`, JS and TS side by side (pilot:
+   `lib/onerm.ts`).
 3. TanStack Router in place of react-router-dom.
 4. TypeScript conversion by layer: `lib/`, `store/`, `components/`, `views/`, then `sheets.jsx`.
 
 `api/` and `mcp/` stay upstream-shaped JavaScript.
+
+### Converting a file to TypeScript
+
+```bash
+cd frontend
+node scripts/ts-convert.mjs src/lib/foo.js src/lib/foo.test.js   # git mv + rewrite every import
+vp check                                                         # types (strict), lint, format
+vp fmt src/lib/foo.ts src/lib/foo.test.ts
+vp test run src/lib/foo
+```
+
+- **Imports name the real file** (`./foo.ts`, not `./foo.js`). `api/` and `mcp/` load about 40
+  `frontend/src/lib` modules under plain Node, which strips types (Node 22.18+) but resolves
+  nothing; the codemod rewrites importers in `frontend/`, `api/` and `mcp/` for that reason.
+- **Erasable syntax only** (`erasableSyntaxOnly`): no enums, namespaces or parameter properties.
+  Use union types and `as const` objects. Type-only imports use `import type`.
+- Shared document shapes live in `src/lib/domain-types.ts` and grow as code is converted. Keep
+  fields optional: old backups and other devices carry older shapes.
+- `tsconfig.json` is strict with `noUncheckedIndexedAccess`; JavaScript is in the program
+  (`allowJs`) but not checked, so converted files see the JS they import as loosely typed.
+- A converted file is formatted by Oxfmt (single quotes, no semicolons, 120 columns); the JS
+  stays in upstream's hand-set style until its turn.
+- Names that are plain strings rather than imports (`mcp/scripts/check-node-loadable.mjs`'s module
+  list) are printed by the codemod; update them by hand.
 
 ## Running it
 

@@ -7,7 +7,7 @@ import {
   meaningFactor, entryAs, historyAs, currentDbLoad, withMeaning,
 } from './dumbbells.js'
 import { workoutVolume, setLabel, bestWeightFor, freestyleConfig } from './history.js'
-import { best1RM, is1RMRecord, e1rmSeries } from './onerm.js'
+import { best1RM, is1RMRecord, e1rmSeries } from './onerm.ts'
 import { exerciseHistory, bestSetFor } from './exercise-history.js'
 import { buildPlannedEntry } from './session-start.js'
 import { mergeStates, stampChange } from './sync-merge.js'

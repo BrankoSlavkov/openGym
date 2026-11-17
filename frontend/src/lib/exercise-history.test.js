@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { exerciseHistory, HISTORY_SESSIONS, bestSetFor } from './exercise-history.js'
 import { EXDB } from './exercises-data.js'
-import { estimate1RM, e1rmSeries } from './onerm.js'
+import { estimate1RM, e1rmSeries } from './onerm.ts'
 import { lastEntryFor } from './history.js'
 import { nextPrescription } from './progression.js'
 

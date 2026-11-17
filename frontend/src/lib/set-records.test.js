@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { recordBaseline, recordKindsOf, entryRecords, savedEntryRecords, recordHint, repRecordTable, repsRecordAt, repFactor, liveRecordsOn, recordHintsOn, recordSoundOn } from './set-records.js'
 import { sessionPrs, isWeightPr } from './finish-workout.js'
-import { estimate1RM } from './onerm.js'
+import { estimate1RM } from './onerm.ts'
 
 const BENCH = '0025'
 const ASSISTED = '0017'

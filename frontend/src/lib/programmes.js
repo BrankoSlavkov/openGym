@@ -32,7 +32,7 @@
 import { isoOf, todayISO, uid, weekKey, MONDAY, SUNDAY } from './format.js'
 import { queueOf } from './queue.js'
 import { REST, saveRotation, startPass, stopPass, chooseFixedWeek } from './rotation.js'
-import { best1RM } from './onerm.js'
+import { best1RM } from './onerm.ts'
 import { t } from './i18n-core.js'
 
 export const MAX_WEEKS = 16

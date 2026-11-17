@@ -83,7 +83,7 @@ import { sessionGymView, gymsOf, activeGym, gymLabel, switchGym, reRoundOpenSets
 import { gymNoteFor } from '../lib/journal.js'
 import { exView, viewEntry, inEntryUnit, shownWeight } from '../lib/ex-unit.js'
 import { setTrendOn, setTrendsFor, trendGlyph, trendLabel } from '../lib/set-trend.js'
-import { formulaOf } from '../lib/onerm.js'
+import { formulaOf } from '../lib/onerm.ts'
 import { cues } from '../lib/spoken-cues.js'
 import { recordBaseline, entryRecords, recordHint, liveRecordsOn, recordHintsOn, recordSoundOn } from '../lib/set-records.js'
 import { RecordMark, RecordHintLine } from '../components/SetRecord.jsx'

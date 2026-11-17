@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import Tools from './Tools.jsx'
 import { DEF, useStore } from '../store/useStore.js'
-import { estimate1RM } from '../lib/onerm.js'
+import { estimate1RM } from '../lib/onerm.ts'
 import { dots } from '../lib/calculators.js'
 
 vi.mock('../lib/api.js', () => ({ api: vi.fn(() => Promise.resolve({})) }))

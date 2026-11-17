@@ -6,7 +6,7 @@
 // decline even when its muscle is kept fresh by other work. Muscle mapping is
 // catalogue-first (EXIDX), exactly like the fatigue/strength maps, falling back to the
 // logged snapshot (muscleWeights) for exercises no longer in the catalogue.
-import { best1RM } from './onerm.js'
+import { best1RM } from './onerm.ts'
 import { entriesForExercise, workoutAt } from './history.js'
 import { STRENGTH_FULL_MS, STRENGTH_HALF_LIFE_MS, STRENGTH_FLOOR, halfLifeDecay } from './recovery.js'
 import { musclesOf, muscleWeightsOf } from './muscles.js'

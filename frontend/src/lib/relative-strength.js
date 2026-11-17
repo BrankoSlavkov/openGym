@@ -12,7 +12,7 @@ import { isAssisted } from './exercises.js'
 import { entriesForExercise, metricRowsForEntry, workoutAt } from './history.js'
 import { onLifter } from './structuralBalance.js'
 import { isSideSet } from './workout-model.js'
-import { estimate1RM, formulaOf } from './onerm.js'
+import { estimate1RM, formulaOf } from './onerm.ts'
 import { currentDbLoad, workoutAs, isBellEx } from './dumbbells.js'
 
 const DAY = 86400000

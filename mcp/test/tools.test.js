@@ -7,7 +7,7 @@ import { buildDemoState } from '../../frontend/src/lib/demoSeed.js'
 import { EXDB, exOr } from '../../frontend/src/lib/exercises.js'
 import { _seedStateForTests } from '../src/state.js'
 import { TOOLS } from '../src/tools.js'
-import { bestSetOf } from '../../frontend/src/lib/onerm.js'
+import { bestSetOf } from '../../frontend/src/lib/onerm.ts'
 
 // Re-stated here so the assertions stand alone without reaching into lib internals to learn
 // the demo state's exact values.

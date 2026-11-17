@@ -4,7 +4,7 @@ import { stopAt, pauseSpans, pausedBetween } from './workout-pause.js'
 import { bestWeightForEntry, bestWeightFor, cleanupSg } from './history.js'
 import { hasCompletedWork, isSideSet, isWarmupRow } from './workout-model.js'
 import { beatsWeight, betterWeight } from './exercises.js'
-import { is1RMRecord } from './onerm.js'
+import { is1RMRecord } from './onerm.ts'
 import { entryDbLoad } from './dumbbells.js'
 import { cleanBrand } from './gym-split.js'
 

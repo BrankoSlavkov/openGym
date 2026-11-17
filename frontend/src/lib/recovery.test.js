@@ -28,7 +28,7 @@ import {
 import { EXDB, registerCustom } from './exercises.js'
 import { MUSCLES, exerciseMuscleSnapshot, musclesOf } from './muscles.js'
 import { fatigueStateOf } from './recovery-view.js'
-import { estimate1RM } from './onerm.js'
+import { estimate1RM } from './onerm.ts'
 
 const HOUR = 60 * 60 * 1000
 const DAY = 24 * HOUR

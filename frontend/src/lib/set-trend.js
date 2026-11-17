@@ -21,7 +21,7 @@
 import { isWarmupRow, isSideSet, hasCompletedWork } from './workout-model.js'
 import { lastEntryFor, modeOf, workoutAt, entryRoutineId } from './history.js'
 import { isAssisted } from './exercises.js'
-import { estimate1RM } from './onerm.js'
+import { estimate1RM } from './onerm.ts'
 import { t, tn } from './i18n-core.js'
 import { fmtNum } from './format.js'
 import { fmtSec } from './history.js'

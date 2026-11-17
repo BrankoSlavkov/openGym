@@ -1,6 +1,6 @@
 import { metricEntriesForExercise, metricRowsForEntry, bestWeightForEntry, completedRepsOf, modeOf, workoutAt, countsWarmups } from './history.js'
 import { completedVolumeOf, isWarmupRow } from './workout-model.js'
-import { bestSetOf } from './onerm.js'
+import { bestSetOf } from './onerm.ts'
 import { beatsWeight } from './exercises.js'
 import { currentDbLoad, historyAs, volumeFactor, workoutAs } from './dumbbells.js'
 

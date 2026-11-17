@@ -16,7 +16,7 @@
 // health store (lib/vitals.js). A day the check-in made lighter is left out of every comparison: it
 // was easier on purpose. Pure, and nothing here is sent anywhere.
 import { workoutDay, sessionVolume } from './history.js'
-import { bestSetOf, formulaOf } from './onerm.js'
+import { bestSetOf, formulaOf } from './onerm.ts'
 import { isCardio } from './exercises.js'
 import { isWarmupRow } from './workout-model.js'
 import { rirOf } from './effort.js'

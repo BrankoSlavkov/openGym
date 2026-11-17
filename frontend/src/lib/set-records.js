@@ -19,7 +19,7 @@
 import { isWarmupRow, isSideSet } from './workout-model.js'
 import { metricRowsForEntry, workoutAt, bestWeightFor } from './history.js'
 import { isAssisted, beatsWeight } from './exercises.js'
-import { estimate1RM, best1RM, weightedEstimate, FORMULAS, DEFAULT_FORMULA, REP_CAP } from './onerm.js'
+import { estimate1RM, best1RM, weightedEstimate, FORMULAS, DEFAULT_FORMULA, REP_CAP } from './onerm.ts'
 import { historyAs } from './dumbbells.js'
 import { t, tn } from './i18n.js'
 

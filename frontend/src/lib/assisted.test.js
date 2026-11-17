@@ -5,7 +5,7 @@ import { describe, it, expect } from 'vitest'
 import { isAssisted, betterWeight, beatsWeight, EXIDX } from './exercises.js'
 import { bestWeightFor, bestWeightForEntry } from './history.js'
 import { readSession, nextPrescription } from './progression.js'
-import { bestSetOf, e1rmSeries, is1RMRecord } from './onerm.js'
+import { bestSetOf, e1rmSeries, is1RMRecord } from './onerm.ts'
 
 const ASSISTED = '0017'          // assisted pull-up, leverage machine
 const PLAIN = '0025'             // barbell bench press

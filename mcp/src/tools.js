@@ -17,7 +17,7 @@ import { exOr, registerCustom, allExercises, searchScore, CATEGORIES } from '../
 import { isWarmupRow, isFailureSet } from '../../frontend/src/lib/workout-model.js'
 import {
   bestSetOf, best1RM, e1rmSeries, DEFAULT_FORMULA, REP_CAP
-} from '../../frontend/src/lib/onerm.js'
+} from '../../frontend/src/lib/onerm.ts'
 import { loadOfWorkouts, rankOf, levelsOf } from '../../frontend/src/lib/muscles.js'
 import { policyFor, profileRule } from '../../frontend/src/lib/progression.js'
 import { buildSessionEntries, startsFromLast } from '../../frontend/src/lib/session-start.js'

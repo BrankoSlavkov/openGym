@@ -4,6 +4,7 @@ import { join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig, lazyPlugins } from 'vite-plus'
 import react from '@vitejs/plugin-react'
+import type { Plugin } from 'vite'
 import { lazyAssets, stampSw } from './scripts/sw-stamp.mjs'
 import { mobileViewport } from './src/lib/viewport-zoom.js'
 import { webOnlyAlias } from './web-only/alias.js'
@@ -19,17 +20,21 @@ const apiOrigin = process.env.API_ORIGIN || 'http://localhost:8080'
 // Exercise media: served straight from catalogue/media in dev (see catalogueMedia below), or
 // proxied to a server of your choice with MEDIA_TARGET.
 const media = process.env.MEDIA_TARGET
-const catalogueMedia = {
+const catalogueMedia: Plugin = {
   name: 'opengym-catalogue-media',
   configureServer(server) {
     if (media) return
-    const dirs = { '/exercise-media/still/': ['still', '.webp'], '/exercise-media/clip/': ['clip', '.mp4'] }
+    const dirs: Record<string, [dir: string, ext: string]> = {
+      '/exercise-media/still/': ['still', '.webp'],
+      '/exercise-media/clip/': ['clip', '.mp4'],
+    }
     const root = resolve(fileURLToPath(new URL('.', import.meta.url)), '../catalogue/media')
     server.middlewares.use((req, res, next) => {
-      const prefix = Object.keys(dirs).find((p) => req.url.startsWith(p))
+      const url = req.url ?? ''
+      const prefix = Object.keys(dirs).find((p) => url.startsWith(p))
       if (!prefix) return next()
-      const [dir, ext] = dirs[prefix]
-      const name = decodeURIComponent(req.url.slice(prefix.length).split('?')[0])
+      const [dir, ext] = dirs[prefix]!
+      const name = decodeURIComponent(url.slice(prefix.length).split('?')[0] ?? '')
       const file = join(root, dir, name)
       if (!/^\d{4,5}\.(webp|mp4)$/.test(name) || !name.endsWith(ext) || !existsSync(file)) {
         res.statusCode = 404
@@ -47,7 +52,7 @@ const catalogueMedia = {
 const umamiSrc = process.env.VITE_UMAMI_SRC
 const umamiId = process.env.VITE_UMAMI_ID
 
-const umami = {
+const umami: Plugin = {
   name: 'opengym-umami',
   transformIndexHtml() {
     if (!umamiSrc || !umamiId) return
@@ -70,8 +75,8 @@ const umami = {
 // The worker also gets the build's code that loads on demand (`__LAZY__`, scripts/sw-stamp.mjs),
 // so it is there offline before the page has ever needed it.
 let outDir = fileURLToPath(new URL('./dist/', import.meta.url))
-let lazy = []
-const swStamp = {
+let lazy: string[] = []
+const swStamp: Plugin = {
   name: 'opengym-sw-stamp',
   apply: 'build',
   configResolved(config) {
@@ -95,7 +100,7 @@ const swStamp = {
 // reads this tag in the synced copy after `cap sync` and fails the build without it.
 // The phone flavour also keeps zooming off (src/lib/viewport-zoom.js): the web build lets people
 // pinch, the Capacitor apps stay as they were.
-const flavor = {
+const flavor: Plugin = {
   name: 'opengym-flavor',
   transformIndexHtml(html) {
     if (process.env.VITE_MOBILE !== '1') return
@@ -159,6 +164,9 @@ export default defineConfig({
     printWidth: 120,
   },
   lint: {
+    // `vp check` type-checks with tsconfig.json (TypeScript Go via tsgolint): strict for .ts/.tsx,
+    // JavaScript is in the program but not checked.
+    options: { typeAware: true, typeCheck: true },
     ignorePatterns: [
       'dist/**',
       'coverage/**',
@@ -166,6 +174,24 @@ export default defineConfig({
       'src/lib/instr/**',
       'src/lib/exercise-names/**',
       'src/lib/exercise-desc/**',
+    ],
+    // Type-aware rules hold the TypeScript to account; on the JavaScript (upstream's, not yet
+    // converted) they would only flag idioms it relies on, like an un-awaited act() in tests.
+    overrides: [
+      {
+        files: ['**/*.{js,jsx,mjs,cjs}'],
+        rules: {
+          'typescript/no-floating-promises': 'off',
+          'typescript/require-array-sort-compare': 'off',
+          'typescript/unbound-method': 'off',
+          'typescript/await-thenable': 'off',
+          'typescript/no-misused-spread': 'off',
+          'typescript/restrict-template-expressions': 'off',
+          'typescript/no-implied-eval': 'off',
+          'typescript/no-base-to-string': 'off',
+          'typescript/no-redundant-type-constituents': 'off',
+        },
+      },
     ],
     rules: {
       // `ok && run()` and `cond ? a() : b()` as statements are the house style.

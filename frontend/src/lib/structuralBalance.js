@@ -1,4 +1,4 @@
-import { estimate1RM, FORMULAS, DEFAULT_FORMULA } from './onerm.js'
+import { estimate1RM, FORMULAS, DEFAULT_FORMULA } from './onerm.ts'
 import { LB_TO_KG } from './recovery.js'
 import { isBw } from './history.js'
 import { EXIDX, isAssisted } from './exercises.js'

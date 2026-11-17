@@ -8,7 +8,7 @@
 import { EXIDX } from './exercises.js'
 import { sessionVolume, workoutAt } from './history.js'
 import { isWarmupRow } from './workout-model.js'
-import { bestSetOf } from './onerm.js'
+import { bestSetOf } from './onerm.ts'
 import { weighInAt } from './bodyweight.js'
 
 const median = arr => {

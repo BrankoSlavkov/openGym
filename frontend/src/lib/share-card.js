@@ -13,7 +13,7 @@
 import { sessionSections, workoutVolume, workoutDuration, doneUnits, modeOf, isBw, setLabel } from './history.js'
 import { EXIDX } from './exercises.js'
 import { isWarmupRow, hasCompletedWork, isSideSet } from './workout-model.js'
-import { bestSetOf } from './onerm.js'
+import { bestSetOf } from './onerm.ts'
 import { sanitizeHr } from './heart-rate.js'
 import { viewEntry, exUnitOf } from './ex-unit.js'
 import { fmtDur, fmtNum, fmtVol, capWords } from './format.js'

@@ -38,7 +38,7 @@ import { loadOfWeeklyPlan, loadOfWorkouts, muscleBalanceWindow, rankOf, MUSCLES,
 import { fatigueOf, strengthOf, STRENGTH_FLOOR, LB_TO_KG } from '../lib/recovery.js'
 import { strengthExerciseRowsForMuscle } from '../lib/strength-exercises.js'
 import { fatigueStateOf, fatigueRecoveryMs, fmtRecoveryIn, recoveryEtas, fmtRecoveryShort, fmtReadyAt } from '../lib/recovery-view.js'
-import { e1rmSeries, best1RM, formulaOf } from '../lib/onerm.js'
+import { e1rmSeries, best1RM, formulaOf } from '../lib/onerm.ts'
 import { currentDbLoad, workoutAs } from '../lib/dumbbells.js'
 import { maxRepsSeries } from '../lib/pyramid.js'
 import { weighInAt } from '../lib/bodyweight.js'

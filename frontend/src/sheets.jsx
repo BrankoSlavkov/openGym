@@ -73,7 +73,7 @@ import ImportChoices, { freshChoices, choicesChanged } from './components/Import
 import { buildPlanBundle, buildProgrammeBundle, parsePlan, mergePlan } from './lib/plan-share.js'
 import PrintPlanSheet from './components/PrintPlanSheet.jsx'
 import { printWorkout } from './lib/report-print.js'
-import { estimate1RM, best1RM, is1RMRecord, REP_CAP, formulaOf, FORMULA_NAMES } from './lib/onerm.js'
+import { estimate1RM, best1RM, is1RMRecord, REP_CAP, formulaOf, FORMULA_NAMES } from './lib/onerm.ts'
 import { setTrendOn, setTrendsFor, lastTimeBefore, trendGlyph, trendLabel } from './lib/set-trend.js'
 import { mergeExercise, undoMerge, mergePreview, mergeBlocked } from './lib/exercise-merge.js'
 import { setNoteOf, withSetNote, SET_NOTE_MAX } from './lib/set-notes.js'

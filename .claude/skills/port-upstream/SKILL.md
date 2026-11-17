@@ -47,7 +47,9 @@ reworked several times).
   TanStack Router instead of react-router-dom, and may carry fork-only changes (see
   `git log -- <our path>`); keep those. Don't paste upstream's file over ours.
 - **`new` files:** add them in our conventions (TypeScript `.ts/.tsx` once the folder is converted,
-  our router, exact-pinned deps). If you place one somewhere other than its upstream path, add a
+  our router, exact-pinned deps). Imports name the real file (`./foo.ts`) and TypeScript stays erasable
+  (FORK.md, "Converting a file to TypeScript"); `node frontend/scripts/ts-convert.mjs` renames a JS file
+  and its importers. If you place one somewhere other than its upstream path, add a
   `.fork/path-map` line.
 - **`missing` files:** find where the code lives now (`git log --diff-filter=R --summary`,
   grep for a function name), port there, and add a `.fork/path-map` line.

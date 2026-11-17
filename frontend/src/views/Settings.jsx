@@ -9,7 +9,7 @@ import { healthStatus, loadHealth, enableHealth, disableHealth, openHealthConnec
 import { phoneSessionSupported } from '../lib/phone-workout.js'
 import { workoutControls } from '../lib/workout-controls.js'
 import { speedUnitOf } from '../lib/speed.js'
-import { formulaOf, FORMULA_NAMES } from '../lib/onerm.js'
+import { formulaOf, FORMULA_NAMES } from '../lib/onerm.ts'
 import { copyText } from '../lib/clipboard.js'
 import { useUI } from '../store/useUI.js'
 import { activeGym, gymLabel, switchGym } from '../lib/gym-inventory.js'

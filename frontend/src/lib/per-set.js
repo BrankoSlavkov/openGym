@@ -8,7 +8,7 @@
  * tests read the same thing. */
 import { entriesForExercise, completedRepsOf, workoutAt } from './history.js'
 import { phaseForSet, modeForSet, hasCompletedWork, isSideSet } from './workout-model.js'
-import { estimate1RM } from './onerm.js'
+import { estimate1RM } from './onerm.ts'
 
 export const PER_SET_MAX = 5
 

@@ -18,7 +18,7 @@
 // THE NUMBERS. The best estimated 1RM ever logged for the lift (onerm.js best1RM, the profile's
 // formula; dumbbells read per bell) against the latest weigh-in. No weigh-in, no level: the
 // screens hide it.
-import { best1RM, formulaOf } from './onerm.js'
+import { best1RM, formulaOf } from './onerm.ts'
 import { lastBW } from './history.js'
 
 export const LEVELS = ['beginner', 'novice', 'intermediate', 'advanced', 'elite']
