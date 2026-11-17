@@ -22,6 +22,10 @@ The full list is [.fork/removed-paths](.fork/removed-paths). In short:
 - the Capacitor packages (phone-only)
 - the gym reminder's map and place search (Leaflet, OpenStreetMap; phone-only), with stand-ins
   in `frontend/web-only/gym/` for the upstream files that still import them
+- QR codes: drawing them (lean-qr: passkey device link, trainer codes, the connector address)
+  and scanning them (jsQR, the camera sheet, Plan > Scan a QR code). Codes and links remain.
+  This one edits upstream files (Passkeys, TrainerSheets, Assistants, Plan, the CSS), so a sync
+  that touches those lines conflicts: keep the QR out.
 
 Kept: the `api` and `web` containers, the optional `mcp` container, the AI Coach, integrations
 and the exercise catalogue.

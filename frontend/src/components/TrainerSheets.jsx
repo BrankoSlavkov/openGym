@@ -1,12 +1,11 @@
-// The trainer dashboard's sheets: inviting a member (code + QR), assigning a routine to one or many,
+// The trainer dashboard's sheets: inviting a member (a code and its link), assigning a routine to one or many,
 // a comment on a workout, a weigh-in, a check-in, a workout logged or corrected. Each one says
 // before sending what will happen per member.
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
 import { fmtDate, todayISO, weekOrder, weekStartOf } from '../lib/format.js'
-import { renderQrToCanvas } from '../lib/qr.js'
 import { assignRoutine, assignOutcome, assignResult, commentOn, makeCode, makeGymCode, sendOps, trainerError, weekdayName, exName } from '../lib/trainer-api.js'
 import { MEASUREMENT_FIELDS } from '../lib/measurements.js'
 import { CATALOGUE, searchExercises } from '../lib/exercises.js'
@@ -18,14 +17,11 @@ async function copyText(s, toast) {
   try { await navigator.clipboard.writeText(s); toast(t('Copied')) } catch { toast(s) }
 }
 
-/** A code, shown once, big and as a QR, with copy and share. */
+/** A code, shown once and big, with copy and share. */
 export function CodeCard({ code, link, expires, uses }) {
   const toast = useUI(s => s.toast)
-  const ref = useRef(null)
-  useEffect(() => { renderQrToCanvas(ref.current, link).catch(() => {}) }, [link])
   const share = () => (navigator.share ? navigator.share({ text: link }).catch(() => {}) : copyText(link, toast))
   return <div className="tr-code">
-    <canvas ref={ref} className="qr-canvas tr-qr" aria-label={t('QR code for {0}', code)} role="img" />
     <div className="tr-code-v" aria-live="polite">{code}</div>
     <div className="tr-tile-s">{t('Valid until {0}', fmtDate(new Date(expires).toISOString().slice(0, 10)))}{uses ? ' · ' + t('{0} uses', uses) : ''}</div>
     <div className="tr-code-a">
@@ -52,7 +48,7 @@ export function InviteSheet({ overview, close }) {
   return <>
     <h3>{t('Connect a member')}</h3>
     {!made ? <>
-      <p className="intg-lead">{t('They scan it or type it in Trainer & gym, pick what to share, and you confirm. Nothing moves before that.')}</p>
+      <p className="intg-lead">{t('They open the link or type the code in Trainer & gym, pick what to share, and you confirm. Nothing moves before that.')}</p>
       <Section>
         {where.length > 1 && <SelectRow icon="mapPin" iconTint="var(--green)" title={t('For')} value={gym} options={where} onChange={setGym} />}
         <Row icon="person" iconTint="var(--blue)" title={t('How many people')}>
@@ -76,7 +72,7 @@ export function GymCodeSheet({ gym, close }) {
   useEffect(() => { makeGymCode(gym.id).then(setMade).catch(e => { toast(trainerError(e)); close() }) }, [])
   return <>
     <h3>{t('Join {0}', gym.name)}</h3>
-    <p className="intg-lead">{t('Put it on the front desk. Whoever scans it joins the gym and chooses what you see.')}</p>
+    <p className="intg-lead">{t('Put it on the front desk. Whoever enters it joins the gym and chooses what you see.')}</p>
     {made ? <CodeCard code={made.code} link={made.link} expires={made.expires} uses={made.maxUses} /> : <p className="muted small">{t('Loading…')}</p>}
     <Button onClick={close}>{t('Done')}</Button>
   </>

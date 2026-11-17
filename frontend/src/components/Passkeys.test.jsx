@@ -52,8 +52,6 @@ vi.mock('../lib/api.js', () => ({
 vi.mock('../lib/clipboard.js', () => ({ copyText: (...a) => mocks.copyText(...a) }))
 vi.mock('../lib/mobile.js', () => ({ get MOBILE() { return mocks.MOBILE } }))
 vi.mock('../sheets.jsx', () => ({ askAddDeviceData: mocks.askAddDeviceData }))
-// lean-qr loads on demand; what matters here is what the QR code carries.
-vi.mock('./QrCanvas.jsx', () => ({ default: ({ value }) => <canvas data-qr={value} /> }))
 
 const fail = (status, data) => Object.assign(new Error(data?.error || 'HTTP ' + status), { status, data })
 const named = (name, e = new Error(name)) => Object.assign(e, { name })
@@ -343,16 +341,14 @@ describe('Settings: a code for another device', () => {
     expect(mocks.calls.filter(c => c.method !== 'GET')).toEqual([])
   })
 
-  it('after the proof shows the code, a QR code of the link, and copies the link', async () => {
+  it('after the proof shows the code and copies the link', async () => {
     mocks.answers['GET /api/account/passkeys'] = LIST
     mocks.answers['POST /api/account/device-link'] = { code: 'K7WQ-2MZP-4HXA', expires: Date.now() + 600000 }
     const host = mount(<DeviceLinkSheet close={() => {}} />)
     await settle()
-    expect(host.querySelector('canvas')).toBeNull()
     await click(host, 'Confirm with a passkey')
     expect(mocks.calls.at(-1)).toEqual({ path: '/api/account/device-link', method: 'POST', body: { cid: 'login-cid', credential: { id: 'k1' } } })
     const link = window.location.origin + window.location.pathname + '?link=K7WQ-2MZP-4HXA'
-    expect(host.querySelector('canvas').dataset.qr).toBe(link)
     expect(host.textContent).toContain('K7WQ-2MZP-4HXA')
     expect(host.textContent).toMatch(/works once, for 10 minutes/)
     await click(host, 'Copy link')
@@ -368,7 +364,6 @@ describe('Settings: a code for another device', () => {
     await click(host, 'Confirm with a passkey')
     await settle()
     expect(host.textContent).toContain('This code has expired.')
-    expect(host.querySelector('canvas')).toBeNull()
     await click(host, 'Make a new code')
     expect(button(host, 'Confirm with a passkey')).toBeTruthy()
   })
@@ -388,7 +383,8 @@ describe('a code for another device, from the paired phone app', () => {
     type(byPlaceholder(host, 'Current password'), 'correct horse battery staple')
     await submit(host)
     expect(mocks.calls.at(-1)).toEqual({ path: '/api/account/device-link', method: 'POST', body: { current: 'correct horse battery staple' } })
-    expect(host.querySelector('canvas').dataset.qr).toBe('https://gym.example.com/?link=K7WQ-2MZP-4HXA')
+    await click(host, 'Copy link')
+    expect(mocks.copyText).toHaveBeenCalledWith('https://gym.example.com/?link=K7WQ-2MZP-4HXA')
   })
   it('without a password says where to make it instead, and sends nothing', async () => {
     mocks.MOBILE = true

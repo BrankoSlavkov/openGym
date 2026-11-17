@@ -3350,18 +3350,8 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
   .hm-wrap{display:flex;flex-direction:column;align-items:center}
 }
 
-/* The QR itself: lean-qr paints 1 module per pixel, so scale it up with the browser's
-   nearest-neighbour so every module stays a crisp square instead of a blurred blob. White
-   quiet-zone padding is baked in by the renderer; the plate underneath just frames it. */
 .nexd{display:flex;flex-direction:column;gap:12px;margin:4px 0 10px}
 .nexd-note{margin:0 0 14px;line-height:var(--lh-small)}
-.ci-qr-plate{background:#fff;border-radius:var(--r-lg);padding:16px}
-.qr-canvas{display:block;image-rendering:pixelated;image-rendering:crisp-edges;transition:opacity var(--fast)}
-/* browser camera sheet (components/CameraScan.jsx): the video fills a portrait plate, a dashed
-   square in the middle says "put the code here" — decoding reads the whole frame regardless. */
-.cam-wrap{position:relative;width:100%;aspect-ratio:3/4;max-height:58vh;border-radius:var(--r-lg);overflow:hidden;background:#000}
-.cam-wrap video{width:100%;height:100%;object-fit:cover;display:block}
-.cam-frame{position:absolute;inset:0;margin:auto;width:62%;aspect-ratio:1;border:2px dashed rgba(255,255,255,.75);border-radius:14px;pointer-events:none}
 /* ---------------------------------------------------------------- Plan -- */
 /* Schedule | Routines (views/Plan.jsx). A settings-like page, one column at every width. */
 .plan-views{margin-bottom:18px}
@@ -3980,7 +3970,6 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 
 /* sheets: a code, a weigh-in */
 .tr-code{display:flex;flex-direction:column;align-items:center;gap:8px;padding:6px 0 16px}
-.tr-qr{width:184px;height:184px;border-radius:14px;background:#fff}
 .tr-code-v{font:600 var(--fs-title3)/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;-webkit-user-select:all;user-select:all}
 .tr-code-a{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:4px}
 .tr-num{width:72px;text-align:end}

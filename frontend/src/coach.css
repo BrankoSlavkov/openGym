@@ -354,8 +354,6 @@
 .as-addr{padding:12px;display:flex;flex-direction:column;gap:10px}
 .as-addr code{display:block;padding:12px 14px;border-radius:12px;background:var(--surface-2);font-size:var(--fs-body);font-weight:600;letter-spacing:-.01em;overflow-wrap:anywhere;user-select:all}
 .as-addr-b{display:flex;gap:8px;flex-wrap:wrap}
-.as-qr{display:flex;justify-content:center;padding:6px 0 2px}
-.as-qr canvas{width:184px;height:184px;border-radius:12px;background:#fff;padding:8px;image-rendering:pixelated}
 .as-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:10px 12px}
 .as-card{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-height:104px;padding:14px 12px;border-radius:16px;background:var(--surface-2);border:1.5px solid transparent;color:var(--label);font:inherit;text-align:start;cursor:pointer;transition:transform 140ms cubic-bezier(.23,1,.32,1),border-color 160ms ease,background-color 160ms ease}
 .as-card:active{transform:scale(.97)}

@@ -5,7 +5,7 @@
 // connected assistants with a way to cut them off. Where no assistant could reach this openGym
 // (a phone on its own, connectors off, an address only the home network knows) it says so plainly
 // and points at what works on the phone instead.
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
@@ -30,7 +30,6 @@ export default function Assistants() {
   const toast = useUI(s => s.toast)
   const [tokens, setTokens] = useState(null)
   const [pick, setPick] = useState(null)
-  const [qr, setQr] = useState(false)
   const [checking, setChecking] = useState(false)
 
   const mcp = !!(user && config?.mcp)
@@ -89,9 +88,7 @@ export default function Assistants() {
           <code translate="no">{address}</code>
           <div className="as-addr-b">
             <Button size="sm" variant="tinted" icon="copy" onClick={copy}>{t('Copy server address')}</Button>
-            <Button size="sm" icon="qr" aria-expanded={qr} onClick={() => setQr(v => !v)}>{qr ? t('Hide QR code') : t('QR code')}</Button>
           </div>
-          {qr && <QrCode value={address} />}
         </div>
       </Section>
 
@@ -159,12 +156,4 @@ function Unavailable({ user, config, nav }) {
       <Row icon="rocket" iconTint="var(--purple)" title={t('Run your own openGym server')} subtitle={t('Then the connectors work too. About ten minutes with Docker.')} accessory="chevron" onClick={() => open(SELF_HOSTING_DOCS)} />
     </Section>
   </>
-}
-
-// The address as a QR code, for the assistant on another device. Plain black on white: phone
-// cameras read that best, whatever the app's theme.
-function QrCode({ value }) {
-  const ref = useRef(null)
-  useEffect(() => { import('../lib/qr.js').then(m => m.renderQrToCanvas(ref.current, value)).catch(() => {}) }, [value])
-  return <div className="as-qr"><canvas ref={ref} className="qr-canvas" role="img" aria-label={t('QR code of the server address')} /></div>
 }

@@ -75,3 +75,21 @@ frontend/src/views/GymReminder.test.jsx
 frontend/src/lib/gym-places.js
 frontend/src/lib/gym-places.test.js
 
+# QR codes and scanning: drawing (lean-qr), reading (jsQR, the browser camera sheet, ML Kit's
+# stand-in) and the 1D barcode code they shared.
+frontend/src/lib/qr.js
+frontend/src/lib/qr.test.js
+frontend/src/lib/barcode.js
+frontend/src/lib/barcode.test.js
+frontend/src/lib/scan.js
+frontend/src/lib/scan.test.js
+frontend/src/lib/scan.module.test.js
+frontend/src/lib/scan-web.js
+frontend/src/lib/scan-web.test.js
+frontend/src/lib/scan-route.js
+frontend/src/lib/scan-route.test.js
+frontend/src/components/QrCanvas.jsx
+frontend/src/components/CameraScan.jsx
+frontend/src/components/CameraScan.test.jsx
+frontend/src/components/ScanCode.jsx
+frontend/src/components/ScanCode.test.jsx

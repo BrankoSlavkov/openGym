@@ -1,6 +1,6 @@
 // More than one passkey on a profile, and the one-time code that adds one on another device
 // (#95). Settings → Account lists the passkeys and offers both ways to add one; the sign-in screen
-// — or the link in the code's QR, opened on the other device — redeems a code. The rules are the
+// — or the code's link, opened on the other device — redeems a code. The rules are the
 // server's (api/passkeys-store.js, api/device-link.js and the passkeys block in api/server.js):
 // what needs proof, the last way in, how long a code lives. This only words them.
 import { useEffect, useRef, useState } from 'react'
@@ -13,7 +13,6 @@ import { copyText } from '../lib/clipboard.js'
 import { deviceLinkUrl, deviceLabel } from '../lib/device-link.js'
 import { askAddDeviceData } from '../sheets.jsx'
 import { passwordError, notReached, useAgainOnceReached, ProveOwner } from './PasswordAuth.jsx'
-import QrCanvas from './QrCanvas.jsx'
 import { MOBILE } from '../lib/mobile.js'
 import { Row, Button } from './ui.jsx'
 
@@ -204,9 +203,9 @@ function AddPasskeySheet({ state, close, done }) {
   </>
 }
 
-/* A code for another device: after the same proof, the code itself, a QR code of the link that
-   carries it, and a way to copy that link. The other device either scans it or types the code on
-   its sign-in screen. When it expires the sheet says so and offers a new one. */
+/* A code for another device: after the same proof, the code itself and a way to copy the link
+   that carries it. The other device either opens the link or types the code on its sign-in
+   screen. When it expires the sheet says so and offers a new one. */
 export function DeviceLinkSheet({ close }) {
   const { st } = usePasskeys(true)
   const [link, setLink] = useState(null)   // { code, expires }
@@ -238,9 +237,8 @@ export function DeviceLinkSheet({ close }) {
       <Button variant="primary" onClick={() => setLink(null)}>{t('Make a new code')}</Button>
     </> : <>
       <div className="muted small" style={{ marginBottom: 14 }}>
-        {t('Scan this with the other device, or open openGym there and enter the code on the sign-in screen. It works once, for {0} minutes.', LINK_MINUTES)}
+        {t('Open the link on the other device, or open openGym there and enter the code on the sign-in screen. It works once, for {0} minutes.', LINK_MINUTES)}
       </div>
-      <div className="ci-qr-plate" style={{ width: 'fit-content', margin: '0 auto 14px' }}><QrCanvas value={url} size={200} /></div>
       {/* Read out or typed character by character: left to right in every language. */}
       <div className="card" dir="ltr" style={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 700, letterSpacing: '.12em', padding: '14px 0' }}>{link.code}</div>
       <div style={{ height: 12 }} />
