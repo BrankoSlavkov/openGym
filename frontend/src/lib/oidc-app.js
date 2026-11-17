@@ -3,7 +3,7 @@
 // local OidcBrowser plugin, ios/App/App/OidcBrowserPlugin.swift and android/.../OidcBrowserPlugin.java).
 // The server sends the browser back to opengym://oidc with a one-time code, and the code is only
 // good together with the verifier made here, so another app that grabs the scheme gets nothing.
-import { oidcRedeem } from './api.js'
+import { oidcRedeem } from './api.ts'
 import { oidcErrorText } from './oidc.js'
 
 export const APP_RETURN = 'opengym://oidc'

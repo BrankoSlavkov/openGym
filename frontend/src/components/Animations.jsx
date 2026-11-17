@@ -11,7 +11,7 @@ import { gifSrc, figureOf } from '../lib/exercises.js'
 import { fmtMB } from '../lib/media-limits.js'
 import { BUILTIN_PX, packId, parsePackId, wantedQuality, clipSources } from '../lib/anim-quality.js'
 import { subscribe, getState, installedBases, deviceInfo, refresh, ensureWanted, writePrefs, download, remove, downloadBytes, diagnose, offeredQualities, targetPack, ALL_PACKS, offerFor, networkInfo } from '../lib/anim-packs.js'
-import { Section, Row, Switch, Button } from './ui.jsx'
+import { Section, Row, Switch, Button } from './ui.tsx'
 import { useUI } from '../store/useUI.js'
 import { tourState } from '../lib/tour.js'
 

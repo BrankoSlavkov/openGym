@@ -5,11 +5,11 @@
 import { useEffect, useState } from 'react'
 import { t } from '../lib/i18n.js'
 import { fmtDate } from '../lib/format.js'
-import { photoBlob } from '../lib/trainer-api.js'
-import { apiBlob } from '../lib/api.js'
+import { photoBlob } from '../lib/trainer-api.ts'
+import { apiBlob } from '../lib/api.ts'
 import { mediaStore } from '../lib/media-store.js'
-import { Button } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Button } from './ui.tsx'
+import Icon from './Icon.tsx'
 
 const PAGE = 9
 

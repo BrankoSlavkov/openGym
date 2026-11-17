@@ -22,7 +22,7 @@ vi.mock('../store/useUI.js', () => {
 })
 vi.mock('../lib/mobile.js', () => ({ MOBILE: true, shareExport: (...a) => mocks.share(...a) }))
 
-const { CsvExportSheet } = await import('./CsvExportSheet.jsx')
+const { CsvExportSheet } = await import('./CsvExportSheet.tsx')
 const { todayISO } = await import('../lib/format.js')
 
 let root, host, close

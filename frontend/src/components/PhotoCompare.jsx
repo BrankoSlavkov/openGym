@@ -1,5 +1,5 @@
 // Comparing progress photos (#950): two to nine, oldest first. Two can be the before/after slider
-// or side by side; more are side by side, in rows of at most three (lib/photo-compare.js). Every
+// or side by side; more are side by side, in rows of at most three (lib/photo-compare.ts). Every
 // cell has the same shape, the middle one of the set's, so they all stand at the same height; a
 // photo of another shape is cropped and can be dragged to choose what shows. Share draws what is
 // on the screen into one picture (lib/compare-image.js) for the share sheet. The photos are only
@@ -9,10 +9,10 @@ import { MOBILE } from '../lib/mobile.js'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { t, tn } from '../lib/i18n.js'
 import { fmtDate } from '../lib/format.js'
-import { compareRows, cellAspect, panBy, daysApart } from '../lib/photo-compare.js'
+import { compareRows, cellAspect, panBy, daysApart } from '../lib/photo-compare.ts'
 import { useMediaUrl } from './CustomMedia.jsx'
-import { Segmented } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Segmented } from './ui.tsx'
+import Icon from './Icon.tsx'
 
 const GAP = 6
 const posCss = p => `${((p?.x ?? 0.5) * 100).toFixed(1)}% ${((p?.y ?? 0.5) * 100).toFixed(1)}%`

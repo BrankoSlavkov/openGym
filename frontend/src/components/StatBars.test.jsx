@@ -4,7 +4,7 @@
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { BarRow, StackBar, ChartLegend } from './StatBars.jsx'
+import { BarRow, StackBar, ChartLegend } from './StatBars.tsx'
 
 let host, root
 beforeEach(() => { globalThis.IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement('div'); document.body.appendChild(host); root = createRoot(host) })

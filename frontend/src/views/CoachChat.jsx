@@ -24,7 +24,7 @@ import { speedUnitOf } from '../lib/speed.js'
 import { DEMO } from '../lib/demo.js'
 import { MOBILE } from '../lib/mobile.js'
 import { scheduleModeOf } from '../lib/rotation.js'
-import ChatInput from '../components/ChatInput.jsx'
+import ChatInput from '../components/ChatInput.tsx'
 import {
   coachAvailable, hasConsent, emptyCoach, appendChat, recordTiming, estimateMs, profileLines,
   markStale, applicable, applyChangeSet, applyCreatedPlan, recordDismissal, recordDebrief, logEntry,
@@ -32,7 +32,7 @@ import {
 } from '../lib/coach.js'
 import { AdaptProposal, adaptTitle } from '../components/WorkoutCoachSheet.jsx'
 import { insightsFor, sessionInsights } from '../lib/coach-insights.js'
-import { useCoachStatus, requestReview, requestDebrief, requestPlan, refinePlan, askCoach, resolvePending, cohortStats, setCohortShare, jobErrorText, awaitedJob, settleAwaited, JOB_ERRORS, ensureAiConsent, isDeclined } from '../lib/coach-api.js'
+import { useCoachStatus, requestReview, requestDebrief, requestPlan, refinePlan, askCoach, resolvePending, cohortStats, setCohortShare, jobErrorText, awaitedJob, settleAwaited, JOB_ERRORS, ensureAiConsent, isDeclined } from '../lib/coach-api.ts'
 import { AiConsentSection } from '../components/CoachConsentSheet.jsx'
 import { ActionCards, Sources } from '../components/CoachActions.jsx'
 import { CoachSeesSection } from '../components/CoachSees.jsx'
@@ -43,10 +43,10 @@ import { EXIDX, isCustomEx } from '../lib/exercises.js'
 const typed = id => (isCustomEx(EXIDX[id]) ? ' nocap' : '')
 import { activeProfile } from '../lib/equipment.js'
 import { NotHereButton } from '../components/MachinePicker.jsx'
-import Icon from '../components/Icon.jsx'
+import Icon from '../components/Icon.tsx'
 import { glyphOf } from '../lib/glyphs.js'
 import LineChart from '../components/LineChart.jsx'
-import { Button, Check, Switch, Section, Row, SelectRow } from '../components/ui.jsx'
+import { Button, Check, Switch, Section, Row, SelectRow } from '../components/ui.tsx'
 import '../coach.css'
 import { isoRun } from '../lib/bidi.js'
 
@@ -64,7 +64,7 @@ export default function CoachChat() {
   const gate = useCoachGate()
   const { job, pending, cap, loading, lastError, last, refresh, maxMessageLen } = useCoachStatus(gate.ok)
   const [text, setText] = useState('')
-  // The message box opened into a tall editor (components/ChatInput.jsx); closed again on send.
+  // The message box opened into a tall editor (components/ChatInput.tsx); closed again on send.
   const [expanded, setExpanded] = useState(false)
   const [busy, setBusy] = useState(false)
   const endRef = useRef(null)

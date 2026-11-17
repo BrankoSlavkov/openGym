@@ -7,7 +7,7 @@ import { tempData } from './helpers.ts';
 
 tempData();
 const { runPipeline } = await import('../coach/core/pipeline.js');
-const { buildPromptParts } = await import('../coach/core/prompt.js');
+const { buildPromptParts } = await import('../coach/core/prompt.ts');
 
 const plan = {
   routines: [{ id: 'push', name: 'Push Day', ex: [{ id: '0001', sets: 3, reps: 8 }, { id: '0007', sets: 3, reps: 10 }] }],

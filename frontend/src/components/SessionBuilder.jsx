@@ -10,8 +10,8 @@ import { buildSession, swapPick, sessionRoutine, DURATIONS } from '../lib/sessio
 import { startBuiltSession, exerciseDetailSheet } from '../sheets.jsx'
 import { nav } from '../lib/nav.js'
 import { Thumb } from './Media.jsx'
-import Icon from './Icon.jsx'
-import { Button, Segmented } from './ui.jsx'
+import Icon from './Icon.tsx'
+import { Button, Segmented } from './ui.tsx'
 import { isoRun } from '../lib/bidi.js'
 
 /* Tap muscles, get a session (lib/session-builder.js). Opened from Exercises → By muscle once a

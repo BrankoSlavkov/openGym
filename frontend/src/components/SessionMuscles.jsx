@@ -5,8 +5,8 @@ import { t } from '../lib/i18n.js'
 import { fmtNum } from '../lib/format.js'
 import { isWarmupRow } from '../lib/workout-model.js'
 import { sessionLoad, sessionLevels, MUSCLES, MUSCLE_NAME } from '../lib/muscles.js'
-import BodyMap from './BodyMap.jsx'
-import { Button } from './ui.jsx'
+import BodyMap from './BodyMap.tsx'
+import { Button } from './ui.tsx'
 
 // What the running session hits (#670): a tiny body in the workout header that lights up as sets
 // are ticked, and a sheet behind it with the full map and done/planned sets per muscle. The

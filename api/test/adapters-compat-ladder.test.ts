@@ -15,10 +15,10 @@ import assert from 'node:assert/strict';
 import { tempData } from './helpers.ts';
 
 tempData();
-const compatible = (await import('../coach/core/adapters/compatible.js')).default;
-const openai = (await import('../coach/core/adapters/openai.js')).default;
-const { compatProfile, rememberCompatProfile } = await import('../coach/core/adapters/http.js');
-const { REVIEW_SCHEMA, ASK_SCHEMA } = await import('../coach/core/schemas.js');
+const compatible = (await import('../coach/core/adapters/compatible.ts')).default;
+const openai = (await import('../coach/core/adapters/openai.ts')).default;
+const { compatProfile, rememberCompatProfile } = await import('../coach/core/adapters/http.ts');
+const { REVIEW_SCHEMA, ASK_SCHEMA } = await import('../coach/core/schemas.ts');
 
 const ANSWER = '{"coach_contract":1,"nochange":true,"reading":"fine"}';
 const GENERIC = 'The request could not be processed. Please check the request parameters.';

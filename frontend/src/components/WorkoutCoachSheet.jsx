@@ -3,7 +3,7 @@
 // suggests a few changes to what is left of the session, as cards you tick. Nothing changes until
 // you apply them; logged sets and the routine are never touched (lib/coach-adapt.js).
 //
-// It goes through the same door as every Coach job (lib/coach-api.js): the data-sharing question
+// It goes through the same door as every Coach job (lib/coach-api.ts): the data-sharing question
 // first, the same polling, the same failures in the app's voice.
 import { useEffect, useMemo, useState } from 'react'
 import { useStore } from '../store/useStore.js'
@@ -11,10 +11,10 @@ import { useUI } from '../store/useUI.js'
 import { t, tn } from '../lib/i18n.js'
 import { fmtRest } from '../lib/duration.js'
 import { exTitle, appendLog } from '../lib/coach.js'
-import { useCoachStatus, requestAdapt, resolvePending, jobErrorText, isDeclined } from '../lib/coach-api.js'
+import { useCoachStatus, requestAdapt, resolvePending, jobErrorText, isDeclined } from '../lib/coach-api.ts'
 import { adaptFor, markAdaptStale, applyAdapt, adaptLogEntry } from '../lib/coach-adapt.js'
-import Icon from './Icon.jsx'
-import { Button, Check, TextField } from './ui.jsx'
+import Icon from './Icon.tsx'
+import { Button, Check, TextField } from './ui.tsx'
 import '../coach.css'
 
 export const ADAPT_REASONS = ['pain', 'busy', 'short', 'great', 'tired', 'other']

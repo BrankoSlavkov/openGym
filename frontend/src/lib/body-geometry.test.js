@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import RAW from './body-paths.js'
-import GEO, { BODY_SPLIT, regionLevel } from './body-geometry.js'
+import GEO, { BODY_SPLIT, regionLevel } from './body-geometry.ts'
 import { MUSCLES } from './muscles.js'
 
 // The vertical extent of an SVG path, read off its coordinates (enough to tell a lat from a

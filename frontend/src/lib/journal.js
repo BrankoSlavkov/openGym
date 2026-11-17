@@ -1,7 +1,7 @@
 // The journal (Stats → More → Journal): every note the app keeps, in one feed.
 //
 // Notes live where they were written and stay there: a workout's own note on the workout, an
-// exercise's note for the day on its entry, a set's on the set (lib/set-notes.js), the standing note
+// exercise's note for the day on its entry, a set's on the set (lib/set-notes.ts), the standing note
 // in S.exNotes, a routine's tip on its slot (#1003), a day off's in S.dayNotes, a check-in's on the
 // measurement entry, a sauna's on the recovery session. The journal only reads them back, so nothing
 // is stored twice and an edit anywhere shows here at once. The two things it keeps itself:
@@ -15,7 +15,7 @@
 //     true at the gym with that machine. With an exercise it shows on that exercise in the workout,
 //     without one ('*') at the top of the workout, both only while that gym is the active one.
 import { NOTE_MAX } from './history.js'
-import { setNoteOf } from './set-notes.js'
+import { setNoteOf } from './set-notes.ts'
 import { dayNoteOf, DAY_NOTE_LABEL } from './day-notes.js'
 import { recoverySessionsOf, RECOVERY_LABEL } from './recovery-sessions.js'
 import { workoutMediaOf } from './media-refs.js'

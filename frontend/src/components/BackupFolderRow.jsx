@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { t } from '../lib/i18n.js'
 import { backupFolder, chooseBackupFolder, resetBackupFolder, onBackupFolderChange } from '../lib/mobile.js'
 import { useUI } from '../store/useUI.js'
-import { Row } from './ui.jsx'
+import { Row } from './ui.tsx'
 
 const DEFAULT_FOLDER = 'Documents/openGym'
 

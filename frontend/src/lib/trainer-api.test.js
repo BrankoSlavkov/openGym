@@ -2,7 +2,7 @@
 // assignment will land, whether the dashboard shows at all. And the server's trainer write
 // (api/trainers/ops.js) merging on a member's device like any second device's change, `_by` and all.
 import { describe, expect, it } from 'vitest'
-import { sortMembers, flagText, changeText, changeLines, assignOutcome, assignResult, showsDashboard, trainerRoles, trainerError, initials, attentionOf } from './trainer-api.js'
+import { sortMembers, flagText, changeText, changeLines, assignOutcome, assignResult, showsDashboard, trainerRoles, trainerError, initials, attentionOf } from './trainer-api.ts'
 import { mergeStates } from './sync-merge.js'
 import { applyOps, cleanOps } from '../../../api/trainers/ops.ts'
 

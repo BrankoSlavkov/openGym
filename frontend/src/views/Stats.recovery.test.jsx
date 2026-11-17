@@ -9,7 +9,7 @@ import { FATIGUE_STATES, STRENGTH_FLOOR, fatigueHalfLifeOf, FATIGUE_SETS_PER_UNI
 import { fatigueStateOf } from '../lib/recovery-view.js'
 import Stats from './Stats.jsx'
 import Modals from '../components/Modals.jsx'
-import { bindUI } from '../components/ui.jsx'
+import { bindUI } from '../components/ui.tsx'
 import { useUI } from '../store/useUI.js'
 
 const DAY = 86400000
@@ -48,8 +48,8 @@ vi.mock('../components/LineChart.jsx', () => ({ default: props => {
   return React.createElement('div')
 } }))
 vi.mock('../components/Heatmap.jsx', () => ({ default: () => React.createElement('div') }))
-vi.mock('../components/Icon.jsx', () => ({ default: props => React.createElement('span', props) }))
-vi.mock('../components/BodyMap.jsx', () => ({
+vi.mock('../components/Icon.tsx', () => ({ default: props => React.createElement('span', props) }))
+vi.mock('../components/BodyMap.tsx', () => ({
   default: props => {
     mocks.maps.push(props)
     React.useEffect(() => {

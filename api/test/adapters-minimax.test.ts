@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import { tempData } from './helpers.ts';
 
 tempData();
-const minimax = (await import('../coach/core/adapters/minimax.js')).default;
-const { HTTP_PROVIDERS } = await import('../coach/core/providers.js');
+const minimax = (await import('../coach/core/adapters/minimax.ts')).default;
+const { HTTP_PROVIDERS } = await import('../coach/core/providers.ts');
 
 const answer = { choices: [{ message: { content: '{"coach_contract":1,"nochange":true,"reading":"fine"}' }, finish_reason: 'stop' }] };
 

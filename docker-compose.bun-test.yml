@@ -15,7 +15,8 @@ services:
     image: opengym-bun-test-api:local
     pull_policy: build
     build:
-      context: ./api
+      context: .
+      dockerfile: api/Dockerfile
       target: ${API_TARGET:-coach}
     restart: "no"
     env_file: .env

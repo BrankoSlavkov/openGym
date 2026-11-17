@@ -1,5 +1,5 @@
 // Getting back to the top of a long page: the tab bar's re-tap (components/TabBar.jsx) and the
-// floating button (components/ScrollTopButton.jsx). The app scrolls the window, not a container
+// floating button (components/ScrollTopButton.tsx). The app scrolls the window, not a container
 // (App.jsx records and restores window.scrollY per route), so both go through window.scrollTo and
 // the route's remembered position simply follows from the scroll events that come out of it.
 

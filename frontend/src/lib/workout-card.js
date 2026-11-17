@@ -13,7 +13,7 @@ import { sessionSections, workoutVolume, workoutDuration, workoutDay, doneUnits 
 import { EXIDX } from './exercises.js'
 import { isWarmupRow } from './workout-model.js'
 import { MUSCLES, INERT, levelsOf, loadOfWorkouts } from './muscles.js'
-import { regionLevel } from './body-geometry-level.js'
+import { regionLevel } from './body-geometry-level.ts'
 import { fmtDate, fmtDur, fmtNum, fmtVol, capWords } from './format.js'
 import { t, exerciseNameClass } from './i18n-core.js'
 import { parseColor, mixColor, FORMATS, drawBrand, roundRect } from './card-draw.js'
@@ -345,7 +345,7 @@ export function mapColors({ label, surface, acc }) {
 
 /* ---------- drawing ---------- */
 
-// The trophy and the flame from components/Icon.jsx, on their 24×24 grid, so the card and the app agree.
+// The trophy and the flame from components/Icon.tsx, on their 24×24 grid, so the card and the app agree.
 export const TROPHY = [
   'M7.6 4h8.8v4.6a4.4 4.4 0 0 1-8.8 0Z',
   'M7.6 5.6H4.9v1.5a3 3 0 0 0 2.9 3M16.4 5.6h2.7v1.5a3 3 0 0 1-2.9 3M12 13v3.4M8.6 20.4h6.8l-.7-4H9.3Z',

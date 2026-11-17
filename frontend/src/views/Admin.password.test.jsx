@@ -11,7 +11,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true
    close. Only an instance with password sign-in sends `password` on the user, and only then is
    any of this there. */
 const mocks = vi.hoisted(() => ({ answers: {}, sheets: [], posts: [], confirm: vi.fn() }))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: (path, init) => {
     if (init?.method === 'POST') mocks.posts.push({ path, body: JSON.parse(init.body) })
     const key = path.split('?')[0]

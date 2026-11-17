@@ -4,11 +4,11 @@ import { parseHTML } from 'linkedom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import CoachChat from './CoachChat.jsx'
 import { CONSENT_VERSION } from '../lib/coach.js'   // the consent a fixture grants is the current one, whatever its number
-// Loaded up front: coach-api.js imports it on first use, and a cold load (transform, file reads)
+// Loaded up front: coach-api.ts imports it on first use, and a cold load (transform, file reads)
 // outlasted `flush` below on a fast runner (Node 22 on CI), so the first ask was not in yet.
 import '../lib/coach-demo.js'
 
-// The demo Coach's failure state, end to end. Every other CoachChat test mocks lib/coach-api.js;
+// The demo Coach's failure state, end to end. Every other CoachChat test mocks lib/coach-api.ts;
 // this one runs the real thing with DEMO forced on, so the chain under test is exactly what the
 // GitHub Pages build ships: a builder throws inside lib/coach-demo.js's timer → demoStatus()
 // reports `lastError` → useCoachStatus hands it over on the next poll → the job-ended effect
@@ -28,7 +28,7 @@ const mocks = vi.hoisted(() => {
 
 vi.mock('../store/useStore.js', () => {
   const useStore = selector => selector(mocks.storeSnapshot())
-  useStore.getState = mocks.storeSnapshot          // coach-api.js reads S() from here in demo mode
+  useStore.getState = mocks.storeSnapshot          // coach-api.ts reads S() from here in demo mode
   return { useStore }
 })
 vi.mock('../store/useUI.js', () => {
@@ -39,13 +39,13 @@ vi.mock('../store/useUI.js', () => {
 vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => mocks.nav }))
 vi.mock('../lib/demo.js', () => ({ DEMO: true, DEMO_SEEDED: 'gym_demo_seeded_v1', REPO: '' }))
 vi.mock('../sheets.jsx', () => ({ startFlow: vi.fn(), confirmSheet: vi.fn() }))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: vi.fn(() => Promise.resolve({})), IS_APPLE: false, IS_ANDROID: false, BIO: 'biometrics',
 }))
 vi.mock('../coach.css', () => ({}))
 
 const DELAY = 2200        // coach-demo.js's thinking time
-const POLL_MS = 3000      // coach-api.js's cadence while a job is in flight
+const POLL_MS = 3000      // coach-api.ts's cadence while a job is in flight
 
 let dom, root, container
 

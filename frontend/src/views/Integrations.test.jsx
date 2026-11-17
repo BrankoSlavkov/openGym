@@ -23,7 +23,7 @@ vi.mock('../store/useUI.js', () => {
   return { useUI }
 })
 vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => (...a) => mocks.navs.push(a), useLocation: () => ({ pathname: '/settings/integrations', search: mocks.search || '' }) }))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: vi.fn(async (path, opts) => {
     const body = opts?.body ? JSON.parse(opts.body) : null
     mocks.calls.push([path.split('?')[0], body])
@@ -42,13 +42,13 @@ vi.mock('../lib/health-sync.js', () => ({
   disableHealth: vi.fn(async () => ({})),
   disableRead: vi.fn(async () => ({})),
 }))
-vi.mock('../lib/clipboard.js', () => ({ copyText: vi.fn(async () => true) }))
+vi.mock('../lib/clipboard.ts', () => ({ copyText: vi.fn(async () => true) }))
 vi.mock('../sheets.jsx', () => ({
   importFromApp: vi.fn(), importFromHevy: vi.fn(),
   confirmSheet: o => { mocks.confirm = o },
   menuSheet: o => { mocks.menu = o },
 }))
-vi.mock('../components/CsvExportSheet.jsx', () => ({ csvExportSheet: vi.fn() }))
+vi.mock('../components/CsvExportSheet.tsx', () => ({ csvExportSheet: vi.fn() }))
 
 import IntegrationsPage from './Integrations.jsx'
 import { importFromHevy } from '../sheets.jsx'

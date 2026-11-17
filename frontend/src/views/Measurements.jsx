@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
-import DateField from '../components/DateField.jsx'
+import DateField from '../components/DateField.tsx'
 import {
   MEASUREMENT_FIELDS, MEASUREMENT_KEYS, emptyMeasurement, enabledMeasurementFields,
   fromMeasurementDisplay, latestMeasurement, measurementEntryHasValues,
@@ -14,11 +14,11 @@ import {
 import { CheckinReminderRow } from '../components/CheckinReminder.jsx'
 import { fmtDate, fmtNum, todayISO, uid } from '../lib/format.js'
 import { t } from '../lib/i18n.js'
-import { nameIn } from '../lib/a11y-name.js'
+import { nameIn } from '../lib/a11y-name.ts'
 import LineChart from '../components/LineChart.jsx'
-import Icon from '../components/Icon.jsx'
-import HealthBodyCard from '../components/HealthBodyCard.jsx'
-import { Button, NumberField, Section, Segmented, SelectRow, Switch, TextField } from '../components/ui.jsx'
+import Icon from '../components/Icon.tsx'
+import HealthBodyCard from '../components/HealthBodyCard.tsx'
+import { Button, NumberField, Section, Segmented, SelectRow, Switch, TextField } from '../components/ui.tsx'
 import { confirmSheet } from '../sheets.jsx'
 
 // Every write leaves the list in its one-entry-per-day shape (normalizeMeasurementsState).

@@ -4,7 +4,7 @@
 // Done, a sheet in the way, and a phone that was locked through all of it (timestamps, not ticks).
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
 
-vi.mock('../lib/api.js', () => ({ api: vi.fn(() => Promise.resolve({ ok: true })) }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn(() => Promise.resolve({ ok: true })) }))
 const { beep, chime, vibrate } = vi.hoisted(() => ({ beep: vi.fn(), chime: vi.fn(), vibrate: vi.fn() }))
 vi.mock('../lib/sound.js', () => ({ beep, chime, vibrate, alertBuzz: vi.fn() }))
 

@@ -4,8 +4,8 @@ import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
 import { queueTones, unlock, vibrate } from '../lib/sound.js'
 import { normalizeTempo, parseTempo, tempoSteps, stepAt, tutSec, PHASES, PHASE_LABEL, PHASE_FREQ } from '../lib/tempo.js'
-import { Section, Row, Switch, Button, Stepper } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Section, Row, Switch, Button, Stepper } from './ui.tsx'
+import Icon from './Icon.tsx'
 
 /* Tempo (#572): the editor for a tempo like 3-1-1-0 (an exercise's, or one set's) and the guide
    that counts a set through it, with a tone and a buzz at each phase so the phone can sit on the

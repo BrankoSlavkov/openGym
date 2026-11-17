@@ -11,7 +11,7 @@
  */
 import * as jobs from './jobs.ts';
 import * as cfgStore from './config.ts';
-import { isDue, reviewedAtOf, retryWaiting } from './core/due.js';
+import { isDue, reviewedAtOf, retryWaiting } from './core/due.ts';
 
 // Re-exported so nothing that reached it through this module has to move.
 export { isDue };
@@ -42,7 +42,7 @@ export function startCadence(deps) {
         // "nothing to change", or with an answer that failed validation and was paid for all the
         // same. A call that never reached it (timeout, no runtime, consent, switched off) is retried.
         // A failure no retry fixes (a refused key, no runtime) counts too, or the tick queued it
-        // again every minute and spent the day's cap on it (core/due.js reviewedAtOf).
+        // again every minute and spent the day's cap on it (core/due.ts reviewedAtOf).
         const history = jobs.readUser(user.id).history;
         const reviewedAt = reviewedAtOf(history);
         if (retryWaiting(history)) continue;

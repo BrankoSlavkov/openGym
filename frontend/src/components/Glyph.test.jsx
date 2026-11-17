@@ -7,7 +7,7 @@ import { createRoot } from 'react-dom/client'
 import { describe, expect, it } from 'vitest'
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import Glyph, { EmojiText, splitEmoji } from './Glyph.jsx'
+import Glyph, { EmojiText, splitEmoji } from './Glyph.tsx'
 import { Medal, StreakFlame, Freezes } from './Streak.jsx'
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true

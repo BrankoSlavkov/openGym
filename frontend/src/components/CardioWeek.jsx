@@ -12,8 +12,8 @@ import {
   CARDIO_KINDS, KIND_LABEL, KIND_ICON, GOALS_MAX, GOAL_MAX, STEP, unitsOf, cardioGoalsOf, withCardioGoals,
   cardioWeekTotals, goalValue, shownUnit, toShown, fromShown, suggestedShown,
 } from '../lib/cardio-goals.js'
-import Icon from './Icon.jsx'
-import { Button, Row, Section, Segmented, Stepper } from './ui.jsx'
+import Icon from './Icon.tsx'
+import { Button, Row, Section, Segmented, Stepper } from './ui.tsx'
 
 /** "45 min", "3 sessions", "5 km", "1,000 m". */
 export function amountText(v, u) {

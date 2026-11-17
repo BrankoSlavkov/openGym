@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { makePkce, authUrl, readCallback, pastedCode, exchangeCode, OPENROUTER_KEYS } from '../coach/core/openrouter-oauth.js';
+import { makePkce, authUrl, readCallback, pastedCode, exchangeCode, OPENROUTER_KEYS } from '../coach/core/openrouter-oauth.ts';
 
 test('the verifier is a fresh 43-character base64url string and the challenge is its SHA-256', async () => {
   const a = await makePkce();

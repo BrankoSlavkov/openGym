@@ -17,8 +17,8 @@ import { circuitUnitAt } from '../store/useCircuit.js'
 import { stationsOf } from '../lib/circuit.js'
 import { modeOf, fmtMetres } from '../lib/history.js'
 import Media, { Thumb } from './Media.jsx'
-import Icon from './Icon.jsx'
-import { Button } from './ui.jsx'
+import Icon from './Icon.tsx'
+import { Button } from './ui.tsx'
 
 const nameOf = id => (EXIDX[id] ? exerciseNameText(EXIDX[id]) : String(id ?? ''))
 

@@ -5,7 +5,7 @@
    showed the previous person's meals. A sign-out now forgets the link, its cache and its token. */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../lib/api.js', () => ({ api: vi.fn(async () => ({ ok: true })), setRemoteAuth: vi.fn() }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn(async () => ({ ok: true })), setRemoteAuth: vi.fn() }))
 vi.mock('./useUI.js', () => ({ useUI: { getState: () => ({ toast: vi.fn(), stopRest: vi.fn(), abandonWork: vi.fn() }) } }))
 vi.mock('../sheets.jsx', () => ({ askAddDeviceData: async () => true }))
 

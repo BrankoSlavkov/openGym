@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'
 import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
 import { dateLocale } from '../lib/i18n-core.js'
-import { appBase } from '../lib/api.js'
+import { appBase } from '../lib/api.ts'
 import { fmtAgo } from '../lib/format.js'
 import { loadLink, onNutritionChange, link, unlink, refresh, setShown, guessUrl, cleanUrl, fastingNow } from '../lib/sister-nutrition.js'
 import { confirmSheet } from '../sheets.jsx'
-import Icon from './Icon.jsx'
-import { Section, Row, Switch, Button, TextField } from './ui.jsx'
+import Icon from './Icon.tsx'
+import { Section, Row, Switch, Button, TextField } from './ui.tsx'
 
 /* Sister apps (v1.4.5, gm-hooks): Settings → Integrations → Sister apps → openNutrition. Linking
    this device to an openNutrition account, read-only (lib/sister-nutrition.js), what it may show
@@ -17,6 +17,7 @@ import { Section, Row, Switch, Button, TextField } from './ui.jsx'
 export const SISTER_DOCS = 'https://github.com/DuarteSantos8/openGym/blob/main/docs/dev/SISTER_APPS.md'
 
 /** This device's openNutrition link, kept up to date; with `range`, the days of it are fetched too. */
+/** @param {{from: string, to: string} | null} [range] */
 export function useNutritionLink(range = null) {
   const [l, setL] = useState(() => loadLink())
   useEffect(() => onNutritionChange(setL), [])

@@ -2,7 +2,7 @@
 // rows of a block of your own. The rules live in lib/warmup-ramp.js; this only edits the slot's
 // `warmup`, `warmupRows` and the older `warmupSets` count.
 import { t } from '../lib/i18n.js'
-import { SelectRow, Stepper, Button } from './ui.jsx'
+import { SelectRow, Stepper, Button } from './ui.tsx'
 import { fmtNum } from '../lib/format.js'
 import { MAX_PLANNED_WARMUPS, barFloor, isBw, modeOf } from '../lib/history.js'
 import { dropGrid } from '../lib/plates.js'

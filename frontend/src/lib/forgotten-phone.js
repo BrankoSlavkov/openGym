@@ -1,6 +1,6 @@
 // The phone's side of Forgotten workouts (lib/forgotten-workout.js decides, this follows): a check
 // every 30 s while a workout runs and whenever the app comes to the front, the in-app card
-// (components/ForgottenPrompt.jsx), a local notification planned for the moment the question is
+// (components/ForgottenPrompt.tsx), a local notification planned for the moment the question is
 // due (Keep going / Finish right on it), the gym leave the native gym reminder noticed, and the
 // finish itself. Phone apps only: a laptop's tab never ends a phone's workout.
 //

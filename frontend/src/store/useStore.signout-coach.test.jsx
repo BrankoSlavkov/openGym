@@ -11,7 +11,7 @@ vi.mock('../lib/coach-device.js', async importOriginal => ({
   ...(await importOriginal()),
   saveCoachDevice: vi.fn(async patch => { coach.saved.push(patch); return { mode: 'byok', ...patch } }),
 }))
-vi.mock('../lib/api.js', async importOriginal => ({ ...(await importOriginal()), api: vi.fn(async () => ({ ok: true })), setRemoteAuth: vi.fn() }))
+vi.mock('../lib/api.ts', async importOriginal => ({ ...(await importOriginal()), api: vi.fn(async () => ({ ok: true })), setRemoteAuth: vi.fn() }))
 vi.mock('./useUI.js', () => ({ useUI: { getState: () => ({ toast: vi.fn(), stopRest: vi.fn(), abandonWork: vi.fn() }) } }))
 vi.mock('../sheets.jsx', () => ({ askAddDeviceData: async () => true }))
 

@@ -9,9 +9,9 @@ import {
   RECOVERY_KINDS, RECOVERY_LABEL, RECOVERY_ICON, RECOVERY_PRESETS, RECOVERY_MIN_MAX,
   recoverySessionsOf, withRecovery, recoveryLine,
 } from '../lib/recovery-sessions.js'
-import DateField from './DateField.jsx'
-import Icon from './Icon.jsx'
-import { Button, Stepper } from './ui.jsx'
+import DateField from './DateField.tsx'
+import Icon from './Icon.tsx'
+import { Button, Stepper } from './ui.tsx'
 
 // Recovery sessions (lib/recovery-sessions.js): the sauna, the ice bath, the massage. Two taps:
 // what it was and how long, the day and a note if you like. Opened from History, a day in the

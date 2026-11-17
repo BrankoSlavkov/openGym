@@ -6,14 +6,14 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from '../router/hooks.tsx'
 import { t } from '../lib/i18n.js'
-import { Section, Row, Switch } from '../components/ui.jsx'
+import { Section, Row, Switch } from '../components/ui.tsx'
 import { readWatchPrefs, writeWatchPrefs, readWatchStatus, onWatchPrefs, watchLinkState, lastHeardAt } from '../lib/watch-settings.js'
 import { watchStatus } from '../lib/watch-sync.js'
 import { loadHealth, onHealthChange } from '../lib/health-sync.js'
 import { fmtAgo } from '../lib/format.js'
 import { useStore } from '../store/useStore.js'
 import { isOn } from '../lib/modules.js'
-import Icon from '../components/Icon.jsx'
+import Icon from '../components/Icon.tsx'
 
 // The two rest screens as the watch draws them (simulator screenshots of the effort screen from #1100, in public/watch/).
 const REST_LOOKS = [

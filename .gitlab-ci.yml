@@ -95,6 +95,9 @@ workflow:
 .node:
   image: $NODE_IMAGE
   timeout: 20 minutes
+  before_script:
+    - npm install --global bun@1.4.4
+    - bun install --frozen-lockfile --ignore-scripts
 
 # docker-in-docker with TLS, the way gitlab.com's shared runners expect it.
 .docker:
@@ -148,7 +151,7 @@ test:frontend:
   cache:
     key:
       files:
-        - frontend/package-lock.json
+        - bun.lock
     paths:
       - frontend/.npm
   script:
@@ -156,14 +159,14 @@ test:frontend:
     # --ignore-scripts: nothing here needs a postinstall. (@capacitor/assets, whose sharp
     # downloaded libvips from GitHub and once turned a release red, is no longer installed:
     # docs/MOBILE.md runs it with npx when icons are redrawn.)
-    - npm ci --cache .npm --prefer-offline --ignore-scripts
     # JUnit → the MR widget lists exactly which tests failed; cobertura → coverage on the
     # diff; text-summary → the number the coverage badge shows.
     - npx vitest run
         --reporter=default --reporter=junit --outputFile.junit=junit.xml
         --coverage --coverage.reporter=text-summary --coverage.reporter=cobertura
     # A broken import or bad JSX fails the build long before any test covers it.
-    - npm run build
+    - bun run --cwd .. generate
+    - bun run build
     # What this commit costs on the wire, and — in an MR — what it adds compared with main.
     # main's numbers are the artifact of its last green test:frontend; report-only.
     - node scripts/bundle-size.mjs --out bundle-size.json
@@ -201,16 +204,13 @@ test:mcp:
   cache:
     key:
       files:
-        - mcp/package-lock.json
-        - api/package-lock.json
+        - bun.lock
     paths:
       - mcp/.npm
   script:
     # log_workout's end-to-end test drives the real api/server.js: the api's dependencies too
     # (as test:api installs them), or that test fails here rather than skipping.
-    - (cd api && npm ci --cache ../mcp/.npm --prefer-offline --omit=optional)
     - cd mcp
-    - npm ci --cache .npm --prefer-offline --ignore-scripts
     - npx vitest run
         --reporter=default --reporter=junit --outputFile.junit=junit.xml
         --coverage --coverage.reporter=text-summary --coverage.reporter=cobertura
@@ -237,19 +237,16 @@ test:api:
   cache:
     key:
       files:
-        - api/package-lock.json
+        - bun.lock
     paths:
       - api/.npm
   script:
     - cd api
-    - npm ci --cache .npm --prefer-offline --omit=optional
     # The Coach tests run on node:test and drive the in-repo fixture provider plus a local mock
     # of the Chat Completions shape, so the whole job works without an AI account or the network.
     # Same suite `npm test` runs, plus the JUnit file and node's own coverage table.
-    - node --experimental-test-coverage --test
-        --test-reporter=spec --test-reporter-destination=stdout
-        --test-reporter=junit --test-reporter-destination=junit.xml
-        test/*.test.js
+    - bun run typecheck
+    - bun test --parallel --timeout 120000 --reporter=junit --reporter-outfile=junit.xml ./test/
     - cd ..
     # The api's copy of the exercise catalogue and the prompt module are generated and committed.
     # A dataset or prompt change that forgets to regenerate them would otherwise only surface as
@@ -257,8 +254,8 @@ test:api:
     - node scripts/build-coach-assets.mjs --check
     # website/api.html is generated from api/openapi.yaml and committed. Same reason: a spec
     # change that forgets to regenerate it publishes a reference for the previous version.
-    - npm ci
-    - node scripts/build-api-docs.mjs --check
+    - bun run generate
+    - bun run typecheck
     # api/coach/core is imported by the server under bare node AND by the phone under Vite.
     # vitest forgives what node does not (?raw, import.meta.glob); this runs outside vitest.
     - node api/scripts/check-core-loadable.mjs
@@ -301,7 +298,7 @@ build:images:
   parallel:
     matrix:
       - IMAGE: api
-        CONTEXT: "./api"
+        CONTEXT: "."
         DOCKERFILE: "./api/Dockerfile"
       - IMAGE: web
         CONTEXT: "."
@@ -392,11 +389,11 @@ build:api-check:
   stage: build
   needs: ["test:api"]
   script:
-    - docker build --pull --target default -t opengym-api:default ./api
-    - docker build --pull --target coach   -t opengym-api:coach   ./api
+    - docker build --pull --target default -t opengym-api:default -f api/Dockerfile .
+    - docker build --pull --target coach   -t opengym-api:coach -f api/Dockerfile .
     # No --target, exactly like build:images. What it ships is whatever Dockerfile stage happens
     # to be last, and that untargeted artifact is the image every self-hoster pulls as :latest.
-    - docker build --pull -t opengym-api:published ./api
+    - docker build --pull -t opengym-api:published -f api/Dockerfile .
     # --- the published image has no AI runtime, and does not need one for the HTTPS providers
     - |
       set -eu
@@ -807,12 +804,11 @@ pages:
   cache:
     key:
       files:
-        - frontend/package-lock.json
+        - bun.lock
     paths:
       - frontend/.npm
   script:
     - cd frontend
-    - npm ci --cache .npm --prefer-offline --ignore-scripts
     - npm run build
     - cd ..
     - node scripts/catalogue/stage-media.mjs frontend/dist

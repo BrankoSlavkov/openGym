@@ -16,7 +16,7 @@ export function sheetKeyboardInsets(win) {
    size, only the visual viewport shrinks — so a bottom sheet with a text input near its
    foot ends up half under the keys. index.css reads two custom properties on the sheet
    (--picker-keyboard-bottom / --picker-visual-height) to lift and cap it. SelectSheet in
-   components/ui.jsx does the same sync inline; the exercise picker, the custom-exercise
+   components/ui.tsx does the same sync inline; the exercise picker, the custom-exercise
    form and the note sheets need it too, hence this hook. Both measure with
    sheetKeyboardInsets below.
 

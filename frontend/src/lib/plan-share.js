@@ -728,6 +728,9 @@ export function planPrintHTML(S, owner, { routineId, probe = false, pictures = n
  * `beforePrint` runs once the page is ready, just before the dialog opens; returning false there
  * (the sheet was dismissed while the pictures loaded) prints nothing.
  */
+/** @param {import('./domain-types.ts').AppState} S
+ * @param {string} owner
+ * @param {{withPictures?: boolean, name?: string, routineId?: string, beforePrint?: () => boolean | void, loadPictures?: typeof loadPrintPictures}} [options] */
 export async function printPlan(S, owner, { withPictures = false, name, beforePrint, loadPictures = loadPrintPictures, ...opts } = {}) {
   let pictures = null
   if (withPictures) {

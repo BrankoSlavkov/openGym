@@ -15,12 +15,12 @@ import { fileURLToPath } from 'node:url';
 import { run } from './spawn.ts';
 import claude from './claude.ts';
 import codex from './codex.ts';
-import anthropic from '../core/adapters/anthropic.js';
-import openai from '../core/adapters/openai.js';
-import gemini from '../core/adapters/gemini.js';
-import minimax from '../core/adapters/minimax.js';
-import openrouter from '../core/adapters/openrouter.js';
-import compatible from '../core/adapters/compatible.js';
+import anthropic from '../core/adapters/anthropic.ts';
+import openai from '../core/adapters/openai.ts';
+import gemini from '../core/adapters/gemini.ts';
+import minimax from '../core/adapters/minimax.ts';
+import openrouter from '../core/adapters/openrouter.ts';
+import compatible from '../core/adapters/compatible.ts';
 import chatgpt from './chatgpt.ts';
 import { on as chatgptPlanOn } from '../chatgpt-plan.ts';
 

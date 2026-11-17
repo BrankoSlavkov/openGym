@@ -10,13 +10,13 @@ import { t } from '../lib/i18n.js'
 import { MOBILE } from '../lib/mobile.js'
 import { DEMO } from '../lib/demo.js'
 import { platformNow } from '../lib/platform-now.js'
-import { api } from '../lib/api.js'
-import { libraryOn } from '../lib/shared-api.js'
+import { api } from '../lib/api.ts'
+import { libraryOn } from '../lib/shared-api.ts'
 import { MODULES, GROUPS, PRESETS, isOn, presetOf, presetModules, applyPreset, setModule, turnedOff, moduleBuilt } from '../lib/modules.js'
 import { readWatchStatus, readGarminLink } from '../lib/watch-settings.js'
 import { moduleCopy, groupCopy, presetCopy } from '../lib/modules-copy.js'
 import { confirmSheet } from '../sheets.jsx'
-import { Section, Row, SelectRow, Switch } from '../components/ui.jsx'
+import { Section, Row, SelectRow, Switch } from '../components/ui.tsx'
 
 /* What is connected right now, read once when the page opens. Each answer is a promise that never
    rejects: a check that fails counts as nothing connected, and the switch simply goes off. */

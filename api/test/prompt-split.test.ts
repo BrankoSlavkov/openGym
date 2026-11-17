@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildPrompt, buildPromptParts, taskOf } from '../coach/core/prompt.js';
-import { SCHEMAS } from '../coach/core/schemas.js';
+import { buildPrompt, buildPromptParts, taskOf } from '../coach/core/prompt.ts';
+import { SCHEMAS } from '../coach/core/schemas.ts';
 import { build, FULL_DETAIL_SESSIONS } from '../coach/core/payload.js';
-import { chatCompletionsSpec } from '../coach/core/adapters/openai.js';
+import { chatCompletionsSpec } from '../coach/core/adapters/openai.ts';
 import { validatePlan } from '../coach/core/validate.js';
 import { D as fixtureDay } from './helpers.ts';
 

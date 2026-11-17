@@ -1,6 +1,6 @@
 // The progress-photo camera (#951): a live view with an earlier photo laid over it, faint, so the
 // new one can be framed the same way (same distance, same height, same pose). The overlay sits
-// exactly on the camera's frame, which is also the picture that is kept (lib/camera-frame.js),
+// exactly on the camera's frame, which is also the picture that is kept (lib/camera-frame.ts),
 // and none of it ends up in the saved photo.
 //
 // Camera access is getUserMedia, as the QR scan already does (CameraScan.jsx): it works in the
@@ -15,10 +15,10 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { t } from '../lib/i18n.js'
 import { fmtDate, todayISO } from '../lib/format.js'
-import { containRect, captureSize, overlayOpacity, captureName } from '../lib/camera-frame.js'
+import { containRect, captureSize, overlayOpacity, captureName } from '../lib/camera-frame.ts'
 import { CustomThumb, useMediaUrl } from './CustomMedia.jsx'
-import { Button } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Button } from './ui.tsx'
+import Icon from './Icon.tsx'
 
 const OVERLAY_KEY = 'gym_photo_overlay'
 const readOpacity = () => { try { return overlayOpacity(localStorage.getItem(OVERLAY_KEY) ?? undefined) } catch { return 0.4 } }

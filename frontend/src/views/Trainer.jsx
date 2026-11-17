@@ -12,14 +12,14 @@ import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
 import { fmtDaysAgo, todayISO } from '../lib/format.js'
-import { categoryLabel } from '../lib/sharing-api.js'
+import { categoryLabel } from '../lib/sharing-api.ts'
 import {
   getOverview, getMembers, getMember, getGym, sendOps, answerRequest, dropMember, setGymTrainer,
   sortMembers, trainerError, trainerRoles, showsDashboard,
-} from '../lib/trainer-api.js'
+} from '../lib/trainer-api.ts'
 import { confirmSheet } from '../sheets.jsx'
-import { Section, Row, Button, SearchField, Segmented, Check, TextField, openSelectSheet } from '../components/ui.jsx'
-import Icon from '../components/Icon.jsx'
+import { Section, Row, Button, SearchField, Segmented, Check, TextField, openSelectSheet } from '../components/ui.tsx'
+import Icon from '../components/Icon.tsx'
 import TrainerMember, { Avatar, FlagPill } from '../components/TrainerMember.jsx'
 import { InviteSheet, GymCodeSheet, AssignSheet, CommentSheet, WeighSheet, WorkoutEditSheet, WorkoutAddSheet, MeasureSheet } from '../components/TrainerSheets.jsx'
 

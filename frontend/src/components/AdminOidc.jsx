@@ -2,10 +2,10 @@
 // found at the provider, with a button that asks again. Renders nothing on an instance without
 // OIDC. English only, like the rest of the admin dashboard.
 import { useEffect, useState } from 'react'
-import { api } from '../lib/api.js'
+import { api } from '../lib/api.ts'
 import { useStore } from '../store/useStore.js'
 import { oidcOn } from '../lib/oidc.js'
-import { Button } from './ui.jsx'
+import { Button } from './ui.tsx'
 
 const when = ts => (ts ? new Date(ts).toLocaleString() : 'never')
 const yes = v => (v ? 'on' : 'off')

@@ -1,5 +1,5 @@
-import Icon from './Icon.jsx'
-import { BrandMark } from './BrandLogo.jsx'
+import Icon from './Icon.tsx'
+import { BrandMark } from './BrandLogo.tsx'
 import { t } from '../lib/i18n.js'
 import { islandChips } from '../lib/live-glance.js'
 import { useState } from 'react'

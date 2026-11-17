@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { levelsFor, summarize, logLine, sharingError, consentWords, TRAINER_CONSENT, sharingOn } from './sharing-api.js'
+import { levelsFor, summarize, logLine, sharingError, consentWords, TRAINER_CONSENT, sharingOn } from './sharing-api.ts'
 import { CONSENT_TEXTS } from '../../../api/consent.ts'
 
 describe('sharing helpers', () => {

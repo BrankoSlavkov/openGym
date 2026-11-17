@@ -1195,7 +1195,8 @@ export const sharingPreview = {
   description: 'The same projection the trainer or gym lead of that grant gets, so the preview cannot drift from the truth.',
   request: {
       query: z.object({
-        grant: z.string().openapi({ description: 'Grant id' }).optional()
+        grant: z.string().openapi({ description: 'Grant id' }).optional(),
+        today: z.string().openapi({ description: 'Client date (YYYY-MM-DD)' }).optional()
       })
     },
   responses: {

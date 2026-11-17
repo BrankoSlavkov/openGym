@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import * as web from './sharing-scopes.js'
+import * as web from './sharing-scopes.ts'
 import * as api from '../../../api/trainers/scopes.ts'
 
 // Code that exists twice on purpose (CLAUDE.md): the app's copy of the scope catalog must give

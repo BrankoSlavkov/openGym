@@ -24,7 +24,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = snap
   return { useUI }
 })
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: (...a) => mocks.api(...a), webauthnOK: () => true, passkeyAssertion: vi.fn(async () => ({ cid: 'c', credential: { id: 'k' } })),
   passwordLogin: vi.fn(), passwordRegister: vi.fn(), passwordResetRedeem: vi.fn()
 }))

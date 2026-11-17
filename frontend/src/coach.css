@@ -176,7 +176,7 @@
    the composer rides on top of it. */
 :root[data-native-kb] .composer{bottom:var(--native-kb);padding-bottom:10px}
 .composer-in{max-width:560px;margin:0 auto;display:flex;gap:8px;align-items:flex-end;position:relative}
-/* The height is set by components/ChatInput.jsx: as tall as the text, up to 40% of the screen
+/* The height is set by components/ChatInput.tsx: as tall as the text, up to 40% of the screen
    above the keyboard, or 70% opened into the tall editor. */
 .composer textarea{
   flex:1;min-height:44px;resize:none;border-radius:22px;padding:11px 16px;overflow-y:auto;

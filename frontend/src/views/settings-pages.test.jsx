@@ -32,7 +32,7 @@ vi.mock('../store/useUI.js', () => {
   return { useUI }
 })
 vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => (...a) => mocks.navs.push(a), useLocation: () => ({ pathname: '/settings', search: '' }) }))
-vi.mock('../lib/api.js', () => ({ api: vi.fn(path => Promise.resolve(path === '/api/account/passkeys' ? { passkeys: [] } : {})), webauthnOK: () => false, passkeyLogin: vi.fn(), passkeyRegister: vi.fn(), IS_ANDROID: false }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn(path => Promise.resolve(path === '/api/account/passkeys' ? { passkeys: [] } : {})), webauthnOK: () => false, passkeyLogin: vi.fn(), passkeyRegister: vi.fn(), IS_ANDROID: false }))
 vi.mock('../lib/push.js', () => ({ pushSupported: () => mocks.push, enablePush: vi.fn(), disablePush: vi.fn(), sendTestPush: vi.fn(), syncPushSubscription: vi.fn(() => Promise.resolve(mocks.pushOn)) }))
 vi.mock('../lib/wakelock.js', () => ({ wakeLockSupported: () => true }))
 vi.mock('../lib/mobile.js', () => ({ get MOBILE() { return mocks.MOBILE }, isAndroid: () => Promise.resolve(false), shareExport: vi.fn(), shareExportBlob: vi.fn(), syncReminder: vi.fn() }))
@@ -44,7 +44,7 @@ vi.mock('../sheets.jsx', () => ({
 
 import Settings from './Settings.jsx'
 import { FLOWS } from '../lib/tour.js'
-import { bindUI } from '../components/ui.jsx'
+import { bindUI } from '../components/ui.tsx'
 import { useUI } from '../store/useUI.js'
 
 globalThis.__APP_VERSION__ ??= 'test'

@@ -10,7 +10,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true
    admin; for an admin only when the viewer is the owner; never for the owner (whose way back is
    the server command) or oneself. Asks first, then shows the code exactly once, locked. */
 const mocks = vi.hoisted(() => ({ answers: {}, sheets: [], posts: [], confirm: vi.fn(), me: { id: 'adm', name: 'Admin', admin: true } }))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: (path, init) => {
     if (init?.method === 'POST') mocks.posts.push({ path, body: JSON.parse(init.body) })
     const key = path.split('?')[0]

@@ -4,18 +4,18 @@ import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { DAYN, DAYS, weekOrder, weekStartOf, uid, exCount, routineCount, todayISO, fmtDate } from '../lib/format.js'
 import { t } from '../lib/i18n.js'
-import { nameIn, said } from '../lib/a11y-name.js'
+import { nameIn, said } from '../lib/a11y-name.ts'
 import {
   dayAssignSheet, starterPlanSheet, confirmSheet, menuSheet,
   planHasRoutines, exportPlanFile, printWholePlan, importPlanFile,
 } from '../sheets.jsx'
-import Icon from '../components/Icon.jsx'
-import EmptyState from '../components/EmptyState.jsx'
+import Icon from '../components/Icon.tsx'
+import EmptyState from '../components/EmptyState.tsx'
 import { SeasonDeco } from '../components/Seasonal.jsx'
-import { Button, Row, Section, Segmented } from '../components/ui.jsx'
-import SwipeRow from '../components/SwipeRow.jsx'
+import { Button, Row, Section, Segmented } from '../components/ui.tsx'
+import SwipeRow from '../components/SwipeRow.tsx'
 import { copyRoutine, deleteRoutine, restoreRoutine, routineSnapshot } from '../lib/routines.js'
-import MiniBodyMap from '../components/MiniBodyMap.jsx'
+import MiniBodyMap from '../components/MiniBodyMap.tsx'
 import { workoutControls } from '../lib/workout-controls.js'
 import { tappable } from '../lib/use-sheet-keyboard.js'
 import { useListReorder, moved } from '../lib/use-list-reorder.js'
@@ -34,7 +34,7 @@ import {
 import { isOn } from '../lib/modules.js'
 import { groupRoutines, folderOpen, setFolderOpen, folderOf } from '../lib/routine-folders.js'
 import { isFavRoutine } from '../lib/routine-favs.js'
-import { routineFromWorkoutSheet } from '../components/RoutineFromWorkout.jsx'
+import { routineFromWorkoutSheet } from '../components/RoutineFromWorkout.tsx'
 import { routineSources } from '../lib/session-routines.js'
 
 // Plan has two views (v1.3.11): Schedule (how you train, and when) and Routines (what you

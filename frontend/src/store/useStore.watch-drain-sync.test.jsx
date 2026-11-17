@@ -10,11 +10,11 @@
    Real store and real lib/watch-sync.js; the API is a mock whose answers the test lets go. */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../lib/api.js', () => ({ api: vi.fn(), setRemoteAuth: vi.fn() }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn(), setRemoteAuth: vi.fn() }))
 vi.mock('./useUI.js', () => ({ useUI: { getState: () => ({ toast: vi.fn() }) } }))
 vi.mock('../sheets.jsx', () => ({ askAddDeviceData: async () => false }))
 
-import { api } from '../lib/api.js'
+import { api } from '../lib/api.ts'
 import { DEF, useStore } from './useStore.js'
 import { stampWorkout } from '../lib/sync-merge.js'
 import { applyEvents, bindWatchActions, bindWatchAppActions, patchSetIn, _resetWatchSync } from '../lib/watch-sync.js'

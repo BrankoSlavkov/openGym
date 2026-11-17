@@ -1,5 +1,5 @@
 import { favRoutinesFirst, isFavRoutine } from '../lib/routine-favs.js'
-import Icon from './Icon.jsx'
+import Icon from './Icon.tsx'
 import { useMemo } from 'react'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
@@ -14,8 +14,8 @@ import { exOr } from '../lib/exercises.js'
 import { speedUnitOf } from '../lib/speed.js'
 import { glyphOf } from '../lib/glyphs.js'
 import { leftoversBefore } from '../lib/leftovers.js'
-import { Button, Row } from './ui.jsx'
-import MiniBodyMap from './MiniBodyMap.jsx'
+import { Button, Row } from './ui.tsx'
+import MiniBodyMap from './MiniBodyMap.tsx'
 
 const ui = () => useUI.getState()
 const S = () => useStore.getState().S

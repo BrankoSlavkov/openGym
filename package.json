@@ -1,0 +1,30 @@
+{
+  "name": "opengym",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@1.4.4",
+  "workspaces": [
+    "api",
+    "frontend",
+    "mcp",
+    "packages/*"
+  ],
+  "scripts": {
+    "generate": "bun run --cwd api openapi && bun run --cwd frontend api:generate",
+    "start": "bun run scripts/start.ts",
+    "dev": "bun run scripts/dev.ts",
+    "build": "bun run generate && bun run --cwd frontend build",
+    "typecheck": "bun run --cwd api typecheck && bun run --cwd frontend typecheck && bun run --cwd packages/shared typecheck && bun run --cwd mcp typecheck",
+    "test:api": "bun run --cwd api test",
+    "test:web": "bun run --cwd frontend test --maxWorkers=2",
+    "test:mcp": "bun run --cwd mcp test"
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.6.0",
+    "vitest": "5.1.0"
+  },
+  "devDependencies": {
+    "@types/bun": "1.4.4",
+    "typescript": "7.0.2"
+  }
+}

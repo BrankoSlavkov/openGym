@@ -26,7 +26,7 @@ const offEquipment = (ctx, id) => libraryHas(id) && !(ctx.offered && ctx.offered
   && ((!!ctx.equipment?.length && !equipmentAllows(ctx.equipment, id)) || (ctx.noDumbbells === true && isDumbbellLift(id))
     || !machineAllows(ctx.machines, id));
 const OFF_EQUIPMENT = (where, id) => `${where} "${id}" needs equipment the user does not have — use an exercise from the library provided in the payload`;
-import { glyphStr } from './glyphs.js';
+import { glyphStr } from './glyphs.ts';
 import { sortActions } from './ask-actions.js';
 
 // The closed list (FR-23 / C3). Adding a member here is a deliberate act with an apply
@@ -104,7 +104,7 @@ const cardioTarget = e => (e.mode !== 'cardio' ? {} : {
   ...(isNum(e.speed) && e.speed > 0 && e.speed <= MAX_SPEED ? { speed: e.speed } : {})
 });
 // Routine icons: an icon key the app knows or a legacy emoji, never free text (#311).
-export { ROUTINE_GLYPHS } from './glyphs.js';
+export { ROUTINE_GLYPHS } from './glyphs.ts';
 
 /* ---------- the two v1.2.4 flags, enforced rather than merely accepted ----------
    `prompts/common.md` tells the model that unilateral work is prescribed as the total across

@@ -2,7 +2,7 @@
 // Both are right for a 20 kg bar, but nothing said that bar was counted, and 12.5 kg cannot be
 // "bar only" on a 20 kg bar. The first line names the bar; a weight under it says so.
 import { describe, expect, it } from 'vitest'
-import { plateText } from './plate-text.js'
+import { plateText } from './plate-text.ts'
 import { inventoryFor, rowLoad, sameLoad } from './plates.js'
 
 const inv = inventoryFor({ unit: 'kg' })

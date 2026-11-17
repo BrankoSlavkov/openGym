@@ -41,7 +41,7 @@ vi.mock('../store/useUI.js', () => {
   return { useUI }
 })
 vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => to => mocks.navs.push(to) }))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: vi.fn(() => Promise.resolve({})), webauthnOK: () => true, passkeyLogin: vi.fn(), passkeyRegister: vi.fn(), IS_ANDROID: false,
 }))
 vi.mock('../lib/push.js', () => ({ pushSupported: () => false, enablePush: vi.fn(), disablePush: vi.fn(), sendTestPush: vi.fn() }))

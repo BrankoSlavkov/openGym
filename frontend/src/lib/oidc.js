@@ -2,7 +2,7 @@
 // (api/oidc/); in a browser this only leaves for /api/oidc/start and reads what the callback
 // put in the address bar on the way back. The phone app's own flow is in lib/oidc-app.js.
 import { t } from './i18n-core.js'
-import { appBase } from './app-base.js'
+import { appBase } from './app-base.ts'
 
 export const oidcOn = config => !!config?.oidc
 export const oidcOnly = config => !!config?.oidc?.only

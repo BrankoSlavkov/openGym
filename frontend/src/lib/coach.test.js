@@ -11,7 +11,7 @@ import { registerCustom } from './exercises.js'
 // The two runtimes share no build step, so the client's copy of the fingerprint logic is
 // checked against the server's actual source rather than against a transcribed expectation.
 import * as serverPayload from '../../../api/coach/core/payload.js'
-import { hashPlan as serverHashPlan } from '../../../api/coach/core/plan-hash.js'
+import { hashPlan as serverHashPlan } from '../../../api/coach/core/plan-hash.ts'
 
 const state = (over = {}) => ({
   unit: 'kg', lang: 'en', customEx: [], workouts: [], bodyweight: [], exWeights: {}, dayPlan: {},
@@ -690,7 +690,7 @@ describe('the gate has something real to read', () => {
     const src = readFileSync(new URL('../store/useStore.js', import.meta.url), 'utf8')
     expect(src).toMatch(/\bconfig:\s*null\b/)
     expect(src).toMatch(/set\(\s*\{\s*config[:\s]/)
-    expect(src).toMatch(/api\(['"]\/api\/config['"]\)/)
+    expect(src).toMatch(/queryClient\.fetchQuery\(getGetConfigQueryOptions\(\)\)/)
     // and boot() must actually reach it, however it is spelled
     expect(src).toMatch(/loadConfig\(\)|config:\s*await api\(/)
   })

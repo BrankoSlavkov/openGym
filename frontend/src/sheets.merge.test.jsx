@@ -8,7 +8,7 @@ import { registerCustom, EXIDX } from './lib/exercises.js'
 import { DEF, useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
 import { _setLangState } from './lib/i18n-core.js'
-import { bindUI } from './components/ui.jsx'
+import { bindUI } from './components/ui.tsx'
 import { exerciseDetailSheet } from './sheets.jsx'
 
 bindUI(useUI)

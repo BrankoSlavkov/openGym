@@ -11,10 +11,10 @@
  * a `fetch`), and gets back a plain object.
  */
 import { CONTRACT } from './payload.js';
-import { buildPrompt, buildPromptParts } from './prompt.js';
-import { SCHEMAS } from './schemas.js';
-import { extractJSON, contractOK } from './parse.js';
-import { classifyFailure, redact } from './failure.js';
+import { buildPrompt, buildPromptParts } from './prompt.ts';
+import { SCHEMAS } from './schemas.ts';
+import { extractJSON, contractOK } from './parse.ts';
+import { classifyFailure, redact } from './failure.ts';
 import { validatePlan, validateReview, validateDebrief, validateAsk, validateAdapt } from './validate.js';
 import { isChangeList, changesOntoPlan } from './refine-changes.js';
 

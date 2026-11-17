@@ -4,14 +4,14 @@ import { createRoot } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import CoachChat from './CoachChat.jsx'
 import { CONSENT_VERSION } from '../lib/coach.js'
-import { api } from '../lib/api.js'
+import { api } from '../lib/api.ts'
 
 // Console noise on a server without a Coach (round 1.4.5, P5). The chat is routed whenever the
 // Coach module is on, and it started its status poll on mount, before it knew whether this server
 // has a Coach at all: opened straight on #/coach (a reload, a bookmark), it asked once, got
 // 503 (401 as a guest), and only then left for Home. Browsers print both as errors. The server's
 // answers stay what they are (paired phones, older apps and scripts read them); the app knows
-// from /api/config not to ask. The real lib/coach-api.js and lib/use-coach-gate.js run here.
+// from /api/config not to ask. The real lib/coach-api.ts and lib/use-coach-gate.js run here.
 const mocks = vi.hoisted(() => {
   const state = { S: null, user: { id: 'u1' }, config: null, nav: vi.fn(), refreshConfig: vi.fn(async () => state.config), status: null }
   state.storeSnapshot = () => ({
@@ -35,7 +35,7 @@ vi.mock('../store/useUI.js', () => {
 vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => mocks.nav }))
 vi.mock('../sheets.jsx', () => ({ startFlow: vi.fn(), confirmSheet: vi.fn() }))
 vi.mock('../coach.css', () => ({}))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   IS_APPLE: false, IS_ANDROID: false, BIO: 'biometrics',
   api: vi.fn(async path => (path === '/api/coach/status' ? mocks.status() : {})),
 }))

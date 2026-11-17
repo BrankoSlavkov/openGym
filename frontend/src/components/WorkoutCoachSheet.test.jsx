@@ -22,7 +22,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.setState = vi.fn()
   return { useUI }
 })
-vi.mock('../lib/coach-api.js', () => ({
+vi.mock('../lib/coach-api.ts', () => ({
   useCoachStatus: () => ({ pending: mocks.pending, job: mocks.job, last: mocks.last, lastError: null, refresh: mocks.refresh }),
   requestAdapt: vi.fn(() => Promise.resolve({ job: { id: 'j1' } })),
   resolvePending: vi.fn(() => Promise.resolve({})),
@@ -31,7 +31,7 @@ vi.mock('../lib/coach-api.js', () => ({
 }))
 vi.mock('../coach.css', () => ({}))
 
-const api = await import('../lib/coach-api.js')
+const api = await import('../lib/coach-api.ts')
 const { default: WorkoutCoachSheet, AdaptProposal } = await import('./WorkoutCoachSheet.jsx')
 
 const BENCH = '0025', CURL = '0294'

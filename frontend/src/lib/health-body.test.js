@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { mergeBodyComp, bodyCompSummary, BODY_KEEP } from './health-read.js'
-import { bodyCompValue } from '../components/HealthBodyCard.jsx'
+import { bodyCompValue } from '../components/HealthBodyCard.tsx'
 
 // Body composition from the health hub (#197, #589): what a smart scale saved, kept on this phone.
 const DAY = 24 * 3600e3

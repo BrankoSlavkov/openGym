@@ -73,8 +73,8 @@ describe('server/client reading rules agree', () => {
 // emoji), and the payload sends the plan's icons through the same filter. A glyph the app shows
 // and the server does not know would be reset by every plan.
 import { GLYPHS, KNOWN_GLYPHS, glyphOf } from './glyphs.js'
-import { ICON_NAMES } from '../components/Icon.jsx'
-import { ROUTINE_GLYPHS, LEGACY_ROUTINE_GLYPHS, glyphStr } from '../../../api/coach/core/glyphs.js'
+import { ICON_NAMES } from '../components/Icon.tsx'
+import { ROUTINE_GLYPHS, LEGACY_ROUTINE_GLYPHS, glyphStr } from '../../../api/coach/core/glyphs.ts'
 
 describe('routine glyphs', () => {
   it('the server offers exactly the glyphs the picker offers, each a real icon', () => {

@@ -8,7 +8,7 @@
 //   through https://opengym.ch/openrouter/ to opengym://openrouter, which the session catches; the
 //   key goes into secure storage like a pasted one. Headless mode (a code to paste) is the
 //   fallback when the way back does not work.
-import { makePkce, authUrl, readCallback, pastedCode, exchangeCode, PHONE_CALLBACK, APP_RETURN } from '../../../api/coach/core/openrouter-oauth.js'
+import { makePkce, authUrl, readCallback, pastedCode, exchangeCode, PHONE_CALLBACK, APP_RETURN } from '../../../api/coach/core/openrouter-oauth.ts'
 
 const PENDING = 'og_openrouter_pending'
 const MAX_AGE_MS = 10 * 60000

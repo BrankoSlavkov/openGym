@@ -1,25 +1,21 @@
 {
-  // Fork (FORK.md, "The api on Bun and Hono"): the api is TypeScript, run as is by Bun and checked
-  // here (`bun run typecheck`). api/coach/core stays JavaScript for now: the frontend imports it
-  // as .js and it converts with the frontend's TypeScript phase.
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "target": "es2023",
-    "lib": ["es2023"],
-    "module": "preserve",
-    "moduleResolution": "bundler",
+    "lib": [
+      "es2023"
+    ],
     "allowJs": false,
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "isolatedModules": true,
-    "erasableSyntaxOnly": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
     "strict": false,
     "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["bun"]
+    "types": [
+      "bun"
+    ]
   },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

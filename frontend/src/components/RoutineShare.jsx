@@ -12,13 +12,13 @@ import { exLine } from '../lib/history.js'
 import { speedUnitOf } from '../lib/speed.js'
 import { nav } from '../lib/nav.js'
 import { MOBILE, shareExport } from '../lib/mobile.js'
-import { copyText } from '../lib/clipboard.js'
+import { copyText } from '../lib/clipboard.ts'
 import { buildPlanBundle } from '../lib/plan-share.js'
 import { routineLink, routinePayloadFromUrl, decodePayload, readRoutineBundle, importRoutineLink, FROM_MAX } from '../lib/routine-link.js'
 import { libraryLinkFromUrl } from '../lib/library-link.js'
 import { openLibraryLink } from './LibraryLink.jsx'
-import { Button, Switch } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Button, Switch } from './ui.tsx'
+import Icon from './Icon.tsx'
 
 const ui = () => useUI.getState()
 const toast = m => ui().toast(m)

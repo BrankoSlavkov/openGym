@@ -5,8 +5,8 @@ import { fmtDate } from '../lib/format.js'
 import { explainWeek, explainMissedDay, freezeLine, ruleNote } from '../lib/streak-explain.js'
 import { streakRuleSheet } from './StreakRule.jsx'
 import { StreakFlame, Freezes, FreezeGlyph } from './Streak.jsx'
-import Icon from './Icon.jsx'
-import { Button } from './ui.jsx'
+import Icon from './Icon.tsx'
+import { Button } from './ui.tsx'
 
 /* The streak, explained where you look at it: the month calendar (sheets.jsx Calendar) puts a
    mark at the end of every week (flame, freeze, missed, still open), washes a frozen week in the
@@ -21,7 +21,7 @@ export const weekMarkLabel = s => ({ on: t('Counted'), frozen: t('Frozen'), excu
 export function MarkGlyph ({ s, tag = null }) {
   if (s === 'on') return <StreakFlame />
   if (s === 'frozen') return <span className="wk-frz"><FreezeGlyph /></span>
-  // A sick, travel or injured week (api/coach/core/streak.js): the day note's own icon.
+  // A sick, travel or injured week (api/coach/core/streak.ts): the day note's own icon.
   if (s === 'excused') return <span className="wk-exc" aria-hidden="true"><Icon name={tag === 'travel' ? 'globe' : tag === 'injured' ? 'warning' : 'cloud'} /></span>
   return <span className={'wk-ring' + (s === 'open' ? ' open' : '')} aria-hidden="true" />
 }

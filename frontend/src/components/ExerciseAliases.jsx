@@ -3,8 +3,8 @@ import { useStore } from '../store/useStore.js'
 import { exerciseAliases, normalizeAliases, shownNameOf } from '../lib/exercise-aliases.js'
 import { isCustomEx } from '../lib/exercises.js'
 import { t, exerciseOwnName, exerciseOwnNameClass } from '../lib/i18n.js'
-import { Button } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Button } from './ui.tsx'
+import Icon from './Icon.tsx'
 
 // Other names an exercise is found by (#624). A power feature, so it stays one quiet line until
 // someone asks for it: "Add another name", or the names already given, and only a tap opens the field.

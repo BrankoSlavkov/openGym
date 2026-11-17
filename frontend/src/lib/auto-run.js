@@ -1,4 +1,4 @@
-// Fork: the "Auto" button on a timed exercise's card (components/AutoRunButton.jsx).
+// Fork: the "Auto" button on a timed exercise's card (components/AutoRunButton.tsx).
 //
 // One tap turns on the auto-hold chain (lib/auto-holds.js) for the rest of this workout, without
 // touching the profile's setting: you start the first hold, and when it ends its pause starts,

@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import Journal from './Journal.jsx'
 import { DEF, useStore } from '../store/useStore.js'
 
-vi.mock('../lib/api.js', () => ({ api: vi.fn(() => Promise.resolve({})) }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn(() => Promise.resolve({})) }))
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 const clone = value => JSON.parse(JSON.stringify(value))
 

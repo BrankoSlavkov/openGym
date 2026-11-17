@@ -1,5 +1,5 @@
 // The question the Coach asks once per AI provider, right before your training would first go
-// there (lib/coach-api.js ensureAiConsent), and the list in the Coach settings that takes it back.
+// there (lib/coach-api.ts ensureAiConsent), and the list in the Coach settings that takes it back.
 //
 // The lines below say what the payload actually carries (api/coach/core/payload.js build): one
 // per DATA_CATEGORIES entry, plus what you type, which rides along as the review note or the
@@ -9,11 +9,11 @@ import { useUI } from '../store/useUI.js'
 import { useStore } from '../store/useStore.js'
 import { t } from '../lib/i18n.js'
 import { fmtDate, isoOf } from '../lib/format.js'
-import { DATA_CATEGORIES } from '../../../api/coach/core/categories.js'
+import { DATA_CATEGORIES } from '../../../api/coach/core/categories.ts'
 import { aiConsents, withdrawAi, onAiConsentChange } from '../lib/coach-consent.js'
 import { emptyCoach } from '../lib/coach.js'
-import Icon from './Icon.jsx'
-import { Button, Section, Row } from './ui.jsx'
+import Icon from './Icon.tsx'
+import { Button, Section, Row } from './ui.tsx'
 import '../coach.css'
 
 // Literal t() calls, so check-source-strings sees every line.

@@ -4,8 +4,8 @@ import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
 import { pickerChoices, keyFor, inkFor, iconChoice, pickValue, firstEmoji, EMOJI_IDEAS } from '../lib/streak-icons.js'
 import { StreakFlame, Freezes, FreezeGlyph } from './Streak.jsx'
-import Icon from './Icon.jsx'
-import { Button, Row } from './ui.jsx'
+import Icon from './Icon.tsx'
+import { Button, Row } from './ui.tsx'
 
 /* Settings → Look & Home → Icons → Streak flame / Streak freeze: pick one of openGym's icons or
    any emoji. It applies at once (and syncs, S.flameIcon / S.freezeIcon), the preview on top

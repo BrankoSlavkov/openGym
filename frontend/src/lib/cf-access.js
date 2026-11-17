@@ -9,7 +9,7 @@
 // lib/api.js, which adds them to requests to that origin and to nothing else: a token typed for
 // one server never travels to another one, not even to a pairing typed in by mistake.
 import { secureGet, secureSet, secureRemove } from './coach-secrets.js'
-import { setAccessHeaders } from './api.js'
+import { setAccessHeaders } from './api.ts'
 
 const KEY = 'cfAccess'
 

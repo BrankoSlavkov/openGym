@@ -7,8 +7,8 @@ import { useEffect, useState } from 'react'
 import { useStore } from '../store/useStore.js'
 import { t } from '../lib/i18n.js'
 import { pendingSteps, markStepSeen } from '../lib/onboarding-perms.js'
-import Icon from '../components/Icon.jsx'
-import { Button } from '../components/ui.jsx'
+import Icon from '../components/Icon.tsx'
+import { Button } from '../components/ui.tsx'
 
 // What each step says. Literal t() calls, so check-source-strings sees them; a new step adds its
 // own entry here and its check/request in onboarding-perms.js.

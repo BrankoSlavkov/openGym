@@ -7,8 +7,8 @@ import { loadConfig, saveConfig, onConfigChange, urlProblem, folderUrl, errorTex
 import { runBackup, listBackups, fetchBackup, forgetWebdav, getPassword, setPassword, clientFor, currentOwner, claimWebdav, webdavView } from '../lib/webdav-run.js'
 import { confirmBackupImport } from './backup-restore.js'
 import { confirmSheet } from '../sheets.jsx'
-import { Section, Row, Switch, Button, TextField } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Section, Row, Switch, Button, TextField } from './ui.tsx'
+import Icon from './Icon.tsx'
 
 /* Settings → Integrations → WebDAV backup (#582), also reached from Data & backup: the folder,
    the name and password, a daily backup on this device, Back up now and Restore. The rules and

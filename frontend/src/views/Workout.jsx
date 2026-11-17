@@ -1,18 +1,18 @@
 import { Fragment, useEffect, useId, useRef, useState } from 'react'
 import SwipeCards from '../components/SwipeCards.jsx'
-import SwipeRow from '../components/SwipeRow.jsx'
+import SwipeRow from '../components/SwipeRow.tsx'
 import { useNavigate } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { workoutControls } from '../lib/workout-controls.js'
 import { useUI } from '../store/useUI.js'
 import { autoHoldsFor, forecastHolds, nextAutoHold } from '../lib/auto-holds.js'
 import { autoRunRestSec } from '../lib/auto-run.js'
-import AutoRunRow from '../components/AutoRunButton.jsx'
+import AutoRunRow from '../components/AutoRunButton.tsx'
 import { EXIDX, exOr, betterWeight, isAssisted } from '../lib/exercises.js'
 import { bestsFor, lastRowFor, oddValues } from '../lib/typo-check.js'
 import { usesBar } from '../lib/bar.js'
 import { loadKindFor, baseWeightFor, inventoryFor, rowLoad, sameLoad, plateDelta, dropGrid } from '../lib/plates.js'
-import { plateText } from '../lib/plate-text.js'
+import { plateText } from '../lib/plate-text.ts'
 import { effectiveRoutines, effectiveRoutineIds, lastEntryFor, bestWeightFor, bestWeightForEntry, freestyleConfig, pickedExerciseConfig, setsDoneActive, setUnitsTotal, supersetUnits, unitOf, setLabel, modeOf, isBw, isPerSide, repStep, EFFORT, effortOf, stepEffort, capEffort, cascadeWeight, liveReramp, insertWarmupRow, barFloor, makeWarmupAt, canBeWarmup, makeWorkAt, removeRowAt, removeLastSet, setSpanAt, copyRowAt, copySpanAt, insertRowAt, pairAdjacent, unpairSuperset, cleanupSg, applyIntensifierPlan, pinnedNoteFor, exNoteFor, setsRepsOf, sessionVolume } from '../lib/history.js'
 import { cleanNum, fmtNum, fmtPlate, fmtVol, fmtWeight, exerciseNameText, fmtDate, fmtDaysAgo, todayISO, exCount, DAYN } from '../lib/format.js'
 import { speedUnitOf, toSpeed, fromSpeed } from '../lib/speed.js'
@@ -21,13 +21,13 @@ import { clampIncline, inclineFrom, INCLINE_STEP, clampLevel, levelFrom, cardioC
 import { beep, vibrate, unlock } from '../lib/sound.js'
 import { pinState } from '../lib/queue.js'
 import { t, tn, exerciseNameFor, exerciseNameClass } from '../lib/i18n.js'
-import { nameIn, said } from '../lib/a11y-name.js'
-import { api, beacon } from '../lib/api.js'
+import { nameIn, said } from '../lib/a11y-name.ts'
+import { api, beacon } from '../lib/api.ts'
 import { pyramidRestFor, maxRecordAt, isPyramid, pyramidLabel } from '../lib/pyramid.js'
 import { insertionIndexAfterCurrentUnit, nextUnfinishedUnit, setProgressHighWater, supersetFlowStep, restAfterSet, restOnRecheck, restSecFor, warmupRestSecFor, sideRestFor, ownSetRest, ownExerciseRest, stepUnitIndex, advanceAfterTimedRest, transitionRestFor, restKindAfter } from '../lib/supersetFlow.js'
 import Media from '../components/Media.jsx'
-import WorkoutScrollAnchor from '../components/WorkoutScrollAnchor.jsx'
-import WorkoutChips from '../components/WorkoutChips.jsx'
+import WorkoutScrollAnchor from '../components/WorkoutScrollAnchor.tsx'
+import WorkoutChips from '../components/WorkoutChips.tsx'
 import { filmSetSheet, SetVideoBadge, ActiveSetVideo } from '../components/SetVideo.jsx'
 import { setVideoOf, filmTarget } from '../lib/set-videos.js'
 import { fmtClip } from '../lib/media-refs.js'
@@ -36,21 +36,21 @@ import { circuitOf } from '../lib/circuit.js'
 import { circuitLine } from '../lib/circuit-copy.js'
 import CircuitCard from '../components/CircuitCard.jsx'
 import { useCircuit } from '../store/useCircuit.js'
-import WorkoutThumb, { hasWorkoutMedia } from '../components/WorkoutThumb.jsx'
+import WorkoutThumb, { hasWorkoutMedia } from '../components/WorkoutThumb.tsx'
 import { workoutSettingsSheet } from '../components/WorkoutSettingsSheet.jsx'
 import { SessionMapButton } from '../components/SessionMuscles.jsx'
 import { durationSheet } from '../components/DurationWheel.jsx'
 import { REST_MAX, fmtRest, restWheelValue } from '../lib/duration.js'
-import { youtubeSearchUrl } from '../lib/youtube.js'
+import { youtubeSearchUrl } from '../lib/youtube.ts'
 import { openExternal } from '../components/CustomMedia.jsx'
 import { startFlow, exercisePicker, exConfigSheet, exerciseDetailSheet, finishWorkout, exitWorkoutEdit, workoutCompleteSheet, confirmSheet, exerciseNoteSheet, sessionNoteSheet, renameWorkoutSheet, swapActiveWorkoutExercise, barWeightSheet, menuSheet, effortPickerSheet, exerciseHistorySheet, addRoutineToSessionSheet, finishWorkoutSheet, finishWorkoutNow, swapActiveWorkoutToBackup, setNoteSheet } from '../sheets.jsx'
 import { afterScrollRestore, scrollRestorePending } from '../components/Modals.jsx'
 import { effortColor } from '../lib/effort.js'
-import Elapsed from '../components/Elapsed.jsx'
-import LiveHeartRate from '../components/LiveHeartRate.jsx'
-import LiveCard from '../components/LiveCard.jsx'
-import Icon from '../components/Icon.jsx'
-import { Button, Check, NumberField } from '../components/ui.jsx'
+import Elapsed from '../components/Elapsed.tsx'
+import LiveHeartRate from '../components/LiveHeartRate.tsx'
+import LiveCard from '../components/LiveCard.tsx'
+import Icon from '../components/Icon.tsx'
+import { Button, Check, NumberField } from '../components/ui.tsx'
 import { defaultIncrement, weightIncrement, stepWeight } from '../lib/progression.js'
 import { progressionGuidance } from '../lib/progression-copy.js'
 import { rpeAs } from '../lib/programmes.js'
@@ -86,11 +86,11 @@ import { setTrendOn, setTrendsFor, trendGlyph, trendLabel } from '../lib/set-tre
 import { formulaOf } from '../lib/onerm.ts'
 import { cues } from '../lib/spoken-cues.js'
 import { recordBaseline, entryRecords, recordHint, liveRecordsOn, recordHintsOn, recordSoundOn } from '../lib/set-records.js'
-import { RecordMark, RecordHintLine } from '../components/SetRecord.jsx'
-import { setNoteOf } from '../lib/set-notes.js'
+import { RecordMark, RecordHintLine } from '../components/SetRecord.tsx'
+import { setNoteOf } from '../lib/set-notes.ts'
 import { SET_TAGS, setTagOf, setTagName, withSetTag } from '../lib/set-tags.js'
 import { isOn } from '../lib/modules.js'
-import CardioEffortChip from '../components/CardioEffortChip.jsx'
+import CardioEffortChip from '../components/CardioEffortChip.tsx'
 import { tempoSheet, tempoGuideSheet, TempoTag } from '../components/Tempo.jsx'
 import { tempoOf, normalizeTempo, guideReps } from '../lib/tempo.js'
 import { usesBands, setBandsOf, toggleSetBand } from '../lib/bands.js'
@@ -566,7 +566,7 @@ function ExerciseBlock({ entryIdx, compact, listed, dense, editing, onToggle, on
     const prev = p >= 0 ? loadSeq[p].load : null
     if (prev && sameLoad(prev, L)) return null
     // "+" between plates: "45 + 5 per side" reads as a sum, a dot did not (Boris, 2026-09-13).
-    // The first line names the bar it counts with (lib/plate-text.js).
+    // The first line names the bar it counts with (lib/plate-text.ts).
     const text = plateText(L, { unit: S.unit, base, first: !prev, bar: usesBar(ex) })
     const d = prev && !dense ? plateDelta(prev.plates, L.plates) : null
     const moves = d ? [...d.strip.map(w => '−' + fmtPlate(w)), ...d.add.map(w => '+' + fmtPlate(w))] : []
@@ -741,7 +741,7 @@ function ExerciseBlock({ entryIdx, compact, listed, dense, editing, onToggle, on
           !videosOn ? null : video
             ? { icon: 'play', label: t('Watch your video'), sub: video.dur != null ? fmtClip(video.dur) : undefined, onClick: () => setVideoAt(spanStart) }
             : { icon: 'camera', label: t('Film this set'), sub: t('Check your form later'), onClick: () => filmSet(i) },
-          // A word about this one set (lib/set-notes.js), kept with the workout.
+          // A word about this one set (lib/set-notes.ts), kept with the workout.
           { icon: 'note', label: noteHere ? t('Edit note') : t('Note'), sub: noteHere || t('A word about this set'), onClick: () => setNoteSheet(entryIdx, spanStart, warm ? t('Warm-up') : t('Set {0}', setNumOf(s, i))) },
           // A colour of your own for this set (lib/set-tags.js): up here once the set has one, under
           // More until then, so the menu stays as it was for everyone who never uses it.
@@ -1067,7 +1067,7 @@ function ExerciseBlock({ entryIdx, compact, listed, dense, editing, onToggle, on
             onToggle={id => mutSet(i, row => toggleSetBand(row, id))} />}
           {/* The trophy a set earned, and how close the next one is (lib/set-records.js), under its plates. */}
           {!pairTail && recordLine(i)}
-          {/* The set's own note (lib/set-notes.js): a quiet line under the row, a tap edits it. */}
+          {/* The set's own note (lib/set-notes.ts): a quiet line under the row, a tap edits it. */}
           {!pairTail && setNoteOf(s) && <button type="button" className="setnote-line" aria-label={t('Edit note') + ': ' + setNoteOf(s)}
             onClick={() => setNoteSheet(entryIdx, i, isWarmupRow(s) ? t('Warm-up') : t('Set {0}', setNumOf(s, i)))}>
             <Icon name="note" /><span>{setNoteOf(s)}</span>

@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
    like Capacitor's: a Proxy whose `then` is a native call that never answers (#42). */
 const mocks = vi.hoisted(() => ({ MOBILE: true, auth: null, arm: vi.fn(async () => {}), disarm: vi.fn(async () => {}), registered: 0 }))
 vi.mock('./mobile.js', () => ({ get MOBILE() { return mocks.MOBILE } }))
-vi.mock('./api.js', () => ({ remoteAuth: () => mocks.auth }))
+vi.mock('./api.ts', () => ({ remoteAuth: () => mocks.auth }))
 vi.mock('@capacitor/core', () => ({
   registerPlugin: name => {
     mocks.registered++

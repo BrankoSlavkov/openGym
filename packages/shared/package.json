@@ -1,0 +1,14 @@
+{
+  "name": "@opengym/shared",
+  "version": "1.4.5",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./domain": "./src/domain.ts",
+    "./coach/*": "./src/coach/*.ts",
+    "./sharing-scopes": "./src/sharing-scopes.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p ."
+  }
+}

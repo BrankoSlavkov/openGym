@@ -1,4 +1,4 @@
-# The optional MCP-over-HTTPS container (docs/MCP_REMOTE.md): mcp/src/http.js on port 3100,
+# The optional MCP-over-HTTPS container (docs/MCP_REMOTE.md): mcp/src/http.ts on port 3100,
 # proxied at /mcp by the web container. Built from the repository root, because the tools run
 # the app's own training helpers (frontend/src/lib) the way the stdio server does:
 #
@@ -7,6 +7,16 @@
 #
 # It holds no data and no secret: no ./data mount, no SECRET. Every request carries a scoped
 # token, and every read and write goes through the api with it.
+# Resolve only MCP production dependencies using the monorepo's canonical lockfile.
+FROM oven/bun:1.4.4-alpine AS dependencies
+WORKDIR /app
+COPY package.json bun.lock tsconfig.base.json ./
+COPY api/package.json ./api/package.json
+COPY frontend/package.json ./frontend/package.json
+COPY mcp/package.json ./mcp/package.json
+COPY packages/ ./packages/
+RUN bun install --filter opengym-mcp --production --frozen-lockfile --ignore-scripts
+
 FROM node:22.23.4-alpine
 
 ARG VERSION=dev
@@ -24,13 +34,13 @@ LABEL maintainer="Duarte Santos https://github.com/DuarteSantos8" \
     org.opencontainers.image.created=$BUILD_DATE
 
 RUN apk upgrade --no-cache
+COPY --from=dependencies /app /app
 WORKDIR /app/mcp
-COPY mcp/package.json mcp/package-lock.json ./
-RUN npm ci --omit=dev && npm cache clean --force \
- && rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
 
 # The helpers the tools import, and the one api module they reach (the streak rules), each
 # beside its package.json so node reads them as the ES modules they are.
+COPY packages/ /app/packages/
 COPY frontend/package.json /app/frontend/package.json
 COPY frontend/src/lib/ /app/frontend/src/lib/
 COPY api/package.json /app/api/package.json
@@ -42,7 +52,7 @@ ENV MCP_PORT=3100
 ENV OPENGYM_API_URL=http://api:3000
 EXPOSE 3100
 USER node
-CMD ["node", "src/http.js"]
+CMD ["node", "src/http.ts"]
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD wget --spider -q "http://127.0.0.1:${MCP_PORT}/mcp/health" || exit 1

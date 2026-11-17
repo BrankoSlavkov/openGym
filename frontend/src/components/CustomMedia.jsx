@@ -20,16 +20,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { useStore } from '../store/useStore.js'
 import { t, exerciseNameFor } from '../lib/i18n.js'
-import { nameIn } from '../lib/a11y-name.js'
+import { nameIn } from '../lib/a11y-name.ts'
 import { exerciseNameText } from '../lib/format.js'
 import { mediaOf, cleanUrl, linkKind } from '../lib/media-refs.js'
 import { mediaStore } from '../lib/media-store.js'
 import { fetchToStore, mayFetch } from '../lib/media-sync.js'
 import { prefetchAllowed } from '../lib/media-prefetch.js'
 import { LOOP_MAX_SEC } from '../lib/media-limits.js'
-import Icon from './Icon.jsx'
-import { youtubeId } from '../lib/youtube.js'
-import YouTubeVideo from './YouTubeVideo.jsx'
+import Icon from './Icon.tsx'
+import { youtubeId } from '../lib/youtube.ts'
+import YouTubeVideo from './YouTubeVideo.tsx'
 
 /** Opens a link after a tap: sanitised again here, since plan files and backups can bring any
  *  string in, and in a new browsing context with no opener and no Referer. */

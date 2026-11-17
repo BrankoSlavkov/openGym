@@ -13,11 +13,11 @@ import { useEffect, useRef, useState } from 'react'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
-import { api } from '../lib/api.js'
+import { api } from '../lib/api.ts'
 import { MOBILE } from '../lib/mobile.js'
 import { deviceLock, confirmDeviceOwner } from '../lib/device-auth.js'
 import { passwordError, ProveOwner } from './PasswordAuth.jsx'
-import { Row, Button } from './ui.jsx'
+import { Row, Button } from './ui.tsx'
 
 const errStyle = { color: 'var(--red)', marginTop: 10 }
 

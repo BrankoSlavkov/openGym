@@ -689,7 +689,7 @@ test('a failed provider call says what went wrong, and keeps the provider’s wo
   const s = await settle(uid);
   delete process.env.FIXTURE_MODE;
 
-  const { USER_MESSAGE } = await import('../coach/core/failure.js');
+  const { USER_MESSAGE } = await import('../coach/core/failure.ts');
   const last = lastOutcome(uid);
   assert.equal(last.outcome, 'failed');
   assert.equal(last.errorClass, 'provider');

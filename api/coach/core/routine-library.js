@@ -7,7 +7,7 @@
  * the app can run. Searching is plain word matching: small, deterministic, the same on every
  * runtime, and it only decides which few entries the model gets to see. */
 import { LIB_BY_ID } from './library.js';
-import { STARTER_PLANS } from './starter-plans.js';
+import { STARTER_PLANS } from './starter-plans.ts';
 
 export const FORMAT = 'opengym-routines';
 export const FORMAT_VERSION = 1;

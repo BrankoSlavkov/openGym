@@ -57,3 +57,6 @@ frontend/ios/App/WatchCore/.build/
 /dist/
 .wrangler/
 .taste-skill/
+
+# Orval client, generated from api/openapi.json (frontend/scripts/api-client.mjs)
+frontend/src/generated/

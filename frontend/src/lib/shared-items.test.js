@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { ownItems, applyImport, importedRefs, originOf, browseTypes, cardLine, bylineOf, originLine, hasCopy, newerThanCopy } from './shared-items.js'
-import { libraryOf, libraryOn, sharedError, LIBRARY_CONSENT } from './shared-api.js'
+import { libraryOf, libraryOn, sharedError, LIBRARY_CONSENT } from './shared-api.ts'
 
 const H = c => c.repeat(64)
 const wav = { kind: 'audio', hash: H('a'), mime: 'audio/wav', size: 1000, width: 1, height: 1, dur: 2 }

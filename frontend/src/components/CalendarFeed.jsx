@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react'
 import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
 import { fmtAgo } from '../lib/format.js'
-import { copyText } from '../lib/clipboard.js'
-import { getCalendar, setCalendar, stopCalendar, webcalUrl } from '../lib/api-tokens.js'
+import { copyText } from '../lib/clipboard.ts'
+import { getCalendar, setCalendar, stopCalendar, webcalUrl } from '../lib/api-tokens.ts'
 import { confirmSheet } from '../sheets.jsx'
-import { Section, Row, Switch, Button } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Section, Row, Switch, Button } from './ui.tsx'
+import Icon from './Icon.tsx'
 
 /* Settings → Integrations → Calendar feed (v1.4.5): your planned sessions, and if you like your
    finished workouts, as a private address Apple Calendar, Google Calendar or Outlook subscribe

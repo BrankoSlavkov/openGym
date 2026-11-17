@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { menuItemsOf } from './menu-items.js'
+import { menuItemsOf } from './menu-items.ts'
 
 describe('menuItemsOf', () => {
   it('flattens sections and the rows folded under More, in the order the sheet shows them', () => {

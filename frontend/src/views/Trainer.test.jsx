@@ -9,7 +9,7 @@ let TrainerPage   // imported fresh per test: the page keeps the last list for 1
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 
 const mocks = vi.hoisted(() => ({ answers: {}, calls: [], posts: [], sheets: [], toasts: [], navs: [], params: {}, search: '', config: null }))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: (path, opts) => {
     const key = path.split('?')[0]
     mocks.calls.push(path)

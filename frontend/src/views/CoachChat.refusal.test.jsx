@@ -3,7 +3,7 @@ import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import CoachChat from './CoachChat.jsx'
-import { requestReview, askCoach } from '../lib/coach-api.js'
+import { requestReview, askCoach } from '../lib/coach-api.ts'
 import { CONSENT_VERSION } from '../lib/coach.js'
 
 // When the server refuses a Coach request at enqueue it answers in English, with the refusal's
@@ -35,7 +35,7 @@ vi.mock('../store/useUI.js', () => {
   return { useUI }
 })
 vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => mocks.nav }))
-vi.mock('../lib/coach-api.js', () => ({
+vi.mock('../lib/coach-api.ts', () => ({
   awaitedJob: () => null,
   settleAwaited: vi.fn(),
   useCoachStatus: () => ({ pending: null, job: null, cap: null, loading: false, lastError: null, last: null, refresh: mocks.refresh, maxMessageLen: 2200 }),
@@ -53,7 +53,7 @@ vi.mock('../lib/coach-api.js', () => ({
   isDeclined: e => e?.code === 'declined',
 }))
 vi.mock('../sheets.jsx', () => ({ startFlow: vi.fn(), confirmSheet: vi.fn() }))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: vi.fn(() => Promise.resolve({})), IS_APPLE: false, IS_ANDROID: false, BIO: 'biometrics',
 }))
 vi.mock('../coach.css', () => ({}))

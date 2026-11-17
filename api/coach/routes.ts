@@ -4,7 +4,7 @@
  * are closures over the db and the session secret, and passing them in keeps this module free
  * of a cycle (and trivially testable against fakes).
  */
-import { candidatesFor, discoverLocal } from './core/local-discovery.js';
+import { candidatesFor, discoverLocal } from './core/local-discovery.ts';
 import * as cfgStore from './config.ts';
 import * as jobs from './jobs.ts';
 import { computeCohort } from './cohort.ts';
@@ -13,7 +13,7 @@ import * as chatgptPlan from './chatgpt-plan.ts';
 import { PROVIDER as CHATGPT } from './adapters/chatgpt.ts';
 import { canDropPrivileges, privilegeRefusal } from './adapters/spawn.ts';
 import { DATA_CATEGORIES } from './core/payload.js';
-import { validateBaseUrl, validateHeaders, baseUrlFor } from './core/providers.js';
+import { validateBaseUrl, validateHeaders, baseUrlFor } from './core/providers.ts';
 
 // Job failures the user sees, in the app's own voice. The raw provider detail never reaches
 // them — it goes to the admin card, which is where someone can act on it (FR-47).

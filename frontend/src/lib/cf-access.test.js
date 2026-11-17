@@ -14,7 +14,7 @@ vi.mock('@aparajita/capacitor-secure-storage', () => ({
   }
 }))
 
-import { api, pairRedeem, setRemoteAuth } from './api.js'
+import { api, pairRedeem, setRemoteAuth } from './api.ts'
 import { accessHeaders, loadCfAccess, saveCfAccess } from './cf-access.js'
 import { forgetRemote } from './remote.js'
 

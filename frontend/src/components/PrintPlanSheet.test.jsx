@@ -9,7 +9,7 @@ vi.mock('../lib/plan-share.js', () => ({
   printPlan: vi.fn((S, owner, opts) => new Promise(res => { env.resolve = () => { opts.beforePrint?.(); res() } })),
 }))
 
-import PrintPlanSheet from './PrintPlanSheet.jsx'
+import PrintPlanSheet from './PrintPlanSheet.tsx'
 import { printPlan } from '../lib/plan-share.js'
 import { DEF, useStore } from '../store/useStore.js'
 import { PRINT_PICTURES_KEY } from '../lib/print-pictures.js'

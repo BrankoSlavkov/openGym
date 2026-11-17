@@ -18,8 +18,8 @@ import { buildSessionEntry, builtOutOfProgression } from '../lib/session-start.j
 import { joinSessionNoProg } from '../lib/session-noprog.js'
 import { sessionHistory } from '../lib/backfill.js'
 import { startFlow, confirmSheet, exerciseDetailSheet } from '../sheets.jsx'
-import { Button, Section, Row } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Button, Section, Row } from './ui.tsx'
+import Icon from './Icon.tsx'
 
 const ui = () => useUI.getState()
 

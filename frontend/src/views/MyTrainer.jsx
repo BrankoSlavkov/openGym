@@ -9,15 +9,15 @@ import { useUI } from '../store/useUI.js'
 import { t, baseLang } from '../lib/i18n.js'
 import { fmtDate } from '../lib/format.js'
 import { MOBILE, shareExport } from '../lib/mobile.js'
-import { CATEGORY_IDS, TRAINER_DEFAULTS, leadScopes, sharesNothing } from '../lib/sharing-scopes.js'
+import { CATEGORY_IDS, TRAINER_DEFAULTS, leadScopes, sharesNothing } from '../lib/sharing-scopes.ts'
 import {
   getSharing, checkCode, connectTrainer, declineCode, updateGrant, disconnectGrant, leaveGym, sharingLog, sharingExport,
   categoryLabel, levelLabel, levelsFor, summarize, consentWords, logLine, sharingError,
-} from '../lib/sharing-api.js'
+} from '../lib/sharing-api.ts'
 import { confirmSheet } from '../sheets.jsx'
-import { Section, Row, SelectRow, Button, TextField } from '../components/ui.jsx'
-import Icon from '../components/Icon.jsx'
-import { getInbox, answerItem, markSeen, undoChange, previewGrant, changeLines, trainerError } from '../lib/trainer-api.js'
+import { Section, Row, SelectRow, Button, TextField } from '../components/ui.tsx'
+import Icon from '../components/Icon.tsx'
+import { getInbox, answerItem, markSeen, undoChange, previewGrant, changeLines, trainerError } from '../lib/trainer-api.ts'
 import { noticeText } from '../lib/trainer-notice-text.js'
 import TrainerMember from '../components/TrainerMember.jsx'
 

@@ -23,11 +23,11 @@ vi.mock('../store/useStore.js', () => {
   return { useStore }
 })
 vi.mock('../sheets.jsx', () => ({ confirmSheet: opts => mocks.confirms.push(opts) }))
-vi.mock('../lib/api.js', () => ({ api: vi.fn(() => Promise.resolve({ connections: [] })) }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn(() => Promise.resolve({ connections: [] })) }))
 vi.mock('../lib/mobile.js', () => ({ MOBILE: false }))
 
 import ModulesPage, { connectionNotes } from './Modules.jsx'
-import { bindUI } from '../components/ui.jsx'
+import { bindUI } from '../components/ui.tsx'
 
 let host, root
 beforeEach(() => {

@@ -6,9 +6,10 @@ import { defineConfig, lazyPlugins } from 'vite-plus'
 import react from '@vitejs/plugin-react'
 import type { Plugin } from 'vite'
 import { lazyAssets, stampSw } from './scripts/sw-stamp.mjs'
-import { mobileViewport } from './src/lib/viewport-zoom.js'
+import { mobileViewport } from './src/lib/viewport-zoom.ts'
 import { webOnlyAlias } from './web-only/alias.js'
 import { webOnlyTestConfig } from './web-only/test-config.js'
+import { apiClient } from './scripts/api-client.mjs'
 
 const backend = process.env.API_TARGET || 'http://127.0.0.1:3000'
 // The API refuses a state-changing request that a browser sent from anywhere other than its own
@@ -98,7 +99,7 @@ const swStamp: Plugin = {
 // the mobile build and `cap sync` (two builds in one worktree) shipped the web shell inside an
 // APK: no Android-only settings, a service worker, the passkey login. scripts/check-mobile-bundle.mjs
 // reads this tag in the synced copy after `cap sync` and fails the build without it.
-// The phone flavour also keeps zooming off (src/lib/viewport-zoom.js): the web build lets people
+// The phone flavour also keeps zooming off (src/lib/viewport-zoom.ts): the web build lets people
 // pinch, the Capacitor apps stay as they were.
 const flavor: Plugin = {
   name: 'opengym-flavor',
@@ -131,7 +132,7 @@ export default defineConfig({
     __SEASON_CLOCK__: JSON.stringify(process.env.VITE_SEASON_CLOCK === '1'),
   },
   // lazyPlugins: `vp check`/`vp lint`/`vp fmt` read this config without running the plugins.
-  plugins: lazyPlugins(() => [react(), umami, flavor, swStamp, catalogueMedia]),
+  plugins: lazyPlugins(() => [apiClient(), react(), umami, flavor, swStamp, catalogueMedia]),
   resolve: { alias: webOnlyAlias },
   base: './',
   server: {

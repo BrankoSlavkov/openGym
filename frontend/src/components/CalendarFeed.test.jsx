@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 const mocks = vi.hoisted(() => ({ feed: { on: false }, calls: [], confirm: null, copied: null }))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: vi.fn(async (p, o) => {
     mocks.calls.push([p, o?.body ? JSON.parse(o.body) : null])
     if (p === '/api/calendar' && o?.method === 'POST') {
@@ -20,7 +20,7 @@ vi.mock('../lib/api.js', () => ({
   appBase: () => '/', remoteAuth: () => null,
 }))
 vi.mock('../sheets.jsx', () => ({ confirmSheet: o => { mocks.confirm = o } }))
-vi.mock('../lib/clipboard.js', () => ({ copyText: async v => { mocks.copied = v; return true } }))
+vi.mock('../lib/clipboard.ts', () => ({ copyText: async v => { mocks.copied = v; return true } }))
 
 const { CalendarSheet } = await import('./CalendarFeed.jsx')
 let root, host

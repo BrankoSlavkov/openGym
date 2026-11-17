@@ -3,7 +3,7 @@ import { fmtVol, isoOf, todayISO, MONTHS, weekStartOf, weekDayOffset } from '../
 import { workoutDay, workoutDuration, sessionVolume } from '../lib/history.js'
 import { t, tn } from '../lib/i18n.js'
 import { tappable } from '../lib/use-sheet-keyboard.js'
-import { Segmented } from './ui.jsx'
+import { Segmented } from './ui.tsx'
 import { dayNoteOf, dayNoteLine } from '../lib/day-notes.js'
 
 const normalizeMetric = value => value === 'vol' ? 'vol' : 'time'

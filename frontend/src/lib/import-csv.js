@@ -37,7 +37,7 @@ import { clampIncline, inclineFrom, clampLevel, levelFrom } from './incline.js'
 import { NOTE_MAX } from './history.js'
 import { pickFor, inRange } from './import-choices.js'
 import { SET_TAGS } from './set-tags.js'
-import { SET_NOTE_MAX } from './set-notes.js'
+import { SET_NOTE_MAX } from './set-notes.ts'
 const SET_TAG_IDS = new Set(SET_TAGS.map(x => x.id))
 
 /* ----------------------------------------------------------------- CSV ---- */
@@ -135,7 +135,7 @@ const COLUMNS = [
   ['tempo', ['tempo']],
   // The bands of a set, by name (ours writes it, lib/bands.js).
   ['bands', ['bands']],
-  // A set's own note and its colour tag (ours writes them: lib/set-notes.js, lib/set-tags.js).
+  // A set's own note and its colour tag (ours writes them: lib/set-notes.ts, lib/set-tags.js).
   ['setNote', ['set note']],
   ['setColor', ['set color', 'set colour']],
 ]

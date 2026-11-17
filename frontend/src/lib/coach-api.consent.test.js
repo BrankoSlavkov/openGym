@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 // The door every Coach job goes through asks first (Apple 5.1.2(i)): once per provider and host,
 // before the first request that would send training data there. Pinned here with the real
-// coach-api.js and coach-consent.js; the sheet itself is a stand-in that answers as told, and
+// coach-api.ts and coach-consent.js; the sheet itself is a stand-in that answers as told, and
 // no request ever leaves (api.js, the phone's pipeline and the demo are all fakes).
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -12,7 +12,7 @@ const mocks = vi.hoisted(() => ({
 }))
 vi.mock('./demo.js', () => ({ get DEMO() { return mocks.DEMO }, DEMO_SEEDED: 'gym_demo_seeded_v1', REPO: '' }))
 vi.mock('./mobile.js', () => ({ get MOBILE() { return mocks.MOBILE }, readJsonFile: async () => null, writeJsonFile: async () => {} }))
-vi.mock('./api.js', () => ({
+vi.mock('./api.ts', () => ({
   api: vi.fn(async path => (path === '/api/coach/disclosure' ? mocks.disclosure : { job: { id: 'j1' } })),
 }))
 vi.mock('../store/useStore.js', () => ({ useStore: { getState: () => ({ S: { coach: {} }, coachLocal: mocks.coachLocal }) } }))
@@ -28,11 +28,11 @@ vi.mock('./coach-demo.js', () => ({
   demoReview: vi.fn(async () => ({ job: { id: 'demo-1' } })),
 }))
 
-const { api } = await import('./api.js')
+const { api } = await import('./api.ts')
 const { askAiConsent } = await import('../components/CoachConsentSheet.jsx')
 const local = await import('./coach-local.js')
 const demo = await import('./coach-demo.js')
-const { requestReview, requestPlan, refinePlan, requestDebrief, isDeclined } = await import('./coach-api.js')
+const { requestReview, requestPlan, refinePlan, requestDebrief, isDeclined } = await import('./coach-api.ts')
 const { aiConsents, withdrawAi, _resetAiConsent } = await import('./coach-consent.js')
 
 const jobCalls = () => vi.mocked(api).mock.calls.filter(([p]) => p !== '/api/coach/disclosure')

@@ -6,7 +6,7 @@
 // CheckIn): "Last heard from the watch" is the one sign that the two really talk, both ways.
 import { useEffect, useState } from 'react'
 import { t } from '../lib/i18n.js'
-import { Section, Row, Switch } from '../components/ui.jsx'
+import { Section, Row, Switch } from '../components/ui.tsx'
 import { readWatchPrefs, writeWatchPrefs, readWatchStatus, onWatchPrefs, lastHeardAt } from '../lib/watch-settings.js'
 import { wearStatus } from '../lib/watch-sync.js'
 import { getChannel } from '../lib/channel.js'

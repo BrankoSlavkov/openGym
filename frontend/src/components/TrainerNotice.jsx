@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
 import { t } from '../lib/i18n.js'
-import { getInbox, getOverview, showsDashboard, trainerRoles } from '../lib/trainer-api.js'
+import { getInbox, getOverview, showsDashboard, trainerRoles } from '../lib/trainer-api.ts'
 import { noticeText } from '../lib/trainer-notice-text.js'
-import Icon from './Icon.jsx'
+import Icon from './Icon.tsx'
 
 function lineFor(i) {
   const who = i.from?.name || ''

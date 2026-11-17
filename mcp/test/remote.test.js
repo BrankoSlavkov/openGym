@@ -3,10 +3,10 @@
 // revision moved, and that two profiles read at once stay apart (withProfile).
 import { describe, test, expect, afterEach } from 'vitest'
 import http from 'node:http'
-import { createRemoteProfile } from '../src/remote.js'
-import { withProfile, getState, getUser } from '../src/state.js'
-import { listRoutines } from '../src/tools.js'
-import { toolAllowed, ALL_TOOLS, TOOL_NEEDS } from '../src/server.js'
+import { createRemoteProfile } from '../src/remote.ts'
+import { withProfile, getState, getUser } from '../src/state.ts'
+import { listRoutines } from '../src/tools.ts'
+import { toolAllowed, ALL_TOOLS, TOOL_NEEDS } from '../src/server.ts'
 
 let srv
 afterEach(() => srv?.close())

@@ -21,10 +21,10 @@ import { plateSizesFor, isPlateSize, isStandardPlate, withoutPlateSize, DEFAULT_
 import { toScale, rirOf, EFFORT_PRESETS, effortColor } from './lib/effort.js'
 import { beep, vibrate } from './lib/sound.js'
 import { t, tn, dateLocale, instrFor, instrTranslated, descFor, exerciseNameFor, exerciseNameClass, getLang, useLang } from './lib/i18n.js'
-import { nameIn, said } from './lib/a11y-name.js'
+import { nameIn, said } from './lib/a11y-name.ts'
 import { nav, closeThenNav, navToWorkout } from './lib/nav.js'
 import { buildStarterPlan, starterPlanDays, starterPlanOptions, AWAY_PLANS } from './lib/starter.js'
-import OwnExerciseMedia from './components/OwnExerciseMedia.jsx'
+import OwnExerciseMedia from './components/OwnExerciseMedia.tsx'
 import Media, { Thumb } from './components/Media.jsx'
 import CustomMediaField from './components/CustomMediaField.jsx'
 import WorkoutMediaSection, { workoutMediaCount } from './components/WorkoutMedia.jsx'
@@ -33,31 +33,31 @@ import { workoutSetVideos } from './lib/set-videos.js'
 import { mediaOf, normalizeMediaRef, cleanUrl, workoutMediaOf } from './lib/media-refs.js'
 import { syncMedia } from './lib/media-sync.js'
 import LineChart from './components/LineChart.jsx'
-import Stepper from './components/Stepper.jsx'
-import DateField from './components/DateField.jsx'
+import Stepper from './components/Stepper.tsx'
+import DateField from './components/DateField.tsx'
 import { durationSheet } from './components/DurationWheel.jsx'
 import { cleanBackups, cleanBackupConfigs, withBackups, MAX_BACKUPS, backupSlotConfig } from './lib/routine-backups.js'
 import { replaceSlotExercise } from './lib/routines.js'
-import KitChips from './components/KitChips.jsx'
+import KitChips from './components/KitChips.tsx'
 import { normalizeAliases } from './lib/exercise-aliases.js'
 import ExerciseAliasesEditor, { ExerciseAliasesField, ExerciseAliasesLink } from './components/ExerciseAliases.jsx'
 import { SG_NAME_MAX } from './lib/superset-meta.js'
 import { cleanCircuit, defaultCircuit, RUNWALK, RUNWALK_WARM, applyProgramAdvances, withoutAdvances } from './lib/circuit.js'
 import { modeName, MODE_HINT } from './lib/circuit-copy.js'
 import { REST_MAX, fmtRest, restWheelValue, fmtDuration } from './lib/duration.js'
-import Icon from './components/Icon.jsx'
+import Icon from './components/Icon.tsx'
 import CommunityBits from './components/CommunityBits.jsx'
 import './views/Community.css'
 import { SeasonDeco } from './components/Seasonal.jsx'
 import { useNfcSupported, nfcExerciseSheet } from './components/Nfc.jsx'
 import { usesBands, withBandEx, setBandsOf, toggleSetBand, bandText } from './lib/bands.js'
 import { BandChips } from './components/Bands.jsx'
-import { Button, Slider, Switch, Segmented, SelectRow, Row, TextField, NumberField, MultiSelectRow } from './components/ui.jsx'
+import { Button, Slider, Switch, Segmented, SelectRow, Row, TextField, NumberField, MultiSelectRow } from './components/ui.tsx'
 import { glyphOf, GLYPH_GROUPS, DEFAULT_GLYPH } from './lib/glyphs.js'
-import BodyMap from './components/BodyMap.jsx'
+import BodyMap from './components/BodyMap.tsx'
 import MuscleExplorer from './components/MuscleExplorer.jsx'
-import GymHiddenLine from './components/GymHiddenLine.jsx'
-import ExerciseViewToggle from './components/ExerciseViewToggle.jsx'
+import GymHiddenLine from './components/GymHiddenLine.tsx'
+import ExerciseViewToggle from './components/ExerciseViewToggle.tsx'
 import { sameMuscleFirst, swapMuscleOf } from './lib/similar-exercises.js'
 import { suggestedSubstitutes, relatedSubstitutes } from './lib/exercise-substitutes.js'
 import { backupSuggestions } from './lib/backup-suggestions.js'
@@ -71,12 +71,12 @@ import { importHevyData, parseHevyAccount, HevyApiError, HEVY_DEV_SETTINGS, merg
 import { aliasMatches, choiceOpts, combineNames, rememberPicks } from './lib/import-choices.js'
 import ImportChoices, { freshChoices, choicesChanged } from './components/ImportChoices.jsx'
 import { buildPlanBundle, buildProgrammeBundle, parsePlan, mergePlan } from './lib/plan-share.js'
-import PrintPlanSheet from './components/PrintPlanSheet.jsx'
+import PrintPlanSheet from './components/PrintPlanSheet.tsx'
 import { printWorkout } from './lib/report-print.js'
 import { estimate1RM, best1RM, is1RMRecord, REP_CAP, formulaOf, FORMULA_NAMES } from './lib/onerm.ts'
 import { setTrendOn, setTrendsFor, lastTimeBefore, trendGlyph, trendLabel } from './lib/set-trend.js'
 import { mergeExercise, undoMerge, mergePreview, mergeBlocked } from './lib/exercise-merge.js'
-import { setNoteOf, withSetNote, SET_NOTE_MAX } from './lib/set-notes.js'
+import { setNoteOf, withSetNote, SET_NOTE_MAX } from './lib/set-notes.ts'
 import { setTagOf, setTagName } from './lib/set-tags.js'
 import { StrengthLevelBlock } from './components/StrengthLevel.jsx'
 import { exerciseHistory } from './lib/exercise-history.js'
@@ -84,7 +84,7 @@ import { relativeSeries } from './lib/relative-strength.js'
 import { isBellEx, dbLoadOf, dbLoadFor, withDbLoad, entryDbLoad, currentDbLoad, isOneArm, dumbbellsOf, ownsDumbbells, withDumbbells, ownsNoDumbbells, withNoDumbbells, presetWeights, cleanWeights, canHaveStack, stackOf, withStack, stackFromStep, parseWeightList } from './lib/dumbbells.js'
 import { nextStep } from './lib/weight-step.js'
 import { policyFor, profileRule, defaultIncrement, POLICIES_FOR, POLICY_NAME, POLICY_DESC, MAX_BW_SETS, MAX_TRIPLE_SETS, DENSITY_FLOOR, dupReps } from './lib/progression.js'
-import { normalizeRepRange } from './lib/rep-range.js'
+import { normalizeRepRange } from './lib/rep-range.ts'
 import { isBackoff, backoffWeights } from './lib/backoff.js'
 import { isPyramid, normalizePyramid, normalizePyramidRest, normalizePyramidWeight, pyramidFromFlat, flatFromPyramid, pyramidLabel, PYRAMID_MAX, MAX_PYRAMID_SETS, PYRAMID_PRESETS } from './lib/pyramid.js'
 import { MOBILE, shareExport, shareExportBlob, nativePlatform } from './lib/mobile.js'
@@ -92,7 +92,7 @@ import { loadHealth } from './lib/health-sync.js'
 import { speedUnitOf, toSpeed, fromSpeed } from './lib/speed.js'
 import { clampIncline, inclineFits, INCLINE_MAX, INCLINE_STEP, clampLevel, levelFits, LEVEL_MAX } from './lib/incline.js'
 import { savedEntryRecords, repRecordTable, liveRecordsOn } from './lib/set-records.js'
-import { RecordBadge } from './components/SetRecord.jsx'
+import { RecordBadge } from './components/SetRecord.tsx'
 import { sessionPrs, buildCompletedWorkout, sessionEnd } from './lib/finish-workout.js'
 import { reopenRecord, saveReopen, readReopen, canReopen, applyReopen } from './lib/forgotten-workout.js'
 import { refillAfter } from './lib/rotation.js'
@@ -101,7 +101,7 @@ import { ownExerciseRest } from './lib/supersetFlow.js'
 import { entryTimes } from './lib/exercise-time.js'
 import { saveSessionAsRoutine, routineFromSession, routineAdditions, addToRoutine } from './lib/session-routines.js'
 import { shareRoutineSheet } from './components/RoutineShare.jsx'
-import { youtubeSearchUrl } from './lib/youtube.js'
+import { youtubeSearchUrl } from './lib/youtube.ts'
 import { openExternal } from './components/CustomMedia.jsx'
 import { repeatSessionEntries } from './lib/session-repeat.js'
 import { swapActiveExercise } from './lib/active-exercise-swap.js'
@@ -132,7 +132,7 @@ import { recoverySheet, RecoveryRow } from './components/RecoverySheet.jsx'
 import { activityDays, activitiesOn } from './lib/activities.js'
 import { activitySheet, ActivityRow } from './components/ActivitySheet.jsx'
 import { StreakSummary, StreakLegend, WeekMark, WeekNote } from './components/StreakCalendar.jsx'
-import { copyText } from './lib/clipboard.js'
+import { copyText } from './lib/clipboard.ts'
 import { queueRemaining, pinState } from './lib/queue.js'
 import { DAY_NOTE_TAGS, DAY_NOTE_LABEL, DAY_NOTE_ICON, dayNoteOf, dayNoteLine, canNoteDay, withDayNote } from './lib/day-notes.js'
 import { isOn } from './lib/modules.js'
@@ -1575,7 +1575,7 @@ function ExerciseDetail({ ex, close }) {
     </div>
     <ExerciseAliasesEditor key={ex.id} ex={ex} />
     {/* Your own photo or video on a built-in exercise (#259, #534): shown instead of the animation
-        or beside it, private to your account (components/OwnExerciseMedia.jsx). */}
+        or beside it, private to your account (components/OwnExerciseMedia.tsx). */}
     <OwnExerciseMedia ex={ex} />
     {descFor(ex) && <div className="exnote">{descFor(ex)}</div>}
     {/* One line of text that wraps as a sentence: as a flex row, the last session became a
@@ -1611,7 +1611,7 @@ function ExerciseDetail({ ex, close }) {
         stronger (issue #232). Cardio has none for the same kind of reason. */}
     {!isCardio(ex) && !isAssisted(ex) && <OneRM ex={ex} />}
     {instrFor(ex).length > 0 &&<><h4 className="sec">{t('How to')}{getLang() !== 'en' && !instrTranslated(ex) && <span className="dim" style={{ textTransform: 'none', letterSpacing: 0 }}> · {t('instructions in English')}</span>}</h4><ol className="steps-list">{instrFor(ex).map((s, i) => <li key={i}>{s}</li>)}</ol></>}
-    {/* A YouTube search for the exercise, opened after the tap and only then (lib/youtube.js). A
+    {/* A YouTube search for the exercise, opened after the tap and only then (lib/youtube.ts). A
         video link of the exercise's own stays first, in the media above. */}
     {youtubeSearchUrl(ex) && <Button variant="ghost" icon="play" style={{ marginTop: 6 }} onClick={() => openExternal(youtubeSearchUrl(ex))}>{t('Watch on YouTube')}</Button>}
     {/* The community library: where a copy came from, and tips from people on this server. */}
@@ -3317,7 +3317,7 @@ export async function exportProgrammeFile(id) {
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click(); URL.revokeObjectURL(a.href)
   toast(t('Programme file saved. Send it to a friend!'))
 }
-// The print step (components/PrintPlanSheet.jsx): "With pictures", then the browser's print
+// The print step (components/PrintPlanSheet.tsx): "With pictures", then the browser's print
 // dialog (→ Save as PDF) on the web or the OS print flow via the native Print plugin in the app
 // (Android's WebView has no window.print()). Same printable HTML both ways. Without `routineId`
 // it is the whole week; with it, that one routine (#282), and `name` names its print job.
@@ -3700,7 +3700,7 @@ function WorkoutDetail({ w, close }) {
         {e.note && <span className="small dim" style={{ marginTop: 3 }}>
           {e.notePin && <Icon name="pin" style={{ fontSize: 'var(--fs-caption)', marginInlineEnd: 4, verticalAlign: '-1px', color: 'var(--gold-ink)' }} />}{e.note}
         </span>}
-        {/* Each set's own note (lib/set-notes.js), under the sets: "Set 2: grip slipped". */}
+        {/* Each set's own note (lib/set-notes.ts), under the sets: "Set 2: grip slipped". */}
         {setNotesOf(e).map(n => <span key={n.i} className="small dim setnote-hist"><Icon name="note" />{n.label}: {n.note}</span>)}</button>
       <Icon name="chevronRight" className="chev" style={{ alignSelf: 'center' }} />
     </div>
@@ -4353,7 +4353,7 @@ function ExerciseNote({ entryIdx, close }) {
 }
 export const exerciseNoteSheet = entryIdx => ui().openSheet(close => <ExerciseNote entryIdx={entryIdx} close={close} />)
 
-// A note on one set (lib/set-notes.js): the set menu's Note, or a tap on the note under the row.
+// A note on one set (lib/set-notes.ts): the set menu's Note, or a tap on the note under the row.
 // Saved on the row, so it goes with the workout when it is finished, and with the set when the
 // set is removed.
 function SetNote({ entryIdx, setIdx, title, close }) {

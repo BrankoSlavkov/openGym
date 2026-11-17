@@ -11,11 +11,11 @@
    race happens in exactly one order. */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../lib/api.js', () => ({ api: vi.fn(), setRemoteAuth: vi.fn() }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn(), setRemoteAuth: vi.fn() }))
 vi.mock('./useUI.js', () => ({ useUI: { getState: () => ({ toast: vi.fn() }) } }))
 vi.mock('../sheets.jsx', () => ({ askAddDeviceData: async () => false }))
 
-import { api } from '../lib/api.js'
+import { api } from '../lib/api.ts'
 import { DEF, useStore } from './useStore.js'
 
 const clone = v => JSON.parse(JSON.stringify(v))

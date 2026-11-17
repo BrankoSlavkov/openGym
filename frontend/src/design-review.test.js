@@ -80,7 +80,7 @@ describe('1.4.5 features pass', () => {
   it('no separate insights stylesheet any more', async () => {
     const { existsSync } = await import('node:fs')
     expect(existsSync(resolve(process.cwd(), 'src/insights.css'))).toBe(false)
-    expect(readFileSync(resolve(process.cwd(), 'src/main.jsx'), 'utf8')).not.toMatch(/insights\.css/)
+    expect(readFileSync(resolve(process.cwd(), 'src/main.tsx'), 'utf8')).not.toMatch(/insights\.css/)
   })
   it('set trends, weekly sets and levels colour text with the inks, never the bare system colours', () => {
     expect(rule('.settrend.up')).toMatch(/var\(--green-ink\)/)
@@ -217,9 +217,9 @@ describe('Card dismiss pass', () => {
     expect(src('components/Recap.jsx')).toMatch(/className="card tap-host recap-card"[\s\S]*open=\{\{ onClick: \(\) => recapSheet\(r\)/)
     expect(src('views/Home.jsx')).toMatch(/className="card tap-host streak-card"/)
     for (const f of ['views/Library.jsx', 'components/MuscleExplorer.jsx', 'sheets.jsx', 'views/RoutineEdit.jsx']) expect(src(f), f).toMatch(/className="grow item-open tap-main"/)
-    expect(src('components/CardHead.jsx')).toMatch(/className="card-head-main tap-main"/)
+    expect(src('components/CardHead.tsx')).toMatch(/className="card-head-main tap-main"/)
     // with nothing nested, no control has to stop its click from reaching a card any more
-    for (const f of ['components/Recap.jsx', 'components/WeeklySets.jsx', 'views/Library.jsx', 'components/MuscleExplorer.jsx']) expect(src(f), f).not.toMatch(/stopPropagation/)
+    for (const f of ['components/Recap.jsx', 'components/WeeklySets.tsx', 'views/Library.jsx', 'components/MuscleExplorer.jsx']) expect(src(f), f).not.toMatch(/stopPropagation/)
   })
   it('the cover spans the card, the other controls sit above it, and the press answers the primary only', () => {
     expect(rule('.tap-host')).toMatch(/position:relative/)

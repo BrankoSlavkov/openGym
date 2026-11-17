@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { candidatesFor, discoverLocal } from '../coach/core/local-discovery.js';
+import { candidatesFor, discoverLocal } from '../coach/core/local-discovery.ts';
 
 test('candidates: every known port per host, IPv6 bracketed, junk hosts dropped, capped', () => {
   const c = candidatesFor(['192.168.1.5', '::1', 'bad host/x', '192.168.1.5']);

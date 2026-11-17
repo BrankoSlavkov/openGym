@@ -3,7 +3,7 @@
  * literals that never went through t(): a German or Brazilian lifter read English in the middle of
  * an otherwise translated chat. They are getters over t() now. This reads every line in every
  * locale pack the way the app loads one (setLang), and pins that the text follows a language
- * picked after coach-api.js loaded, which a map translated once at load time would not.
+ * picked after coach-api.ts loaded, which a map translated once at load time would not.
  *
  * setLang sets the page's lang and dir (right-to-left for Arabic), so this runs with a DOM.
  */
@@ -14,11 +14,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 const mocks = vi.hoisted(() => ({ MOBILE: false, coachLocal: null }))
 vi.mock('./demo.js', () => ({ DEMO: false, DEMO_SEEDED: 'gym_demo_seeded_v1', REPO: '' }))
 vi.mock('./mobile.js', () => ({ get MOBILE() { return mocks.MOBILE } }))
-vi.mock('./api.js', () => ({ api: vi.fn() }))
+vi.mock('./api.ts', () => ({ api: vi.fn() }))
 vi.mock('../store/useStore.js', () => ({ useStore: { getState: () => ({ S: {}, coachLocal: mocks.coachLocal }) } }))
 vi.mock('../store/useUI.js', () => ({ useUI: { getState: () => ({ toast: vi.fn() }) } }))
 
-const { JOB_ERRORS, BYOK_ERRORS, jobErrorText } = await import('./coach-api.js')
+const { JOB_ERRORS, BYOK_ERRORS, jobErrorText } = await import('./coach-api.ts')
 const { setLang, getLang, LANGS, DERIVED_LOCALES } = await import('./i18n.js')
 
 const PACKS = Object.fromEntries(Object.entries(import.meta.glob('../locales/*.js', { eager: true }))
@@ -57,7 +57,7 @@ describe('every failure line, in every pack', () => {
   })
 })
 
-describe('a language picked after coach-api.js loaded', () => {
+describe('a language picked after coach-api.ts loaded', () => {
   it('changes what the same map says, and switching back restores the English', async () => {
     expect(getLang()).toBe('en')
     expect(JOB_ERRORS.unprivileged).toBe(EN.JOB_ERRORS.unprivileged)

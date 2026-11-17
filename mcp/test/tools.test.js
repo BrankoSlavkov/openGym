@@ -5,8 +5,8 @@
 import { describe, beforeAll, afterAll, beforeEach, test, expect, vi } from 'vitest'
 import { buildDemoState } from '../../frontend/src/lib/demoSeed.js'
 import { EXDB, exOr } from '../../frontend/src/lib/exercises.js'
-import { _seedStateForTests } from '../src/state.js'
-import { TOOLS } from '../src/tools.js'
+import { _seedStateForTests } from '../src/state.ts'
+import { TOOLS } from '../src/tools.ts'
 import { bestSetOf } from '../../frontend/src/lib/onerm.ts'
 
 // Re-stated here so the assertions stand alone without reaching into lib internals to learn
@@ -1330,7 +1330,7 @@ describe('`to` defaults to today, as documented', () => {
 
 /* ---------- argument validation at the real SDK boundary ---------- */
 
-// Driven through McpServer + an in-memory transport with the registration loop from src/index.js,
+// Driven through McpServer + an in-memory transport with the registration loop from src/index.ts,
 // because the thing under test is what zod does to the arguments BEFORE a handler ever runs.
 describe('date arguments must be dates the calendar has', () => {
   let client
@@ -1471,8 +1471,8 @@ describe('get_workout set notes', () => {
 
 describe('search_exercises (sub-connect-146)', () => {
   test('finds catalogue exercises with ids, filters by body part and equipment, and is allowed to any reading token', async () => {
-    const { searchExercises } = await import('../src/tools.js')
-    const { toolAllowed } = await import('../src/server.js')
+    const { searchExercises } = await import('../src/tools.ts')
+    const { toolAllowed } = await import('../src/server.ts')
     const r = searchExercises.handler({ query: 'barbell bench press', limit: 5 })
     expect(r.exercises.length).toBeGreaterThan(0)
     expect(r.exercises[0].id).toBeTruthy()

@@ -8,8 +8,8 @@ import { t } from '../lib/i18n.js'
 import { circuitOf, previousResult, compareResult } from '../lib/circuit.js'
 import { circuitLine, resultLine, roundLabel, compareLine, modeName, fmtClock } from '../lib/circuit-copy.js'
 import { runStep } from '../lib/circuit.js'
-import Icon from './Icon.jsx'
-import { Button } from './ui.jsx'
+import Icon from './Icon.tsx'
+import { Button } from './ui.tsx'
 
 export default function CircuitCard({ unit }) {
   const A = useStore(s => s.S.active)

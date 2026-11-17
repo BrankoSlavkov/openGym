@@ -7,6 +7,7 @@ import type { RouteConfig } from '@asteasolutions/zod-to-openapi';
 import { z } from '@hono/zod-openapi';
 import { CoachCohort, CoachIntake, CoachStatus, Ok } from '../schemas.ts';
 import * as R from '../responses.ts';
+import { representative } from '../validate.ts';
 
 void z;
 
@@ -128,6 +129,7 @@ the reason, both delivered through \`GET /api/coach/status\`.`,
                 description: `Anything the profile wants the Coach to know this time round. Cut to the
 instance's \`maxMessageLen\` (1000 unless the admin changed it; 200–4000).`
               }).optional(),
+              vitals: representative(z.record(z.string(), z.unknown()).nullable()).openapi({ description: 'Device health summary shared for this request only; ignored if it is not an object.' }).optional(),
               lang: z.string().regex(new RegExp('^[A-Za-z]{2,3}([-_][A-Za-z0-9]{2,8})?$')).openapi({
                 description: `The language the app is showing, which the Coach writes in. Absent or not a
 language tag, the profile's stored \`lang\` is used.`
@@ -164,6 +166,8 @@ it like a logged workout.`,
           'application/json': { schema: z.object({
               text: z.string().openapi({ description: 'The question. Cut at the instance\'s message length.' }),
               today: z.record(z.string(), z.unknown()).openapi({ description: 'The session running on the device (`entries` with their sets), or absent.' }).optional(),
+              vitals: representative(z.record(z.string(), z.unknown()).nullable()).openapi({ description: 'Device health summary shared for this request only; ignored if it is not an object.' }).optional(),
+              routines: representative(z.array(z.record(z.string(), z.unknown())).nullable()).openapi({ description: 'Matching routine-library candidates. The server retains at most eight.' }).optional(),
               lang: z.string().regex(new RegExp('^[A-Za-z]{2,3}([-_][A-Za-z0-9]{2,8})?$')).openapi({ description: 'The language the app is showing, which the Coach answers in.' }).optional()
             }) }
         }

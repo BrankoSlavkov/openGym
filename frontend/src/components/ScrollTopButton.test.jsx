@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
-// The floating way back up (ScrollTopButton.jsx): in from 2.5 screens down, out again under one,
+// The floating way back up (ScrollTopButton.tsx): in from 2.5 screens down, out again under one,
 // out at once when tapped, and a jump instead of a glide with Reduce Motion on.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import ScrollTopButton from './ScrollTopButton.jsx'
+import ScrollTopButton from './ScrollTopButton.tsx'
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 

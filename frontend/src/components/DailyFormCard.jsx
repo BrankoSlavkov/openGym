@@ -11,10 +11,10 @@ import { loadHealth, onHealthChange } from '../lib/health-sync.js'
 import { vitalsSummary } from '../lib/vitals.js'
 import { formDays, formScore, offerCheckin } from '../lib/daily-form.js'
 import { useStore } from '../store/useStore.js'
-import { Button } from './ui.jsx'
+import { Button } from './ui.tsx'
 import { formInsights, insightProgress, workoutPerformance } from '../lib/form-insights.js'
 import { displayScale } from '../lib/effort.js'
-import CardHead from './CardHead.jsx'
+import CardHead from './CardHead.tsx'
 
 // The good side of each factor, as the row's title.
 const FACTOR_LABEL = {

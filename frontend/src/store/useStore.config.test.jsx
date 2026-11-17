@@ -6,9 +6,9 @@
 // enabled" to a server whose admin was looking at a green test.
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../lib/api.js', () => ({ api: vi.fn() }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn() }))
 
-import { api } from '../lib/api.js'
+import { api } from '../lib/api.ts'
 import { useStore } from './useStore.js'
 
 beforeEach(() => { api.mockReset(); useStore.setState({ config: null }) })
@@ -20,7 +20,7 @@ describe('server config', () => {
     expect(await useStore.getState().loadConfig()).toEqual({ invite_only: true, allow_guest: false, coach: { enabled: true } })
     expect(await useStore.getState().loadConfig()).toMatchObject({ coach: { enabled: true } })
     expect(api).toHaveBeenCalledTimes(1)
-    expect(api).toHaveBeenCalledWith('/api/config')
+    expect(api).toHaveBeenCalledWith('/api/config', expect.objectContaining({ method: 'GET', signal: expect.any(AbortSignal) }))
   })
 
   it('refreshConfig always asks the server, so a Coach switched on after boot is seen', async () => {
@@ -59,6 +59,22 @@ describe('server config', () => {
     expect(api).toHaveBeenCalledTimes(2)
     useStore.setState({ user: null })
     localStorage.clear()
+  })
+
+  it('replaces an in-flight config when another account signs in', async () => {
+    localStorage.clear()
+    useStore.setState({ user: { id: 'previous', name: 'Previous' }, config: { coach: null } })
+    let finishOld
+    api.mockImplementationOnce(() => new Promise(resolve => { finishOld = resolve }))
+    const oldRequest = useStore.getState().refreshConfig()
+    api.mockResolvedValueOnce({ coach: null, trainers: { on: true, roles: { trainer: false, lead: false } } })
+    useStore.getState().setUser({ id: 'next', name: 'Next' })
+    await vi.waitFor(() => expect(useStore.getState().config.trainers?.roles.trainer).toBe(false))
+    finishOld({ coach: null, trainers: { on: true, roles: { trainer: true, lead: true } } })
+    await oldRequest
+    expect(useStore.getState().config.trainers.roles).toEqual({ trainer: false, lead: false })
+    expect(api).toHaveBeenCalledTimes(2)
+    useStore.setState({ user: null })
   })
 
   it('two callers asking at once make one request', async () => {

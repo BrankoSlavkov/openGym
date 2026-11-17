@@ -9,9 +9,9 @@ tempData();
 const payloadLib = await import('../coach/core/payload.js');
 const { runPipeline } = await import('../coach/core/pipeline.js');
 const { validateAdapt, validateReview } = await import('../coach/core/validate.js');
-const { SCHEMAS } = await import('../coach/core/schemas.js');
+const { SCHEMAS } = await import('../coach/core/schemas.ts');
 const { muscleLoad, gymOf, challengesOf } = await import('../coach/core/context.js');
-const { strictSchema } = await import('../coach/core/adapters/openai.js');
+const { strictSchema } = await import('../coach/core/adapters/openai.ts');
 
 const NOW = Date.parse('2026-10-29T12:00:00Z');
 const day = n => new Date(NOW - n * 86400000).toISOString().slice(0, 10);
@@ -225,7 +225,7 @@ test('review: a programme, new or revised, over exercises of the plan', () => {
 });
 
 test('the system prompt stays a prompt: every task under 20k characters', async () => {
-  const { buildPromptParts } = await import('../coach/core/prompt.js');
+  const { buildPromptParts } = await import('../coach/core/prompt.ts');
   for (const kind of ['create', 'review', 'debrief', 'ask', 'adapt']) {
     assert.ok(buildPromptParts(kind, {}).system.length < 20000, kind);
   }

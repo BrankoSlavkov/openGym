@@ -8,13 +8,13 @@ import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t, tn } from '../lib/i18n.js'
 import { dateLocale } from '../lib/i18n-core.js'
-import { api, webauthnOK, createPasskey } from '../lib/api.js'
-import { copyText } from '../lib/clipboard.js'
+import { api, webauthnOK, createPasskey } from '../lib/api.ts'
+import { copyText } from '../lib/clipboard.ts'
 import { deviceLinkUrl, deviceLabel } from '../lib/device-link.js'
 import { askAddDeviceData } from '../sheets.jsx'
 import { passwordError, notReached, useAgainOnceReached, ProveOwner } from './PasswordAuth.jsx'
 import { MOBILE } from '../lib/mobile.js'
-import { Row, Button } from './ui.jsx'
+import { Row, Button } from './ui.tsx'
 
 const ui = () => useUI.getState()
 const toast = m => ui().toast(m)

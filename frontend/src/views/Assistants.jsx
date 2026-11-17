@@ -11,13 +11,13 @@ import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
 import { MOBILE } from '../lib/mobile.js'
-import { copyText } from '../lib/clipboard.js'
+import { copyText } from '../lib/clipboard.ts'
 import { fmtAgo } from '../lib/format.js'
-import { listTokens, revokeToken, mcpAddress, tokenLine } from '../lib/api-tokens.js'
+import { listTokens, revokeToken, mcpAddress, tokenLine } from '../lib/api-tokens.ts'
 import { ASSISTANTS, assistantById, connectorsOf, connectionOf, reachability, SELF_HOSTING_DOCS, MCP_REMOTE_DOCS } from '../lib/assistants.js'
 import { confirmSheet } from '../sheets.jsx'
-import Icon from '../components/Icon.jsx'
-import { Section, Row, Button } from '../components/ui.jsx'
+import Icon from '../components/Icon.tsx'
+import { Section, Row, Button } from '../components/ui.tsx'
 
 const open = url => window.open(url, '_blank', 'noopener')
 const POLL_MS = 5000

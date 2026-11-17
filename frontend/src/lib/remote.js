@@ -6,7 +6,7 @@
 // server's RP_ID), so auth here is a short one-time code redeemed from an already signed-in
 // browser tab (Settings → "Pair the mobile app") for a bearer token — see api/server.js's
 // /api/pair/create + /api/pair/redeem.
-import { pairRedeem, setRemoteAuth } from './api.js'
+import { pairRedeem, setRemoteAuth } from './api.ts'
 import { phoneSignIn } from './oidc-app.js'
 import { loadRemoteFile, saveRemoteFile } from './mobile.js'
 import { clearCfAccess } from './cf-access.js'

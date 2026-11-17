@@ -8,7 +8,7 @@
 import { MOBILE } from './mobile.js'
 import { notificationPlan, wrappedOf, wrappedNow, NOTIFY_ID } from './wrapped.js'
 import { t } from './i18n-core.js'
-import { WRAPPED_PUSH } from './wrapped-copy.js'
+import { WRAPPED_PUSH } from './wrapped-copy.ts'
 import { withoutAlarmPrompt } from './exact-alarm.js'
 
 /** The notification itself, for `year`, at `at`. */

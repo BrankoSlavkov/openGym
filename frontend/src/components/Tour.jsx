@@ -24,8 +24,8 @@ import {
   openTour, closeTour, placeCard, visiblePart, routeOf, reached, passOver, TUTORIALS, TUTORIAL_COPY, SAMPLE_ROUTINE_ID, SAMPLE_WORKOUT_ID,
 } from '../lib/tour.js'
 import { beginWorkout } from '../sheets.jsx'
-import { Button } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Button } from './ui.tsx'
+import Icon from './Icon.tsx'
 import { PRESETS, presetOf, applyPreset } from '../lib/modules.js'
 import { presetCopy } from '../lib/modules-copy.js'
 import './Tour.css'

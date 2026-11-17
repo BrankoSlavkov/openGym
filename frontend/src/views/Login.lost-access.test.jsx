@@ -28,7 +28,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = snap
   return { useUI }
 })
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   webauthnOK: () => mocks.webauthn, passkeyLogin: vi.fn(), passkeyRegister: vi.fn(), BIO: 'your fingerprint', bio: () => 'your fingerprint',
   api: vi.fn(), passkeyAssertion: vi.fn(), passwordLogin: vi.fn(), passwordRegister: vi.fn(), passwordResetRedeem: vi.fn(),
   createPasskey: vi.fn(),
@@ -39,7 +39,7 @@ vi.mock('../lib/demo.js', () => ({ DEMO: false, REPO: 'https://example.invalid' 
 vi.mock('../sheets.jsx', () => ({ askAddDeviceData: vi.fn(), confirmSheet: vi.fn() }))
 
 const { default: Login } = await import('./Login.jsx')
-const { LostAccessSheet } = await import('../components/LostAccess.jsx')
+const { LostAccessSheet } = await import('../components/LostAccess.tsx')
 
 const mounted = []
 function mount(el) {

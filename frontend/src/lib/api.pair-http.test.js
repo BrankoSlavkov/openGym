@@ -12,7 +12,7 @@ vi.mock('@capacitor/core', () => ({
   registerPlugin: () => ({}),
 }))
 
-const { pairRedeem, looksLocal } = await import('./api.js')
+const { pairRedeem, looksLocal } = await import('./api.ts')
 
 afterEach(() => { vi.unstubAllGlobals(); h.native = true })
 const failed = () => Promise.reject(new TypeError('Failed to fetch'))
@@ -74,7 +74,7 @@ describe('looksLocal', () => {
 // phone's browser opened fine: pairing said "Could not reach" over https and over http alike.
 describe('a server only the app itself can reach (#870)', () => {
   it('pairs through the native network stack, and keeps talking to it that way', async () => {
-    const { _viaNativeForTests, api, setRemoteAuth } = await import('./api.js')
+    const { _viaNativeForTests, api, setRemoteAuth } = await import('./api.ts')
     const core = await import('@capacitor/core')
     const native = vi.fn(async ({ url }) => ({ status: 200, data: url.endsWith('/redeem') ? JSON.stringify({ token: 'T', user: { id: 'u1' } }) : JSON.stringify({ rev: 7 }) }))
     core.CapacitorHttp.request = native

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { compareRows, cellAspect, coverCrop, panBy, daysApart, byDate, COMPARE_MAX } from './photo-compare.js'
+import { compareRows, cellAspect, coverCrop, panBy, daysApart, byDate, COMPARE_MAX } from './photo-compare.ts'
 
 describe('compareRows', () => {
   it('rows of at most three, as even as they go, the fuller first', () => {

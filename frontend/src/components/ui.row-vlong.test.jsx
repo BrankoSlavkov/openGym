@@ -7,7 +7,7 @@ import { createRoot } from 'react-dom/client'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { Row, VALUE_BESIDE_MAX } from './ui.jsx'
+import { Row, VALUE_BESIDE_MAX } from './ui.tsx'
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 let host, root

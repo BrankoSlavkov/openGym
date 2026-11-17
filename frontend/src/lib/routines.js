@@ -5,7 +5,7 @@ import { sessionsFor } from './progression.js'
 import { isWarmupRow } from './workout-model.js'
 import { ownExerciseRest } from './supersetFlow.js'
 import { warmupModeOf, ownRowsOf, ownRowsFromSession, sameOwnRows } from './warmup-ramp.js'
-import { isRungRow } from './warmup-snap.js'
+import { isRungRow } from './warmup-snap.ts'
 
 /**
  * Create a deep copy of a routine with a new id and a "(Copy)" suffix.

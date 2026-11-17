@@ -5,7 +5,7 @@
  * already answers with words the operator can act on (api/coach/routes.js USER_ERROR). This pins
  * the line, and that it reads the same as the enqueue refusal.
  *
- * coach-api.js pulls the store and the demo/local modules in; they are stubbed so importing it
+ * coach-api.ts pulls the store and the demo/local modules in; they are stubbed so importing it
  * needs no running app. jobErrorText on the server path (not a phone with its own key) is all
  * this file exercises.
  */
@@ -15,13 +15,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const mocks = vi.hoisted(() => ({ MOBILE: false, coachLocal: null, toast: vi.fn() }))
 vi.mock('./demo.js', () => ({ DEMO: false, DEMO_SEEDED: 'gym_demo_seeded_v1', REPO: '' }))
 vi.mock('./mobile.js', () => ({ get MOBILE() { return mocks.MOBILE } }))
-vi.mock('./api.js', () => ({ api: vi.fn() }))
+vi.mock('./api.ts', () => ({ api: vi.fn() }))
 vi.mock('./coach-demo.js', () => ({}))
 vi.mock('./coach-local.js', () => ({ setNotifier: vi.fn() }))
 vi.mock('../store/useStore.js', () => ({ useStore: { getState: () => ({ S: { unit: 'kg' }, coachLocal: mocks.coachLocal }) } }))
 vi.mock('../store/useUI.js', () => ({ useUI: { getState: () => ({ toast: mocks.toast }) } }))
 
-const { jobErrorText, JOB_ERRORS, BYOK_ERRORS } = await import('./coach-api.js')
+const { jobErrorText, JOB_ERRORS, BYOK_ERRORS } = await import('./coach-api.ts')
 
 beforeEach(() => { mocks.MOBILE = false; mocks.coachLocal = null })
 

@@ -11,8 +11,8 @@ import { mediaStore } from '../lib/media-store.js'
 import { fmtClip } from '../lib/media-refs.js'
 import { unlock, chime } from '../lib/sound.js'
 import { soundsOf, addSound, removeSound, setSlot, slotChoice, nameFromFile, SOUNDS_MAX } from '../lib/user-sounds.js'
-import { Section, Row, Button } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Section, Row, Button } from './ui.tsx'
+import Icon from './Icon.tsx'
 
 const toast = m => useUI.getState().toast(m)
 

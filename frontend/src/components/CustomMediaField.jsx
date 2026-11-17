@@ -15,14 +15,14 @@ import { useEffect, useRef, useState } from 'react'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
-import { nameIn } from '../lib/a11y-name.js'
+import { nameIn } from '../lib/a11y-name.ts'
 import { mediaOf, fmtClip } from '../lib/media-refs.js'
 import { mediaStore } from '../lib/media-store.js'
 import { MOBILE } from '../lib/mobile.js'
 import { limitsFrom, fmtMB, MB } from '../lib/media-limits.js'
 import { CustomThumb } from './CustomMedia.jsx'
-import { Row, Button } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Row, Button } from './ui.tsx'
+import Icon from './Icon.tsx'
 
 const toast = m => useUI.getState().toast(m)
 

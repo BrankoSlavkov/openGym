@@ -3,11 +3,11 @@
 // back at boot while its end is ahead, without booking its end a second time.
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
 
-vi.mock('../lib/api.js', () => ({ api: vi.fn(() => Promise.resolve({ ok: true })) }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn(() => Promise.resolve({ ok: true })) }))
 const { chime } = vi.hoisted(() => ({ chime: vi.fn() }))
 vi.mock('../lib/sound.js', () => ({ beep: vi.fn(), chime, vibrate: vi.fn(), alertBuzz: vi.fn() }))
 
-import { api } from '../lib/api.js'
+import { api } from '../lib/api.ts'
 import { useUI, restoreRest, REST_KEY } from './useUI.js'
 import { useStore } from './useStore.js'
 

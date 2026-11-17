@@ -10,7 +10,7 @@ import { useUI } from '../store/useUI.js'
 import { _setLangState } from '../lib/i18n-core.js'
 
 const probe = vi.hoisted(() => ({ fn: null }))
-vi.mock('../lib/api.js', async orig => ({ ...(await orig()), serverConfig: (...a) => probe.fn(...a) }))
+vi.mock('../lib/api.ts', async orig => ({ ...(await orig()), serverConfig: (...a) => probe.fn(...a) }))
 import { ConnectSheet } from './MobileOnboarding.jsx'
 
 let root, host

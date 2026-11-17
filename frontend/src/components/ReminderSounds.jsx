@@ -9,7 +9,7 @@ import { unlock, chime } from '../lib/sound.js'
 import { soundsOf } from '../lib/user-sounds.js'
 import { REST_SOUND_IDS } from '../lib/rest-sounds.js'
 import { reminderSoundOf, setReminderSound, reminderSoundsBuilt, pickPhoneSound, previewPhoneSound } from '../lib/reminder-sounds.js'
-import { Section, Row, Button } from './ui.jsx'
+import { Section, Row, Button } from './ui.tsx'
 
 // The same English keys as Settings → Timer alerts → Sound, so they are translated already.
 const TONE_LABEL = { chime: 'Chime (louder)', classic: 'Classic beeps', bell: 'Bell', beep: 'Beep-beep', whistle: 'Whistle', soft: 'Soft' }

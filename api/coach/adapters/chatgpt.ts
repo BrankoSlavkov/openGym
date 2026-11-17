@@ -9,8 +9,8 @@
  */
 import * as cfgStore from '../config.ts';
 import * as plan from '../chatgpt-plan.ts';
-import { sseEvents } from '../core/adapters/http.js';
-import { SYSTEM_PROMPT } from '../core/system-prompt.js';
+import { sseEvents } from '../core/adapters/http.ts';
+import { SYSTEM_PROMPT } from '../core/system-prompt.ts';
 
 export const PROVIDER = 'chatgpt';
 const API = plan.RESOURCE;

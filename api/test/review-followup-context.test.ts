@@ -4,7 +4,7 @@ import { tempData, sampleState } from './helpers.ts';
 
 tempData();
 const { build, CONVERSATION_CHARS, CONVERSATION_LINES } = await import('../coach/core/payload.js');
-const { buildPromptParts } = await import('../coach/core/prompt.js');
+const { buildPromptParts } = await import('../coach/core/prompt.ts');
 
 test('a review follow-up keeps the suggested replacement after a long training summary', () => {
   const recommendation = 'For the exercise you want to replace, consider cable curls instead.';

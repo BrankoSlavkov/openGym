@@ -5,9 +5,9 @@
 import { useState } from 'react'
 import { EXIDX } from '../lib/exercises.js'
 import { t, tn, exerciseNameFor } from '../lib/i18n.js'
-import { Check, Switch } from './ui.jsx'
-import DateField from './DateField.jsx'
-import Icon from './Icon.jsx'
+import { Check, Switch } from './ui.tsx'
+import DateField from './DateField.tsx'
+import Icon from './Icon.tsx'
 
 /** The state the choices start from: everything in, nothing picked. */
 export const freshChoices = () => ({ picks: new Map(), skip: new Set(), from: '', to: '', notes: true, effort: true })

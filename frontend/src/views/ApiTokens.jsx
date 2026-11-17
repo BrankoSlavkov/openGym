@@ -2,12 +2,12 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
-import { copyText } from '../lib/clipboard.js'
+import { copyText } from '../lib/clipboard.ts'
 import { fmtAgo } from '../lib/format.js'
-import { listTokens, createToken, revokeToken, mcpAddress, tokenLine, TOKEN_CATEGORIES, TOKEN_DAYS, endsLabel } from '../lib/api-tokens.js'
-import { categoryLabel, levelLabel } from '../lib/sharing-api.js'
+import { listTokens, createToken, revokeToken, mcpAddress, tokenLine, TOKEN_CATEGORIES, TOKEN_DAYS, endsLabel } from '../lib/api-tokens.ts'
+import { categoryLabel, levelLabel } from '../lib/sharing-api.ts'
 import { confirmSheet } from '../sheets.jsx'
-import { Section, Row, SelectRow, Button, TextField } from '../components/ui.jsx'
+import { Section, Row, SelectRow, Button, TextField } from '../components/ui.tsx'
 
 /* Settings → Integrations → API tokens (docs/API_TOKENS.md): a token per program (an AI assistant
    over MCP, a planner, a script), each seeing and changing only what is ticked, revoked here. The

@@ -16,15 +16,15 @@ import { t } from '../lib/i18n.js'
 import { DAYN } from '../lib/format.js'
 import { EXDB } from '../lib/exercises.js'
 import { emptyCoach, coachAvailable, hasConsent, CONSENT_VERSION, CATEGORY_TEXT, appendChat, defaultTrainingDays } from '../lib/coach.js'
-import { requestPlan, disclosure, JOB_ERRORS, isDeclined, coachVia } from '../lib/coach-api.js'
+import { requestPlan, disclosure, JOB_ERRORS, isDeclined, coachVia } from '../lib/coach-api.ts'
 import { consentTarget, allowAi } from '../lib/coach-consent.js'
 import { OptionalRows } from '../components/CoachSees.jsx'
 import { DEMO } from '../lib/demo.js'
 import { useCoachGate } from '../lib/use-coach-gate.js'
 import { MOBILE } from '../lib/mobile.js'
 import { activeProfile } from '../lib/equipment.js'
-import Icon from '../components/Icon.jsx'
-import { Button, TextArea } from '../components/ui.jsx'
+import Icon from '../components/Icon.tsx'
+import { Button, TextArea } from '../components/ui.tsx'
 import { HourMinuteWheel } from '../components/DurationWheel.jsx'
 import '../coach.css'
 
@@ -97,7 +97,7 @@ export default function CoachIntake() {
 
   const agree = info => {
     // This screen just named the provider and listed what goes there, which is the question the
-    // data-sharing sheet asks before the first request (lib/coach-api.js ensureAiConsent). The
+    // data-sharing sheet asks before the first request (lib/coach-api.ts ensureAiConsent). The
     // yes counts for that provider and host too, so a first-timer is asked once, not twice.
     // Only when the disclosure arrived: a screen that could not say where to is not a yes to it.
     const target = !DEMO && consentTarget(info, coachVia())

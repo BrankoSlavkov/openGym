@@ -1,6 +1,6 @@
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from '../router/hooks.tsx'
-import { Section, Row, Switch, Segmented, Button } from './ui.jsx'
+import { Section, Row, Switch, Segmented, Button } from './ui.tsx'
 import { GlanceLock, GlanceIsland, GlanceNotification, GlanceStrip, buttonWords } from './LiveGlance.jsx'
 import { t } from '../lib/i18n.js'
 import { useStore } from '../store/useStore.js'

@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client'
 import { TestRouter } from '../router/testing.tsx'
 
 const calls = []
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: vi.fn(async (path, init) => {
     calls.push({ path, body: init?.body ? JSON.parse(init.body) : null })
     if (path.startsWith('/api/oauth/request')) {

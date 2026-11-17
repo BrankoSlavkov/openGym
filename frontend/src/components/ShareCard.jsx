@@ -4,7 +4,7 @@
 // device (`render`), shown before it goes anywhere, and handed to the share sheet as a PNG.
 import { useEffect, useRef, useState } from 'react'
 import { t } from '../lib/i18n.js'
-import { Button, Segmented } from './ui.jsx'
+import { Button, Segmented } from './ui.tsx'
 import { shareImage, saveImage } from '../lib/share-image.js'
 import { MOBILE } from '../lib/mobile.js'
 import { FORMAT_IDS, STYLE_IDS } from '../lib/card-draw.js'

@@ -1,6 +1,9 @@
+import { getGetConfigQueryOptions } from '../generated/api.ts'
+import { queryClient } from '../lib/query-client.ts'
+import { bindQuerySession } from '../lib/query-session.ts'
 import { create } from 'zustand'
 import { unlink as unlinkNutrition } from '../lib/sister-nutrition.js'
-import { api, setRemoteAuth } from '../lib/api.js'
+import { api, setRemoteAuth } from '../lib/api.ts'
 import { localTZ } from '../lib/format.js'
 import { t } from '../lib/i18n.js'
 import { registerCustom, healCustomEx } from '../lib/exercises.js'
@@ -8,7 +11,7 @@ import { syncGymInventory } from '../lib/gym-inventory.js'
 import { DEMO, DEMO_SEEDED } from '../lib/demo.js'
 import { rememberDefaultLang } from '../lib/default-lang.js'
 import { guestAllowed } from '../lib/guest.js'
-import { stateJson } from '../lib/state-json.js'
+import { stateJson } from '../lib/state-json.ts'
 import { MOBILE, initReminderSync, nativeLoad, nativeSave, onAppActive, readJsonFile, syncReminder, writeAutoBackup, writeJsonFile } from '../lib/mobile.js'
 import { initHealthSync, syncHealth, readHealth } from '../lib/health-sync.js'
 import { refillIfComplete } from '../lib/rotation.js'
@@ -20,7 +23,7 @@ import { keptHashes } from '../lib/media-refs.js'
 import { mediaStore, mediaStoreInUse } from '../lib/media-store.js'
 import { countChanges, syncFingerprint } from '../lib/sync-changes.js'
 import { saveWorkoutEdit, deleteEditedWorkout } from '../lib/session-edit.js'
-import { appBase } from '../lib/app-base.js'
+import { appBase } from '../lib/app-base.ts'
 import { linkTokenFromSearch, stripLinkFromUrl } from '../lib/device-link.js'
 import { loadRemote, chooseLocal, forgetRemote, connect, connectWithProvider, normalizeServerUrl, renewToken } from '../lib/remote.js'
 import { takeOidcReturn } from '../lib/oidc.js'
@@ -387,7 +390,6 @@ export const useStore = create((set, get) => {
   let pushing = null       // the PUT in flight, so a second push waits for it instead of racing it
   let pushAgain = false    // a push asked for while one was in flight — run once more after it
   let pulling = null       // the GET in flight, so two resume signals make one request
-  let configFetch = null   // the /api/config in flight, so two callers make one request
   let pushPending = false  // a change made before boot's pull — pushed once boot is through
   let forceNext = false    // the next push replaces the server copy outright (reset)
   // A backup import's replace: pushed against the revision the import's check read (importRead),
@@ -1753,13 +1755,12 @@ export const useStore = create((set, get) => {
     // Two callers that ask at once get one request: signing in re-asks (setUser) and the pairing
     // flow awaits a refresh of its own immediately after, and there is one answer to have.
     async refreshConfig() {
-      if (configFetch) return configFetch
-      configFetch = (async () => {
-        try { const c = await api('/api/config'); rememberDefaultLang(c); set({ config: c }); return c }
-        catch { return null }
-        finally { configFetch = null }
-      })()
-      return configFetch
+      try {
+        const c = await queryClient.fetchQuery(getGetConfigQueryOptions())
+        rememberDefaultLang(c)
+        set({ config: c })
+        return c
+      } catch { return null }
     },
 
     // `adopt` (a sign-in, a pairing — { alwaysAsk } for a device link): adoptProfile follows and
@@ -1824,17 +1825,13 @@ export const useStore = create((set, get) => {
         if (!adopt && !other && owner !== u.id) persist(get().S, false, false)
         // The file follows at once, as the new account's: until then it holds the previous one's.
         if (other && MOBILE) nativePersist(true)
-        // The server answers /api/config with a `coach` key only to a session — the block, or
-        // null on an instance that has no Coach. So a copy with no key at all is one fetched
-        // before this sign-in (boot's, or the login screen asking for invite_only), and every
-        // Coach entry point would stay hidden until the next reload. Ask again, unawaited:
-        // nothing on this path waits for the answer. A copy that has the key was made for a
-        // session and is already the right answer, Coach or no Coach.
-        if (get().config && !('coach' in get().config)) get().refreshConfig()
       } else { rejoined = false; adoptHold = false; localStorage.removeItem('gym_user') }
       set({ user: u })
       // Another account, or none: what is in flight was for the previous one (GHSA-656w-p99j-x8hf).
       if ((u?.id ?? null) !== was) newSession()
+      // Clear the previous account's queries before asking for this session's capabilities.
+      // Even a config that already has a Coach key may hold another account's trainer roles.
+      if (u && get().config && (u.id !== was || !('coach' in get().config))) get().refreshConfig()
       setSync({ held: adoptHold })
     },
 
@@ -2307,5 +2304,8 @@ export const useStore = create((set, get) => {
     }
   }
 })
+
+// Account transitions also cancel server queries issued by the previous account.
+bindQuerySession(useStore)
 
 export { hasData }

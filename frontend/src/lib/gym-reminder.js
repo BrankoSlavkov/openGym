@@ -15,7 +15,7 @@ import { MOBILE } from './mobile.js'
 import { t } from './i18n-core.js'
 import { isoOf } from './format.js'
 import { excusedOn } from './day-notes.js'
-import { remoteAuth } from './api.js'
+import { remoteAuth } from './api.ts'
 import { readForgottenPrefs } from './forgotten-workout.js'
 
 export const GYM_KEY = 'gym_reminder_v1'

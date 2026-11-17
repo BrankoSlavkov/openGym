@@ -20,7 +20,7 @@ import { todayISO } from './format.js'
 /** The quick picks, in the order the sheet shows them. Labels are English source strings. */
 export const DAY_NOTE_TAGS = ['sick', 'travel', 'rest', 'injured']
 export const DAY_NOTE_LABEL = { sick: 'Sick', travel: 'Travelling', rest: 'Rest day', injured: 'Injured' }
-// Icons the set already has (components/Icon.jsx): under the weather, away, asleep, ouch.
+// Icons the set already has (components/Icon.tsx): under the weather, away, asleep, ouch.
 export const DAY_NOTE_ICON = { sick: 'cloud', travel: 'globe', rest: 'moon', injured: 'warning' }
 
 const isMap = v => !!v && typeof v === 'object' && !Array.isArray(v)

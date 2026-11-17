@@ -12,7 +12,7 @@ vi.mock('../lib/rest-alert.js', () => ({
   toneNative: vi.fn(() => Promise.resolve(true)),
 }))
 vi.mock('../lib/sound.js', () => ({ beep: vi.fn(), chime: vi.fn(), vibrate: vi.fn(), alertBuzz: vi.fn() }))
-vi.mock('../lib/api.js', () => ({ api: vi.fn(() => Promise.resolve({ ok: true })) }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn(() => Promise.resolve({ ok: true })) }))
 
 import { useUI, REST_KEY, restoreRest } from './useUI.js'
 import { useStore } from './useStore.js'

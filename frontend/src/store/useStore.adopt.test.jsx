@@ -6,7 +6,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const { api, toast, sheetAsk } = vi.hoisted(() => ({ api: vi.fn(), toast: vi.fn(), sheetAsk: vi.fn() }))
-vi.mock('../lib/api.js', () => ({ api }))
+vi.mock('../lib/api.ts', () => ({ api }))
 vi.mock('./useUI.js', () => ({ useUI: { getState: () => ({ toast }) } }))
 // The question an adoption resumed by the store itself asks (resumeAdoption, checkRev, Sync now).
 vi.mock('../sheets.jsx', () => ({ askAddDeviceData: (...a) => sheetAsk(...a) }))

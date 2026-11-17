@@ -15,7 +15,7 @@ import { DEF, useStore } from '../store/useStore.js'
 vi.mock('../lib/sound.js', async importOriginal => ({
   ...(await importOriginal()), beep: vi.fn(), chime: vi.fn(), unlock: vi.fn(), vibrate: vi.fn(),
 }))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: vi.fn(() => Promise.resolve({})), IS_APPLE: false, IS_ANDROID: false, BIO: 'biometrics',
 }))
 vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => () => {} }))

@@ -59,7 +59,7 @@ describe.skipIf(!HAVE_API)('MCP over HTTP with scoped tokens', () => {
     fs.writeFileSync(path.join(dataDir, 'db.json'), JSON.stringify({ users: [A, B].map(id => ({ id, name: id, created: new Date().toISOString() })), creds: [], subs: [], invites: [] }))
     fs.writeFileSync(path.join(dataDir, `state-${A}.json`), JSON.stringify(DOC('Ana')))
     fs.writeFileSync(path.join(dataDir, `state-${B}.json`), JSON.stringify(DOC('Bo')))
-    child = spawn(process.execPath, ['server.js'], {
+    child = spawn(process.env.BUN_EXEC_PATH || 'bun', ['server.ts'], {
       cwd: API, stdio: ['ignore', 'pipe', 'pipe'],
       env: { ...process.env, PORT: '0', DATA_DIR: dataDir, ORIGIN: 'http://localhost:8080', RP_ID: 'localhost', MCP: 'on' },
     })
@@ -71,7 +71,7 @@ describe.skipIf(!HAVE_API)('MCP over HTTP with scoped tokens', () => {
     })
     apiBase = `http://127.0.0.1:${port}`
     delete process.env.OPENGYM_DATA
-    const { createMcpHandler } = await import('../src/http.js')
+    const { createMcpHandler } = await import('../src/http.ts')
     const handle = createMcpHandler({ apiUrl: apiBase, allowedOrigins: ['https://gym.example.com'] })
     mcp = http.createServer((req, res) => handle(req, res))
     await new Promise(r => mcp.listen(0, '127.0.0.1', r))
@@ -92,7 +92,7 @@ describe.skipIf(!HAVE_API)('MCP over HTTP with scoped tokens', () => {
   })
 
   test('with the public origin known, the 401 points Claude and ChatGPT at the OAuth discovery (coach-146)', async () => {
-    const { createMcpHandler } = await import('../src/http.js')
+    const { createMcpHandler } = await import('../src/http.ts')
     const handle = createMcpHandler({ apiUrl: apiBase, allowedOrigins: [], publicOrigin: 'https://gym.example.com' })
     const srv = http.createServer((req, res) => handle(req, res))
     await new Promise(r => srv.listen(0, '127.0.0.1', r))

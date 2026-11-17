@@ -8,7 +8,7 @@
 // write, which the screen deliberately does in that order.
 //
 // coach-local.js is mocked here only so the DYNAMIC import inside prepare()/turnOff() resolves
-// without a network stack. providers.js, categories.js and coach.js are the real ones, so the
+// without a network stack. providers.ts, categories.js and coach.js are the real ones, so the
 // provider table, the validator and the category copy are exactly what ships.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -17,8 +17,8 @@ import CoachSetup from './CoachSetup.jsx'
 import { getApiKey, setApiKey, clearApiKey } from '../lib/coach-secrets.js'
 import { localModels, localForget } from '../lib/coach-local.js'
 import { CATEGORY_TEXT } from '../lib/coach.js'
-import { HTTP_PROVIDERS } from '../../../api/coach/core/providers.js'
-import { DATA_CATEGORIES } from '../../../api/coach/core/categories.js'
+import { HTTP_PROVIDERS } from '../../../api/coach/core/providers.ts'
+import { DATA_CATEGORIES } from '../../../api/coach/core/categories.ts'
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 

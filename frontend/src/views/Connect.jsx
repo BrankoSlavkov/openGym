@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from '../router/hooks.tsx'
-import { api } from '../lib/api.js'
+import { api } from '../lib/api.ts'
 import { t } from '../lib/i18n.js'
-import { TOKEN_CATEGORIES, TOKEN_DAYS } from '../lib/api-tokens.js'
-import { categoryLabel, levelLabel } from '../lib/sharing-api.js'
+import { TOKEN_CATEGORIES, TOKEN_DAYS } from '../lib/api-tokens.ts'
+import { categoryLabel, levelLabel } from '../lib/sharing-api.ts'
 import { ICON, TINT } from './ApiTokens.jsx'
-import Icon from '../components/Icon.jsx'
-import { Section, SelectRow, Button } from '../components/ui.jsx'
+import Icon from '../components/Icon.tsx'
+import { Section, SelectRow, Button } from '../components/ui.tsx'
 
 /* The consent screen of the MCP connector's sign-in (api/oauth.js, docs/MCP_REMOTE.md): Claude,
    ChatGPT or another assistant sent the browser here. It says who is asking and where the answer

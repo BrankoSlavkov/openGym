@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs'
 import { bestWeightForEntry, metricModeForEntry, metricRowsForEntry } from '../lib/history.js'
 
 const source = readFileSync(new URL('./Stats.jsx', import.meta.url), 'utf8')
-const uiSource = readFileSync(new URL('../components/ui.jsx', import.meta.url), 'utf8')
+const uiSource = readFileSync(new URL('../components/ui.tsx', import.meta.url), 'utf8')
 const cssSource = readFileSync(new URL('../index.css', import.meta.url), 'utf8')
 
 describe('Stats mixed-entry metric contract', () => {
@@ -36,7 +36,7 @@ describe('Stats mixed-entry metric contract', () => {
 
   it('stacks the Stats exercise selector value without changing shared SelectRow defaults', () => {
     expect(source).toContain("onChange={setExId} stackedValue")
-    expect(uiSource).toContain('sheetTitle, stackedValue = false')
+    expect(uiSource).toMatch(/sheetTitle,\s*stackedValue = false/)
     expect(uiSource).toContain("className={stackedValue ? 'lrow-stack-value' : ''}")
     expect(cssSource).toContain('.lrow.lrow-stack-value .lrow-m{grid-column:1;grid-row:1}')
     expect(cssSource).toContain('.lrow.lrow-stack-value .lrow-v{grid-column:1;grid-row:2;width:100%;max-width:none;text-align:start}')

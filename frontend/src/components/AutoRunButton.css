@@ -1,4 +1,4 @@
-/* Fork: the Auto button on a timed exercise's plan line (AutoRunButton.jsx). */
+/* Fork: the Auto button on a timed exercise's plan line (AutoRunButton.tsx). */
 .autorun-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
 .autorun-plan{min-width:0;flex:1}
 .autorun-plan .planline{margin-bottom:0!important}

@@ -22,7 +22,7 @@ import { keptHashes, referencedFiles, uploadableFiles, MEDIA_MIMES } from './med
 import { sniffKind } from './media-sniff.js'
 import { sha256Hex } from './sha256.js'
 import { mediaStore as sharedStore } from './media-store.js'
-import { api, apiBlob, apiUpload } from './api.js'
+import { api, apiBlob, apiUpload } from './api.ts'
 import { prefetchAllowed } from './media-prefetch.js'
 import { MB, BG_UPLOAD_METERED_MAX_MB, LOCAL_CACHE_MAX_MB, LOCAL_GC_GRACE_MS, limitsFrom, fmtMB } from './media-limits.js'
 import { MOBILE, nativeLoad } from './mobile.js'

@@ -1,4 +1,5 @@
 // Pure helpers over the state object S (ported 1:1 from the vanilla app).
+import { NEW_EX_DEFAULTS, newExDefaultsOf } from './new-ex-defaults.ts'
 import { syncSupersetMeta } from './superset-meta.js'
 import { isOn } from './modules.js'
 import { todayISO, isoOf, weekKey, weekStartOf, fmtNum } from './format.js'
@@ -12,7 +13,7 @@ import { barWeightFor } from './bar.js'
 import { phaseForSet, modeForSet, modeForEntry, isWarmupRow, isFailureSet, isDropSet, isRestPauseSet, normalizeMode, completedVolumeOf, hasCompletedWork, nextDropWeight, splitBurstReps, splitClusterReps, makeSideSet, isSideSet, syncSideAggregate, WEIGHT_ORIGIN_MANUAL, dropsOf, clustersOf } from './workout-model.js'
 import { backoffAt, backoffStepOf, backoffWeights } from './backoff.js'
 import { dbLoadOf, bellsIn, volumeFactor, historyAs, ownedFloor } from './dumbbells.js'
-import { isRungRow, rungWeight } from './warmup-snap.js'
+import { isRungRow, rungWeight } from './warmup-snap.ts'
 import { bodyLoadOf, bodyweightFor, countsBodyweight } from './bw-load.js'
 const objectOf = value => value && typeof value === 'object' && !Array.isArray(value) ? value : {}
 // Completed-state-independent work rows whose authoritative mode matches the requested mode.
@@ -288,17 +289,8 @@ export function pickedExerciseConfig(id, mode, S) {
 // What a newly added exercise starts with, the profile's own pick (Settings → Workout → New
 // exercises start with, QOL Q10): S.newExDefaults = { sets, reps, sec }, each optional, clamped.
 // Not cardio, which starts as one block of time. Without a pick it is 3 × 10 and 3 × 0:45.
-export const NEW_EX_DEFAULTS = { sets: 3, reps: 10, sec: 45 }
-const NEW_EX_LIMITS = { sets: [1, 10], reps: [1, 50], sec: [5, 600] }
-export function newExDefaultsOf(S) {
-  const own = S?.newExDefaults && typeof S.newExDefaults === 'object' ? S.newExDefaults : {}
-  const out = {}
-  for (const [k, [lo, hi]] of Object.entries(NEW_EX_LIMITS)) {
-    const v = Math.round(Number(own[k]))
-    out[k] = Number.isFinite(v) && v >= lo ? Math.min(hi, v) : NEW_EX_DEFAULTS[k]
-  }
-  return out
-}
+export { NEW_EX_DEFAULTS, newExDefaultsOf } from './new-ex-defaults.ts'
+
 function ownStart(cfg, S) {
   if (!S?.newExDefaults || !('mode' in cfg) || cfg.mode === 'distance') return cfg
   const d = newExDefaultsOf(S)

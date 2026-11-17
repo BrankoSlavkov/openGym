@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DEF, useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { EXDB } from '../lib/exercises.js'
-import { routineFromWorkoutSheet } from './RoutineFromWorkout.jsx'
+import { routineFromWorkoutSheet } from './RoutineFromWorkout.tsx'
 
 const mounted = []
 function renderTop() {

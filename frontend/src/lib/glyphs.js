@@ -7,7 +7,7 @@
 // glyphOf() accepts either form: a known icon key passes through, a legacy emoji
 // is mapped, and anything unrecognised falls back to the default.
 
-import { ICON_NAMES } from '../components/Icon.jsx'
+import { ICON_NAMES } from '../components/Icon.tsx'
 
 export const DEFAULT_GLYPH = 'figureStrength'
 

@@ -2,7 +2,7 @@
 // period): they open the shared picker sheet, which these tests render on their own and pick from.
 import { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { bindUI } from '../components/ui.jsx'
+import { bindUI } from '../components/ui.tsx'
 import { useUI } from '../store/useUI.js'
 
 bindUI(useUI)

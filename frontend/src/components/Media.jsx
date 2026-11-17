@@ -3,13 +3,13 @@ import { imgSrc, gifSrc, isVideoSrc, isCustomEx, figureOf } from '../lib/exercis
 import { MOBILE } from '../lib/mobile.js'
 import { useStore } from '../store/useStore.js'
 import { t, exerciseNameFor } from '../lib/i18n.js'
-import { nameIn } from '../lib/a11y-name.js'
+import { nameIn } from '../lib/a11y-name.ts'
 import { exerciseNameText } from '../lib/format.js'
-import Icon from './Icon.jsx'
+import Icon from './Icon.tsx'
 import CustomMedia, { CustomThumb, LinkCard } from './CustomMedia.jsx'
-import { youtubeId, youtubeLinks } from '../lib/youtube.js'
+import { youtubeId, youtubeLinks } from '../lib/youtube.ts'
 import { useAnimSources } from './Animations.jsx'
-import { OwnMediaFlip } from './OwnExerciseMedia.jsx'
+import { OwnMediaFlip } from './OwnExerciseMedia.tsx'
 import { exMediaOf } from '../lib/ex-media.js'
 
 // Your own photo or video on this built-in exercise (lib/ex-media.js), or null. The raw entry is

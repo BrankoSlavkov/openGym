@@ -14,7 +14,7 @@ const mocks = vi.hoisted(() => ({
 }))
 vi.mock('./demo.js', () => ({ DEMO: false, DEMO_SEEDED: 'gym_demo_seeded_v1', REPO: '' }))
 vi.mock('./mobile.js', () => ({ MOBILE: true, readJsonFile: async () => null, writeJsonFile: async () => {} }))
-vi.mock('./api.js', () => ({ api: vi.fn(async () => mocks.status) }))
+vi.mock('./api.ts', () => ({ api: vi.fn(async () => mocks.status) }))
 vi.mock('../store/useStore.js', () => ({ useStore: { getState: () => ({ S: { coach: { cadence: { everyWorkouts: 3 } } }, coachLocal: mocks.coachLocal }) } }))
 vi.mock('../store/useUI.js', () => ({ useUI: { getState: () => ({ toast: mocks.toast }) } }))
 vi.mock('../components/CoachConsentSheet.jsx', () => ({ askAiConsent: vi.fn(async () => true) }))
@@ -26,8 +26,8 @@ vi.mock('./coach-local.js', () => ({
 
 const { askAiConsent } = await import('../components/CoachConsentSheet.jsx')
 const local = await import('./coach-local.js')
-const { api } = await import('./api.js')
-const { scheduledReview, scheduledNotice } = await import('./coach-api.js')
+const { api } = await import('./api.ts')
+const { scheduledReview, scheduledNotice } = await import('./coach-api.ts')
 const { allowAi, consentTarget, _resetAiConsent } = await import('./coach-consent.js')
 const { checkScheduledReview, mayBeDue, mayHaveNews } = await import('./coach-schedule.js')
 
@@ -95,7 +95,7 @@ describe('a phone paired with a server', () => {
     mocks.coachLocal = { mode: 'off' }
     mocks.status = { job: null, pending: proposal('p1') }
     expect(await scheduledNotice()).toMatchObject({ id: 'p1' })
-    expect(api).toHaveBeenCalledWith('/api/coach/status')
+    expect(api).toHaveBeenCalledWith('/api/coach/status', expect.objectContaining({ method: 'GET' }))
     expect(mocks.toast).toHaveBeenCalledTimes(1)
     expect(mocks.toast.mock.calls[0][0]).toMatch(/1 suggestion/)
     expect(await scheduledNotice()).toBeNull()

@@ -6,11 +6,12 @@
   "main": "server.ts",
   "license": "AGPL-3.0-or-later",
   "scripts": {
-    "start": "bun server.ts",
-    "test": "bun test --parallel --timeout 120000 ./test/",
+    "start": "bun run ../scripts/start.ts",
+    "test": "bun test --parallel=2 --timeout 120000 ./test/",
     "typecheck": "tsc -p .",
     "openapi": "bun scripts/openapi.ts",
-    "openapi:check": "bun scripts/openapi-check.ts"
+    "openapi:check": "bun scripts/openapi-check.ts",
+    "dev": "bun run ../scripts/dev.ts"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "9.1.0",

@@ -6,11 +6,11 @@
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { nameIn, said } from './lib/a11y-name.js'
+import { nameIn, said } from './lib/a11y-name.ts'
 import { _setLangState, LANGS, DERIVED_LOCALES } from './lib/i18n-core.js'
 import { LRI, FSI, PDI } from './lib/bidi.js'
-import { Stepper, Segmented } from './components/ui.jsx'
-import SwipeRow from './components/SwipeRow.jsx'
+import { Stepper, Segmented } from './components/ui.tsx'
+import SwipeRow from './components/SwipeRow.tsx'
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 const packs = import.meta.glob('./locales/*.js', { eager: true, import: 'default' })

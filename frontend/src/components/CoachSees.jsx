@@ -4,10 +4,10 @@
 import { t } from '../lib/i18n.js'
 import { useStore } from '../store/useStore.js'
 import { CATEGORY_TEXT, OPTIONAL_TEXT, emptyCoach } from '../lib/coach.js'
-import { DATA_CATEGORIES, OPTIONAL_CATEGORIES, shareOf } from '../../../api/coach/core/categories.js'
-import { HTTP_PROVIDERS } from '../../../api/coach/core/providers.js'
+import { DATA_CATEGORIES, OPTIONAL_CATEGORIES, shareOf } from '../../../api/coach/core/categories.ts'
+import { HTTP_PROVIDERS } from '../../../api/coach/core/providers.ts'
 import { MOBILE } from '../lib/mobile.js'
-import { Section, Row, Switch } from './ui.jsx'
+import { Section, Row, Switch } from './ui.tsx'
 
 /** Whether web research can be offered here, and if not, why not (null when it can). */
 export function webBlocker(config, coachLocal) {

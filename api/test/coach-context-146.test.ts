@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { recordsOf, measurementsOf, healthOf, cleanVitals, rotationOf } from '../coach/core/context.js';
-import { shareOf, OPTIONAL_CATEGORIES } from '../coach/core/categories.js';
+import { shareOf, OPTIONAL_CATEGORIES } from '../coach/core/categories.ts';
 import { build } from '../coach/core/payload.js';
 
 const NOW = Date.parse('2026-11-08T12:00:00Z');

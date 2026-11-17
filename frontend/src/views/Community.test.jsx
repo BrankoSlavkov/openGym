@@ -25,7 +25,7 @@ vi.mock('../store/useUI.js', () => {
   return { useUI }
 })
 vi.mock('../sheets.jsx', () => ({ confirmSheet: () => {} }))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   remoteAuth: () => null,
   apiBlob: vi.fn(() => Promise.reject(new Error('no'))),
   api: vi.fn((path, opts) => {

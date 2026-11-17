@@ -7,9 +7,9 @@ import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
 import { fmtDate, isoOf } from '../lib/format.js'
 import { isOn } from '../lib/modules.js'
-import { libraryOn, listShared, importShared, sharedError } from '../lib/shared-api.js'
+import { libraryOn, listShared, importShared, sharedError } from '../lib/shared-api.ts'
 import { originOf, originLine, applyImport, bylineOf } from '../lib/shared-items.js'
-import Icon from './Icon.jsx'
+import Icon from './Icon.tsx'
 
 const day = ms => fmtDate(isoOf(new Date(ms || 0)))
 

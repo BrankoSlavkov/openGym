@@ -41,7 +41,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = snap
   return { useUI }
 })
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: (...a) => mocks.api(...a),
   webauthnOK: () => mocks.webauthn,
   passkeyAssertion: (...a) => mocks.passkeyAssertion(...a),
@@ -49,7 +49,7 @@ vi.mock('../lib/api.js', () => ({
   // PasswordAuth.jsx, for passwordError, imports these too.
   passwordLogin: vi.fn(), passwordRegister: vi.fn(), passwordResetRedeem: vi.fn(),
 }))
-vi.mock('../lib/clipboard.js', () => ({ copyText: (...a) => mocks.copyText(...a) }))
+vi.mock('../lib/clipboard.ts', () => ({ copyText: (...a) => mocks.copyText(...a) }))
 vi.mock('../lib/mobile.js', () => ({ get MOBILE() { return mocks.MOBILE } }))
 vi.mock('../sheets.jsx', () => ({ askAddDeviceData: mocks.askAddDeviceData }))
 

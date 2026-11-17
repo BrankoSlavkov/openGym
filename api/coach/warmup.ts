@@ -12,7 +12,7 @@
  */
 import * as cfgStore from './config.ts';
 import { adapterFor } from './adapters/index.ts';
-import { buildPromptParts } from './core/prompt.js';
+import { buildPromptParts } from './core/prompt.ts';
 import { fetchFor } from './node-fetch.ts';
 
 const INTERVAL_MS = 30 * 60000;

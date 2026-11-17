@@ -14,7 +14,7 @@ import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import CoachIntake from './CoachIntake.jsx'
-import { requestPlan, disclosure } from '../lib/coach-api.js'
+import { requestPlan, disclosure } from '../lib/coach-api.ts'
 import { CONSENT_VERSION, CATEGORY_TEXT } from '../lib/coach.js'
 import { setLang } from '../lib/i18n.js'
 import { consentTarget, hasAiConsent, aiConsents, _resetAiConsent } from '../lib/coach-consent.js'
@@ -49,7 +49,7 @@ vi.mock('../router/hooks.tsx', () => ({
   useNavigate: () => mocks.nav,
   useSearchParams: () => [new URLSearchParams(mocks.search), vi.fn()],
 }))
-vi.mock('../lib/coach-api.js', () => ({
+vi.mock('../lib/coach-api.ts', () => ({
   requestPlan: vi.fn(() => Promise.resolve({})),
   disclosure: vi.fn(() => Promise.resolve(null)),
   JOB_ERRORS: { busy: 'the app’s busy line' },

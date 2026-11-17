@@ -23,9 +23,14 @@ The numbers it answers with are computed by the **same pure functions the React 
 ### 1. Install
 
 ```bash
+# From the repository root (Bun workspace install)
+bun install --frozen-lockfile
 cd mcp
-npm install
 ```
+
+The MCP application is strict TypeScript, run directly by Node 22.18 or later. Its external
+training helpers are still being migrated; `allowJs` in its TypeScript config resolves those
+helpers without treating them as checked MCP source.
 
 ### 2. Point it at your data
 
@@ -34,10 +39,10 @@ to answer for — its user id is in `./data/db.json` under `users[].id`:
 
 ```bash
 # single-user instance (the common self-hosted case) — auto-detected:
-node src/index.js
+node src/index.ts
 
 # multi-user instance, or just to be explicit:
-OPENGYM_UID=<your-uid> OPENGYM_DATA=/path/to/openGym/data node src/index.js
+OPENGYM_UID=<your-uid> OPENGYM_DATA=/path/to/openGym/data node src/index.ts
 ```
 
 ### 3. Register with your LLM client
@@ -50,7 +55,7 @@ Add the server to your LLM client's MCP config. For Claude Desktop, edit
   "mcpServers": {
     "opengym": {
       "command": "node",
-      "args": ["/absolute/path/to/openGym/mcp/src/index.js"],
+      "args": ["/absolute/path/to/openGym/mcp/src/index.ts"],
       "env": {
         "OPENGYM_DATA": "/absolute/path/to/openGym/data",
         "OPENGYM_UID": "<your-uid>"   // optional — auto-detected if you have one profile
@@ -100,7 +105,7 @@ An exercise merged into another in the app (an exercise's details → Merge into
 it went into everywhere, also in a workout another device logged against it before it synced.
 
 Each tool returns JSON the LLM can format as it likes; structured fields (sets, dates, levels)
-are pre-formatted into human-readable labels in `src/labels.js` so the LLM doesn't need to
+are pre-formatted into human-readable labels in `src/labels.ts` so the LLM doesn't need to
 re-interpret them.
 
 ## Logging workouts
@@ -215,7 +220,8 @@ dependencies landed in `frontend/`, no public exports changed.
 ## Tests
 
 ```bash
-cd mcp && npm test
+bun run --cwd mcp typecheck
+bun run --cwd mcp test
 ```
 
 58 cases seeding state from `frontend/src/lib/demoSeed.js` (the same deterministic fixture
@@ -227,7 +233,7 @@ their own 92 tests in `frontend/src/lib/*.test.js`.
 
 `log_workout` has two more files: `write-tools.test.js` against a stand-in api (conflicts,
 retries, a rejected token, dry runs, duplicates), and `log-workout.e2e.test.js` against the real
-`api/server.js` on a temp data directory, which needs `npm ci` in `api/` (it skips without it on
+`api/server.ts` on a temp data directory, which needs the root Bun workspace install (it skips without it on
 a laptop and fails under `CI`). The workout it builds is tested in
 `frontend/src/lib/log-workout.test.js`.
 

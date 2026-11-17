@@ -47,7 +47,7 @@ export function isLocalHost(host) {
 }
 
 /**
- * What a disclosure (coach-api.js `disclosure()`) amounts to, for asking and for remembering.
+ * What a disclosure (coach-api.ts `disclosure()`) amounts to, for asking and for remembering.
  * `via` is 'server' (the paired or signed-in server runs it with its admin's provider) or
  * 'device' (this phone, with its own key). Null when there is nothing to ask about.
  */

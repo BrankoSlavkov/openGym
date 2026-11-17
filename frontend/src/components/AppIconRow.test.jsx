@@ -29,7 +29,7 @@ vi.mock('@capacitor/core', () => ({
   }),
 }))
 
-const { default: AppIconRow } = await import('./AppIconRow.jsx')
+const { default: AppIconRow } = await import('./AppIconRow.tsx')
 const { _resetAppIconForTests } = await import('../lib/app-icon.js')
 const { searchSettings } = await import('../views/settings-pages.js')
 

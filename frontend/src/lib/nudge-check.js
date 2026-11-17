@@ -13,7 +13,7 @@
 // asked for unless the phone is in deep sleep. See docs/MOBILE.md.
 import { MOBILE } from './mobile.js'
 import { isoOf } from './format.js'
-import { remoteAuth } from './api.js'
+import { remoteAuth } from './api.ts'
 
 // The id ranges syncReminder schedules (lib/mobile.js): workout-day reminders, then nudges.
 export const REMINDER_IDS = [1000, 1999]

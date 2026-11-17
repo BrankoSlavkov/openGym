@@ -6,12 +6,12 @@ import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
 import { fmtDate, todayISO, weekOrder, weekStartOf } from '../lib/format.js'
-import { assignRoutine, assignOutcome, assignResult, commentOn, makeCode, makeGymCode, sendOps, trainerError, weekdayName, exName } from '../lib/trainer-api.js'
+import { assignRoutine, assignOutcome, assignResult, commentOn, makeCode, makeGymCode, sendOps, trainerError, weekdayName, exName } from '../lib/trainer-api.ts'
 import { MEASUREMENT_FIELDS } from '../lib/measurements.js'
 import { CATALOGUE, searchExercises } from '../lib/exercises.js'
-import { Section, Row, SelectRow, Button, TextArea, TextField, NumberField, SearchField } from './ui.jsx'
-import DateField from './DateField.jsx'
-import Icon from './Icon.jsx'
+import { Section, Row, SelectRow, Button, TextArea, TextField, NumberField, SearchField } from './ui.tsx'
+import DateField from './DateField.tsx'
+import Icon from './Icon.tsx'
 
 async function copyText(s, toast) {
   try { await navigator.clipboard.writeText(s); toast(t('Copied')) } catch { toast(s) }

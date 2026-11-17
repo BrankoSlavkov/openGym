@@ -15443,6 +15443,25 @@
                     "additionalProperties": {},
                     "description": "The session running on the device (`entries` with their sets), or absent."
                   },
+                  "vitals": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "additionalProperties": {},
+                    "description": "Device health summary shared for this request only; ignored if it is not an object."
+                  },
+                  "routines": {
+                    "type": [
+                      "array",
+                      "null"
+                    ],
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": {}
+                    },
+                    "description": "Matching routine-library candidates. The server retains at most eight."
+                  },
                   "lang": {
                     "type": "string",
                     "pattern": "^[A-Za-z]{2,3}([-_][A-Za-z0-9]{2,8})?$",
@@ -16416,6 +16435,14 @@
                     "type": "string",
                     "maxLength": 4000,
                     "description": "Anything the profile wants the Coach to know this time round. Cut to the\ninstance's `maxMessageLen` (1000 unless the admin changed it; 200–4000)."
+                  },
+                  "vitals": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "additionalProperties": {},
+                    "description": "Device health summary shared for this request only; ignored if it is not an object."
                   },
                   "lang": {
                     "type": "string",
@@ -18418,6 +18445,16 @@
             "required": false,
             "description": "Grant id",
             "name": "grant",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Client date (YYYY-MM-DD)"
+            },
+            "required": false,
+            "description": "Client date (YYYY-MM-DD)",
+            "name": "today",
             "in": "query"
           }
         ],

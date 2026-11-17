@@ -7,8 +7,8 @@ import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t, dateLocale } from '../lib/i18n.js'
 import { weightRate, rateCorridor, rateStatus } from '../lib/bodyweight.js'
-import Icon from './Icon.jsx'
-import { Button, NumberField, Segmented } from './ui.jsx'
+import Icon from './Icon.tsx'
+import { Button, NumberField, Segmented } from './ui.tsx'
 
 // Two decimals, signed: a lean bulk is +0.2 kg a week, and one decimal would round half of it away.
 const signed = v => new Intl.NumberFormat(dateLocale(), { maximumFractionDigits: 2, signDisplay: 'exceptZero' }).format(Math.round(v * 100) / 100 + 0)

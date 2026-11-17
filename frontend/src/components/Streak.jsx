@@ -3,10 +3,10 @@ import { useStore } from '../store/useStore.js'
 import { t, tn } from '../lib/i18n.js'
 import { fmtDate } from '../lib/format.js'
 import { STREAK_BADGES, FREEZE_MAX, streakCelebration, streakInfo } from '../lib/streak.js'
-import { reducedMotion } from '../lib/use-swipe-row.js'
+import { reducedMotion } from '../lib/use-swipe-row.ts'
 import { vibrate } from '../lib/sound.js'
-import Icon from './Icon.jsx'
-import { Button } from './ui.jsx'
+import Icon from './Icon.tsx'
+import { Button } from './ui.tsx'
 import { SeasonDeco } from './Seasonal.jsx'
 import { iconChoice } from '../lib/streak-icons.js'
 import { freezeLine } from '../lib/streak-explain.js'
@@ -60,7 +60,7 @@ export const TIERS = ['bronze', 'silver', 'gold', 'platinum', 'legend']
 
 /** A medal on its ribbon, coloured by tier (index.css .medal-*), or `locked` for one still to earn.
     Decorative: the row it sits in says what it is. */
-// The emoji a medal is with Settings → Icons on Emoji (components/Glyph.jsx: the drawing hides and
+// The emoji a medal is with Settings → Icons on Emoji (components/Glyph.tsx: the drawing hides and
 // the emoji, drawn in the same box, shows). One still to earn stays drawn.
 const MEDAL_EMOJI = { bronze: '🥉', silver: '🥈', gold: '🥇', platinum: '🏅', legend: '🏆' }
 // The emoji inside an svg of ours, in its 24×24 box, shown only with emoji chosen (index.css).
@@ -278,7 +278,7 @@ export function FrozenWeeks ({ frozen }) {
 }
 
 /**
- * The weeks a sick or travel note carried in the running streak (api/coach/core/streak.js), the
+ * The weeks a sick or travel note carried in the running streak (api/coach/core/streak.ts), the
  * newest three, with how many are left this year. Same idea as FrozenWeeks: a gap you can see on
  * the calendar is never a mystery.
  */

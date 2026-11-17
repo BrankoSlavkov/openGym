@@ -3,9 +3,9 @@
 // with the write is log-workout.e2e.test.js; the arithmetic is frontend/src/lib/log-workout.test.js.
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest'
 import http from 'node:http'
-import { logWorkout, WRITE_LIMIT, _resetWriteWindow } from '../src/write-tools.js'
-import { apiBase, apiConfig } from '../src/api-client.js'
-import { _seedStateForTests } from '../src/state.js'
+import { logWorkout, WRITE_LIMIT, _resetWriteWindow } from '../src/write-tools.ts'
+import { apiBase, apiConfig } from '../src/api-client.ts'
+import { _seedStateForTests } from '../src/state.ts'
 
 const TOKEN = 'tok.secret-value'
 const UID = 'u1'

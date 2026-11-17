@@ -1,4 +1,4 @@
-// The Coach in the demo build: the canned provider behind lib/coach-api.js when DEMO is set.
+// The Coach in the demo build: the canned provider behind lib/coach-api.ts when DEMO is set.
 //
 // Nothing here is a render test. What matters about this module is the job machine (one job at
 // a time, an answer 2.2 s later, a pending proposal that survives until it is resolved) and the
@@ -14,7 +14,7 @@ import {
 } from './coach-demo.js'
 import { EXDB, EXIDX } from './exercises.js'
 import { planHash, validateProposal, applyChangeSet } from './coach.js'
-import { DATA_CATEGORIES } from '../../../api/coach/core/categories.js'
+import { DATA_CATEGORIES } from '../../../api/coach/core/categories.ts'
 
 const DELAY = 2200                       // the module's own thinking time
 const NOW = new Date('2026-09-22T12:00:00Z').getTime()

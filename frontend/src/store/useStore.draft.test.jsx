@@ -5,7 +5,7 @@
 // saved is the same document a full clone would have saved.
 import { describe, expect, it, vi } from 'vitest'
 
-vi.mock('../lib/api.js', () => ({ api: vi.fn() }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn() }))
 
 import { draftOf, useStore } from './useStore.js'
 

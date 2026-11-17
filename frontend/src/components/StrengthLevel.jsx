@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
-import { nameIn } from '../lib/a11y-name.js'
+import { nameIn } from '../lib/a11y-name.ts'
 import { fmtNum, exerciseNameText } from '../lib/format.js'
 import { dateLocale } from '../lib/i18n-core.js'
 
@@ -12,8 +12,8 @@ import { dateLocale } from '../lib/i18n-core.js'
 const fmtRatio = r => new Intl.NumberFormat(dateLocale(), { maximumFractionDigits: 2 }).format(r)
 import { EXIDX } from '../lib/exercises.js'
 import { strengthLevel, strengthLevels, liftOf, LEVELS, LEVEL_NAME, sexOf } from '../lib/strength-level.js'
-import Icon from './Icon.jsx'
-import { Button, Segmented, Stepper } from './ui.jsx'
+import Icon from './Icon.tsx'
+import { Button, Segmented, Stepper } from './ui.tsx'
 import { isOn } from '../lib/modules.js'
 
 const weightOf = (lv, w, unit) => (lv.perBell ? t('{0} each', fmtNum(w)) : fmtNum(w)) + ' ' + unit

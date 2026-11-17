@@ -22,7 +22,7 @@ vi.mock('../store/useUI.js', () => {
   return { useUI }
 })
 vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => to => mocks.navs.push(to) }))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: vi.fn(async (path, opts) => {
     const body = opts?.body ? JSON.parse(opts.body) : null
     mocks.calls.push([path, body])
@@ -32,7 +32,7 @@ vi.mock('../lib/api.js', () => ({
   appBase: () => '/',
   remoteAuth: () => null,
 }))
-vi.mock('../lib/clipboard.js', () => ({ copyText: vi.fn(async () => true) }))
+vi.mock('../lib/clipboard.ts', () => ({ copyText: vi.fn(async () => true) }))
 vi.mock('../sheets.jsx', () => ({ confirmSheet: o => { mocks.confirm = o } }))
 
 const { default: Assistants } = await import('./Assistants.jsx')

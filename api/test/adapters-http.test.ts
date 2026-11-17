@@ -10,15 +10,15 @@ import assert from 'node:assert/strict';
 import { tempData } from './helpers.ts';
 
 tempData();
-const anthropic = (await import('../coach/core/adapters/anthropic.js')).default;
-const openai = (await import('../coach/core/adapters/openai.js')).default;
-const gemini = (await import('../coach/core/adapters/gemini.js')).default;
-const compatible = (await import('../coach/core/adapters/compatible.js')).default;
+const anthropic = (await import('../coach/core/adapters/anthropic.ts')).default;
+const openai = (await import('../coach/core/adapters/openai.ts')).default;
+const gemini = (await import('../coach/core/adapters/gemini.ts')).default;
+const compatible = (await import('../coach/core/adapters/compatible.ts')).default;
 const { attemptOnce } = await import('../coach/core/pipeline.js');
-const { HTTP_PROVIDERS, validateBaseUrl, validateHeaders, isPrivateHost, phoneMayCall } = await import('../coach/core/providers.js');
-const { modelSubstitute } = await import('../coach/core/adapters/http.js');
-const { SYSTEM_PROMPT } = await import('../coach/core/system-prompt.js');
-const { REVIEW_SCHEMA, CREATE_SCHEMA } = await import('../coach/core/schemas.js');
+const { HTTP_PROVIDERS, validateBaseUrl, validateHeaders, isPrivateHost, phoneMayCall } = await import('../coach/core/providers.ts');
+const { modelSubstitute } = await import('../coach/core/adapters/http.ts');
+const { SYSTEM_PROMPT } = await import('../coach/core/system-prompt.ts');
+const { REVIEW_SCHEMA, CREATE_SCHEMA } = await import('../coach/core/schemas.ts');
 
 /** A fetch that records what it was asked and answers from a script. Like the real one, it
  *  refuses an already-aborted signal without putting anything on the wire. */
@@ -43,7 +43,7 @@ test('the four HTTP adapters spawn nothing and need no runtime', () => {
   for (const a of [anthropic, openai, gemini, compatible]) {
     assert.equal(a.spawns, false, a.id);
     assert.equal(a.needsRuntime, false, a.id);
-    assert.ok(HTTP_PROVIDERS[a.id], `${a.id} is described in core/providers.js`);
+    assert.ok(HTTP_PROVIDERS[a.id], `${a.id} is described in core/providers.ts`);
   }
 });
 
@@ -114,7 +114,7 @@ test('Gemini: a schema it cannot express (review\'s union types) is not sent at 
   assert.equal(gen.responseMimeType, 'application/json');
 });
 
-test('OpenAI: the schema goes out exactly as schemas.js states it — the Gemini copy is Gemini\'s only', async () => {
+test('OpenAI: the schema goes out exactly as schemas.ts states it — the Gemini copy is Gemini\'s only', async () => {
   const f = fakeFetch([ok({ choices: [{ message: { content: ANSWER }, finish_reason: 'stop' }] })]);
   await openai.invoke({ cfg: {}, prompt: 'P', env, model: 'gpt-x', schema: CREATE_SCHEMA, fetch: f });
   const sent = f.calls[0].body.response_format.json_schema.schema;
@@ -347,7 +347,7 @@ test('a validator that rejects the flat schema on additionalProperties gets one 
   assert.equal(second.properties.changes.items.properties.before.additionalProperties, false);
   // nothing else about the request moved — the added marker is the only difference at
   // the top level — and the flat schema the grammar converters need is still the one
-  // stored in schemas.js
+  // stored in schemas.ts
   assert.deepEqual(Object.keys(second), [...Object.keys(first), 'additionalProperties']);
   assert.equal(second.type, first.type);
   assert.deepEqual(second.required, first.required);
@@ -532,7 +532,7 @@ test('an answer cut off at the output limit fails as "provider", not as a half-p
     [anthropic, ok({ content: [{ type: 'text', text: '{"coach_contract":1,"changes":[' }], stop_reason: 'max_tokens' })],
     [openai, ok({ choices: [{ message: { content: '{"coach_contract":1,"changes":[' }, finish_reason: 'length' }] })],
     [gemini, ok({ candidates: [{ content: { parts: [{ text: '{"coach_contract":1,' }] }, finishReason: 'MAX_TOKENS' }] })]
-  ];
+  ] as const;
   for (const [adapter, answer] of cases) {
     const f = fakeFetch([answer]);
     const r = await adapter.invoke({ cfg: {}, prompt: 'P', env, model: 'm', fetch: f });
@@ -563,7 +563,7 @@ test('a fetch that throws names the host; an abort is a timeout', async () => {
   assert.match(r.stderr, /could not reach ollama\.lan:11434/);
 
   // A fetch that only settles when the signal aborts — what a hung server looks like.
-  const hang = (url, init) => new Promise((_, reject) => init.signal.addEventListener('abort', () => reject(Object.assign(new Error('aborted'), { name: 'AbortError' }))));
+  const hang = (url, init) => new Promise<never>((_, reject) => init.signal.addEventListener('abort', () => reject(Object.assign(new Error('aborted'), { name: 'AbortError' }))));
   const t = await openai.invoke({ cfg: {}, prompt: 'P', env, timeoutMs: 20, fetch: hang });
   assert.equal(t.timedOut, true);
   const cls: any = await attemptOnce({ adapter: openai, cfg: {}, kind: 'review', payload: { plan: { routines: [], week: {} } }, timeoutMs: 20, invokeOpts: { env, fetch: hang } }, null);
@@ -646,7 +646,7 @@ test('isPrivateHost / phoneMayCall: http:// from the phone only to the home netw
 });
 
 test('models(): OpenAI’s list is cut to what Chat Completions can use; a compatible endpoint is not filtered', async () => {
-  const { isChatModel } = await import('../coach/core/adapters/openai.js');
+  const { isChatModel } = await import('../coach/core/adapters/openai.ts');
   const all = ['gpt-5.6', 'gpt-5.6-mini', 'gpt-4o', 'o3', 'o4-mini', 'chatgpt-4o-latest',
     'gpt-4o-realtime-preview', 'gpt-4o-audio-preview', 'gpt-4o-mini-tts', 'gpt-4o-transcribe', 'whisper-1',
     'text-embedding-3-small', 'gpt-image-1', 'dall-e-3', 'omni-moderation-latest', 'gpt-4o-search-preview',
@@ -656,13 +656,13 @@ test('models(): OpenAI’s list is cut to what Chat Completions can use; a compa
   assert.deepEqual((await openai.models({}, env, { fetch: oa })).models, ['chatgpt-4o-latest', 'gpt-4o', 'gpt-5.6', 'gpt-5.6-mini', 'o3', 'o4-mini']);
   const stub = fakeFetch([ok({ data: [{ id: 'model-b' }, { id: 'model-a' }] })]);
   assert.deepEqual((await openai.models({}, env, { fetch: stub })).models, ['model-a', 'model-b'], 'a list with no recognisable chat model is served whole');
-  const { default: compatible } = await import('../coach/core/adapters/compatible.js');
+  const { default: compatible } = await import('../coach/core/adapters/compatible.ts');
   const co = fakeFetch([ok({ data: [{ id: 'qwen2.5:3b' }, { id: 'llama3.2' }] })]);
   assert.deepEqual((await compatible.models({ providerOptions: { compatible: { baseUrl: 'http://ollama:11434' } } }, {}, { fetch: co })).models, ['llama3.2', 'qwen2.5:3b']);
 });
 
 test('invoke sends the configured maxTokens override, and the adapter default when none is given', async () => {
-  const { MAX_OUTPUT_TOKENS } = await import('../coach/core/adapters/http.js');
+  const { MAX_OUTPUT_TOKENS } = await import('../coach/core/adapters/http.ts');
 
   // No override: every caller that configures nothing (the phone, warmup) still gets the default.
   const d = fakeFetch([ok({ choices: [{ message: { content: ANSWER }, finish_reason: 'stop' }] })]);
@@ -747,7 +747,7 @@ test('a normal answer that happens to carry an error field next to its choices i
 // stream, so bytes keep flowing; the deltas are folded back into one answer.
 const SSE_CHAT = ['data: {"choices":[{"delta":{"content":"{\\"coach_contract\\":1,"}}]}', 'data: {"choices":[{"delta":{"content":"\\"nochange\\":true,\\"reading\\":\\"fine\\"}"},"finish_reason":"stop"}]}', 'data: [DONE]', ''].join('\n\n');
 test('compatible and OpenAI ask for a stream and fold the deltas back into one answer (#1035)', async () => {
-  for (const [adapter, cfg] of [[compatible, { provider: 'compatible', providerOptions: { compatible: { baseUrl: 'https://api.deepseek.test/' } } }], [openai, {}]]) {
+  for (const [adapter, cfg] of [[compatible, { provider: 'compatible', providerOptions: { compatible: { baseUrl: 'https://api.deepseek.test/' } } }], [openai, {}]] as const) {
     const bodies = [];
     const f = async (url, init) => {
       bodies.push({ body: JSON.parse(init.body), accept: init.headers.accept });
@@ -775,7 +775,7 @@ test('a stream read chunk by chunk that breaks halfway says how much of the answ
   const r = await compatible.invoke({ cfg, prompt: 'P', env: {}, model: 'm', fetch: f });
   assert.equal(r.code, 1);
   assert.match(r.stderr, /dropped after 20 characters of the answer: Software caused connection abort/);
-  const { classifyFailure } = await import('../coach/core/failure.js');
+  const { classifyFailure } = await import('../coach/core/failure.ts');
   assert.equal(classifyFailure({ text: r.stderr }), 'cutoff');
 });
 
@@ -788,7 +788,7 @@ test('a connection that dies after a long wait is a dropped connection, not an u
     const f = async () => { clock += 95_000; throw new TypeError('Software caused connection abort'); };
     const r = await compatible.invoke({ cfg, prompt: 'P', env: {}, model: 'm', fetch: f });
     assert.match(r.stderr, /dropped while waiting for the answer \(after 95 s\)/);
-    const { classifyFailure } = await import('../coach/core/failure.js');
+    const { classifyFailure } = await import('../coach/core/failure.ts');
     assert.equal(classifyFailure({ text: r.stderr }), 'cutoff');
     const quick = async () => { throw new TypeError('getaddrinfo ENOTFOUND slow.test'); };
     const q = await compatible.invoke({ cfg, prompt: 'P', env: {}, model: 'm', fetch: quick });
@@ -855,7 +855,7 @@ test('Gemini: streamGenerateContent events are joined, thoughts left out, ground
 });
 
 test('sseEvents: blank-line events, several data lines, comments, [DONE] and servers that skip the blank line', async () => {
-  const { sseEvents } = await import('../coach/core/adapters/http.js');
+  const { sseEvents } = await import('../coach/core/adapters/http.ts');
   assert.deepEqual(sseEvents(': keep-alive\n\nevent: a\ndata: {"x":\ndata: 1}\n\ndata: [DONE]\n\n').map(e => [e.event, e.data]), [['a', { x: 1 }]]);
   assert.deepEqual(sseEvents('data: {"a":1}\ndata: {"b":2}\n').map(e => e.data), [{ a: 1 }, { b: 2 }]);
 });
@@ -873,7 +873,7 @@ test('Open WebUI: a 405 for the versioned path tries the bare one, and SPA HTML 
 });
 
 test('OpenRouter: its own base, attribution headers, the web plugin only when asked, prices from the listing', async () => {
-  const openrouter = (await import('../coach/core/adapters/openrouter.js')).default;
+  const openrouter = (await import('../coach/core/adapters/openrouter.ts')).default;
   const f = fakeFetch([ok({ choices: [{ message: { content: ANSWER, annotations: [{ type: 'url_citation', url_citation: { url: 'https://example.org/p', title: 'P' } }] }, finish_reason: 'stop' }] })]);
   const r: any = await openrouter.invoke({ cfg: {}, prompt: 'P', env: { OPENROUTER_API_KEY: 'sk-or-v1-x' }, fetch: f, web: true });
   assert.equal(r.code, 0, r.stderr);
@@ -898,7 +898,7 @@ test('web research: Anthropic gets the web search tool, Gemini Google Search wit
   assert.equal(ra.code, 0, ra.stderr);
   assert.deepEqual(fa.calls[0].body.tools, [{ type: 'web_search_20260209', name: 'web_search', max_uses: 3 }]);
   assert.deepEqual(ra.sources, [{ url: 'https://e.org/1', title: 'One' }]);
-  const { webSearchToolFor } = await import('../coach/core/adapters/anthropic.js');
+  const { webSearchToolFor } = await import('../coach/core/adapters/anthropic.ts');
   assert.equal(webSearchToolFor('claude-haiku-4-5'), 'web_search_20250305');
   assert.equal(webSearchToolFor('claude-opus-4-6'), 'web_search_20260209');
   const fg = fakeFetch([ok({ candidates: [{ content: { parts: [{ text: ANSWER }] }, finishReason: 'STOP' }] })]);
@@ -916,7 +916,7 @@ test('web research: Anthropic gets the web search tool, Gemini Google Search wit
 });
 
 test('key shapes point at their provider, and model names get a rough price tier', async () => {
-  const { providerOfKey, priceTier } = await import('../coach/core/providers.js');
+  const { providerOfKey, priceTier } = await import('../coach/core/providers.ts');
   assert.equal(providerOfKey('sk-ant-api03-' + 'a'.repeat(40)), 'anthropic');
   assert.equal(providerOfKey('sk-proj-' + 'b'.repeat(40)), 'openai');
   assert.equal(providerOfKey('sk-or-v1-' + 'c'.repeat(40)), 'openrouter');

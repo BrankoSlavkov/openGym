@@ -11,7 +11,7 @@ import { tempData } from './helpers.ts';
 
 tempData();
 const { runPipeline } = await import('../coach/core/pipeline.js');
-const { buildPromptParts } = await import('../coach/core/prompt.js');
+const { buildPromptParts } = await import('../coach/core/prompt.ts');
 const { build } = await import('../coach/core/payload.js');
 const { changesOntoPlan, isChangeList } = await import('../coach/core/refine-changes.js');
 

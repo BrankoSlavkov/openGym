@@ -10,10 +10,10 @@ import { uid } from './format.js'
 import { EXIDX } from './exercises.js'
 import { eqAvailable, ALL_EQUIPMENT } from './equipment.js'
 import { defaultConfig } from './history.js'
-import { STARTER_PLANS, AWAY_PLANS } from '../../../api/coach/core/starter-plans.js'
+import { STARTER_PLANS, AWAY_PLANS } from '../../../api/coach/core/starter-plans.ts'
 export { AWAY_PLANS }
 
-// The plans themselves live with the Coach's core (api/coach/core/starter-plans.js), which reads
+// The plans themselves live with the Coach's core (api/coach/core/starter-plans.ts), which reads
 // them for its routines library; this module builds them into routines.
 const PLANS = STARTER_PLANS
 const PPL = PLANS.ppl.routines

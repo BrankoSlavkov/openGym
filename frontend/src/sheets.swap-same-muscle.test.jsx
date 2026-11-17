@@ -10,7 +10,7 @@ import { DEF, useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
 import { EXDB } from './lib/exercises.js'
 import { exercisePicker, swapActiveWorkoutExercise } from './sheets.jsx'
-import { bindUI } from './components/ui.jsx'
+import { bindUI } from './components/ui.tsx'
 import { sameMuscleFirst } from './lib/similar-exercises.js'
 
 const mounted = []

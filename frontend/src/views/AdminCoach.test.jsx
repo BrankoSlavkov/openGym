@@ -36,7 +36,7 @@ vi.mock('../sheets.jsx', () => ({ confirmSheet: (...a) => mocks.confirmSheet(...
 
 // One fake API. `routes` maps a path to a value, a function of the parsed body, or an Error to
 // reject with — so a test can say "the server refuses this" without touching the component.
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: (path, opts = {}) => {
     const body = opts.body ? JSON.parse(opts.body) : undefined
     mocks.calls.push({ path, method: opts.method || 'GET', body })

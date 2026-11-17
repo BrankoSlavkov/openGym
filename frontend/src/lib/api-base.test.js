@@ -3,7 +3,7 @@
 // already relative; the API call was not, so it went to the proxy's own root where nothing
 // answers it. The base is read from where the app is being served.
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { api, appBase, beacon } from './api.js'
+import { api, appBase, beacon } from './api.ts'
 import { readFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { dirname, join } from 'node:path'

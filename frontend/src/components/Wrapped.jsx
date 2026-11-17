@@ -22,15 +22,15 @@ import { makeCanvas, toPng, currentAccent, isRtl } from '../lib/share-image.js'
 import { viewAspect, CARD_FONT } from '../lib/workout-card.js'
 import { reducedMotion } from '../lib/seasonal.js'
 import { t, useLang, dateLocale } from '../lib/i18n.js'
-import Icon from './Icon.jsx'
-import BodyMap from './BodyMap.jsx'
+import Icon from './Icon.tsx'
+import BodyMap from './BodyMap.tsx'
 import ShareCardSheet from './ShareCard.jsx'
 import './Wrapped.css'
 
 /** A card's picture: the card laid out on a 9:16 or 1:1 canvas, PNG. */
 export async function wrappedCardImage(card, { format, style, year, body }) {
   const colors = cardPalette(style, currentAccent())
-  const geometry = card.map ? (await import('../lib/body-geometry.js')).default : null
+  const geometry = card.map ? (await import('../lib/body-geometry.ts')).default : null
   const shape = geometry && (geometry[body] || geometry.male)
   const probe = makeCanvas(1, 1, CARD_FONT)
   if (!probe) return null

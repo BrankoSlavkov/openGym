@@ -12,16 +12,19 @@ FROM --platform=$BUILDPLATFORM node:26-alpine AS build
 # api/coach/core and is imported from frontend/src as ../../../api/coach/core/*, so the two
 # have to keep the same relative position they have in the repository. Copying frontend/ alone
 # is exactly what made the v1.2.15 web image fail to build.
-WORKDIR /app/frontend
-# Fork: the frontend installs with Bun (bun.lock) and builds with Vite+ (`vp build`, which runs
-# on this image's Node). Bun is copied in as a single binary from its official image.
+WORKDIR /app
 COPY --from=oven/bun:1.4.4-alpine /usr/local/bin/bun /usr/local/bin/bun
-COPY frontend/package.json frontend/bun.lock ./
-# --ignore-scripts: the web image only needs the build, and no postinstall should be able to
-# break it (@capacitor/assets' sharp download once timed out on the shared runners).
+COPY package.json bun.lock tsconfig.base.json ./
+COPY api/package.json ./api/package.json
+COPY frontend/package.json ./frontend/package.json
+COPY mcp/package.json ./mcp/package.json
+COPY packages/ ./packages/
 RUN bun install --frozen-lockfile --ignore-scripts
-COPY api/coach/core/ /app/api/coach/core/
-COPY frontend/ ./
+COPY api/ ./api/
+COPY frontend/ ./frontend/
+COPY scripts/ ./scripts/
+RUN bun run generate
+WORKDIR /app/frontend
 # Which build this is, shown in the app as "1.3.8+<build>" next to the version. Without it every
 # image built between two releases calls itself the same thing, and "which build are you running?"
 # cannot be answered from the phone. Unset, the app reports package.json's version as before.

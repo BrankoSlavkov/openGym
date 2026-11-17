@@ -3,7 +3,7 @@ import { effectiveRoutineIds } from '../lib/history.js'
 import { fmtDate } from '../lib/format.js'
 import { t } from '../lib/i18n.js'
 import { sequenceOf, isSimpleSequence } from '../lib/rotation.js'
-import Icon from './Icon.jsx'
+import Icon from './Icon.tsx'
 
 // Home's progress row for a coach week (S.queue) — it stands in for the seven weekday dots
 // while a planner-written queue runs the week, because its sessions have no weekday: they are done in

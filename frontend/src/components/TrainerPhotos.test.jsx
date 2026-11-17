@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 
 const mocks = vi.hoisted(() => ({ blobs: [], store: [], released: [], fail: false }))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: () => Promise.resolve({}),
   apiBlob: path => { mocks.blobs.push(path); return mocks.fail ? Promise.reject(Object.assign(new Error('no'), { status: 403 })) : Promise.resolve(new Blob(['x'], { type: 'image/jpeg' })) },
 }))

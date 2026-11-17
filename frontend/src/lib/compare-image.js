@@ -1,8 +1,8 @@
 // A progress-photo comparison as one picture (#950), the way it is on the screen: the same cells,
-// the same crop of each photo (lib/photo-compare.js coverCrop, from where it was dragged to),
+// the same crop of each photo (lib/photo-compare.ts coverCrop, from where it was dragged to),
 // the date on each, or the before/after slider at the place it was left. It is drawn here, on
 // the device, and handed to the share sheet (lib/share-image.js); nothing is uploaded.
-import { coverCrop } from './photo-compare.js'
+import { coverCrop } from './photo-compare.ts'
 import { makeCanvas, toPng } from './share-image.js'
 
 const W = 1080, PAD = 36, GAP = 12, FOOT = 84

@@ -21,20 +21,20 @@ import { speedUnitOf, toSpeed, fromSpeed } from '../lib/speed.js'
 import { effortPickerSheet, exerciseDetailSheet, exerciseHistorySheet, exerciseNoteSheet, menuSheet, barWeightSheet } from '../sheets.jsx'
 import { baseWeightFor, inventoryFor, loadKindFor, rowLoad } from '../lib/plates.js'
 import { usesBar } from '../lib/bar.js'
-import { plateText } from '../lib/plate-text.js'
+import { plateText } from '../lib/plate-text.ts'
 import { ownedWeightsFor, stepOwned } from '../lib/dumbbells.js'
 import { sessionGymView } from '../lib/gym-inventory.js'
 import { exView } from '../lib/ex-unit.js'
-import Icon from '../components/Icon.jsx'
+import Icon from '../components/Icon.tsx'
 import { BandChips } from '../components/Bands.jsx'
 import { usesBands, setBandsOf, toggleSetBand } from '../lib/bands.js'
-import Glyph from '../components/Glyph.jsx'
-import { Button, Stepper } from '../components/ui.jsx'
+import Glyph from '../components/Glyph.tsx'
+import { Button, Stepper } from '../components/ui.tsx'
 import './FocusView.css'
-import { youtubeSearchUrl } from '../lib/youtube.js'
+import { youtubeSearchUrl } from '../lib/youtube.ts'
 import { openExternal } from '../components/CustomMedia.jsx'
 import { isOn } from '../lib/modules.js'
-import CardioEffortChip from '../components/CardioEffortChip.jsx'
+import CardioEffortChip from '../components/CardioEffortChip.tsx'
 
 const firstIncomplete = entry => {
   const index = entry.sets.findIndex(set => !set.done)
@@ -117,7 +117,7 @@ function PlateBadge({ S, entry, set }) {
   const base = baseWeightFor(S, entry.id)
   const load = rowLoad(loadKindFor(S, { ...(entry.target || {}), id: entry.id }), set.w, base, inventoryFor(S))
   if (!load) return null
-  // One set at a time here, so the bar it counts with is always named (lib/plate-text.js).
+  // One set at a time here, so the bar it counts with is always named (lib/plate-text.ts).
   const text = plateText(load, { unit: S.unit, base, first: true, bar: usesBar(entry.id) })
   return <span className="focus-badge plate"><Icon name="plate" />{text}{load.missing > 0 && <> · <span className="short">{t('{0} short', fmtPlate(load.missing) + ' ' + S.unit)}</span></>}</span>
 }

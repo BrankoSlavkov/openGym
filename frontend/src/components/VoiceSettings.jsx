@@ -23,8 +23,8 @@ import { mediaStore } from '../lib/media-store.js'
 import { fmtClip } from '../lib/media-refs.js'
 import { unlock, chime } from '../lib/sound.js'
 import { soundErrorText } from './OwnSounds.jsx'
-import { Section, Row, Slider, Button, TextField } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Section, Row, Slider, Button, TextField } from './ui.tsx'
+import Icon from './Icon.tsx'
 
 const toast = m => useUI.getState().toast(m)
 const S_ = () => useStore.getState().S

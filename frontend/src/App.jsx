@@ -8,7 +8,7 @@ import { matchPath } from './router/routes.ts'
 import { createHashAppRouter } from './router/app-router.ts'
 import { useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
-import { bindUI } from './components/ui.jsx'
+import { bindUI } from './components/ui.tsx'
 import { setWeightDecimals } from './lib/format.js'
 import { accentValue, applyAccent } from './lib/accent.js'
 import { seasonAccent } from './lib/seasonal.js'
@@ -20,7 +20,7 @@ import { buzzAsAlarm } from './lib/rest-alert.js'
 import { setNav, notePath, keyBefore, navToWorkout, nav } from './lib/nav.js'
 import { onGymReminderOpen, readGymConfig, readGymLeft, onGymLeft } from './lib/gym-reminder.js'
 import { startForgotten, keepGoing } from './lib/forgotten-phone.js'
-import { openForgottenPrompt } from './components/ForgottenPrompt.jsx'
+import { openForgottenPrompt } from './components/ForgottenPrompt.tsx'
 import { autoGymHere } from './lib/gym-auto.js'
 import { workoutVolume, pickedExerciseConfig } from './lib/history.js'
 import { setSystemAccent, setSystemBarsLight } from './lib/system-bars.js'
@@ -29,7 +29,7 @@ import { stepPlaces } from './lib/progression.js'
 import { applyOrientation } from './lib/orientation.js'
 import { initBackButton } from './lib/back.js'
 import { installEdgeSwipeBack, BACK_PREVIEW_EVENT } from './lib/edge-swipe-back.js'
-import { pageMotion } from './lib/page-motion.js'
+import { pageMotion } from './lib/page-motion.ts'
 import { startWatchSync, bindWatchAppActions, patchSetIn, watchStatus, watchClaimed, onWatchClaim, markDiscarded, notePhoneOpen, ensureWatchSet } from './lib/watch-sync.js'
 import { buildSessionEntry } from './lib/session-start.js'
 import { EXIDX } from './lib/exercises.js'
@@ -53,16 +53,16 @@ import { isOn } from './lib/modules.js'
 import { useTour } from './lib/tour.js'
 import { useTourOffer } from './lib/tour-offer.js'
 import { exitWorkoutEdit, startFlow, beginWorkout, bwSheet, finishWorkoutNow, confirmSheet } from './sheets.jsx'
-import { BrandMark } from './components/BrandLogo.jsx'
+import { BrandMark } from './components/BrandLogo.tsx'
 import TabBar from './components/TabBar.jsx'
 import { startOrPreview, startPickerSheet } from './components/StartSheets.jsx'
-import ScrollTopButton from './components/ScrollTopButton.jsx'
-import ErrorBoundary from './components/ErrorBoundary.jsx'
+import ScrollTopButton from './components/ScrollTopButton.tsx'
+import ErrorBoundary from './components/ErrorBoundary.tsx'
 import Modals from './components/Modals.jsx'
-import Toast from './components/Toast.jsx'
+import Toast from './components/Toast.tsx'
 import SyncBanner from './components/SyncBanner.jsx'
 import RestTimer from './components/RestTimer.jsx'
-import TimerFlash from './components/TimerFlash.jsx'
+import TimerFlash from './components/TimerFlash.tsx'
 import { SeasonalLayer } from './components/Seasonal.jsx'
 import { WrappedLayer } from './components/WrappedEntry.jsx'
 import { openDeviceLinkRedeem } from './components/Passkeys.jsx'
@@ -185,7 +185,7 @@ function Shell() {
     if (!user?.admin || MOBILE) return
     import('./lib/openrouter-signin.js').then(async m => {
       if (!m.isWebReturn()) return
-      const { api } = await import('./lib/api.js')
+      const { api } = await import('./lib/api.ts')
       const r = await m.finishWebSignIn({
         save: async key => {
           await api('/api/admin/coach/connect', { method: 'POST', body: JSON.stringify({ provider: 'openrouter', type: 'apikey', token: key, account: 'OpenRouter sign-in' }) })
@@ -221,7 +221,7 @@ function Shell() {
   // (Settings → Look & Home → Seasonal themes); the saved accent itself is never touched.
   const accent = seasonAccent(S) || accentValue(S)
   useEffect(() => { applyPrefs(S.theme, accent) }, [S.theme, accent])
-  // Settings → Icons: openGym's own or the emoji (components/Glyph.jsx, index.css .glyph).
+  // Settings → Icons: openGym's own or the emoji (components/Glyph.tsx, index.css .glyph).
   useEffect(() => { document.documentElement.dataset.icons = S.icons === 'emoji' ? 'emoji' : 'opengym' }, [S.icons])
   // Settings → Icons → your own streak flame and freeze: the tints around them come from their
   // colour (lib/streak-icons.js tintCss), one <style> per page, emptied on Reset to default.

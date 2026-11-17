@@ -29,7 +29,7 @@ vi.mock('../sheets.jsx', () => ({
 }))
 vi.mock('../components/Heatmap.jsx', () => ({ default: () => React.createElement('div') }))
 vi.mock('../components/LineChart.jsx', () => ({ default: props => { mocks.charts.push(props); return React.createElement('div') } }))
-vi.mock('../components/BodyMap.jsx', () => ({
+vi.mock('../components/BodyMap.tsx', () => ({
   default: props => {
     mocks.maps.push(props)
     return React.createElement('div', { 'data-body-map': true, 'data-selected': props.selected || '' },

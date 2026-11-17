@@ -10,7 +10,7 @@ import App from './App.jsx'
 import { DEF, useStore } from './store/useStore.js'
 
 vi.mock('./lib/sound.js', async importOriginal => ({ ...(await importOriginal()), setPlayOnSilent: vi.fn(), setVibrate: vi.fn(), setAlarmBuzzer: vi.fn(), setNativeBuzzer: vi.fn() }))
-vi.mock('./lib/api.js', async importOriginal => {
+vi.mock('./lib/api.ts', async importOriginal => {
   const actual = await importOriginal()
   return { ...actual, api: vi.fn(() => Promise.resolve({})), beacon: vi.fn() }
 })

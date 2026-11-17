@@ -8,10 +8,10 @@
    saw it (review of 771184c9). */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../lib/api.js', () => ({ api: vi.fn(), setRemoteAuth: vi.fn() }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn(), setRemoteAuth: vi.fn() }))
 vi.mock('./useUI.js', () => ({ useUI: { getState: () => ({ toast: vi.fn() }) } }))
 
-import { api } from '../lib/api.js'
+import { api } from '../lib/api.ts'
 import { DEF, useStore } from './useStore.js'
 import { resetIdsOf } from '../lib/sync-merge.js'
 

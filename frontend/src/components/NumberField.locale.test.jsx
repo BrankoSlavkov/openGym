@@ -5,7 +5,7 @@
 import React, { act, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { NumberField, Stepper, numWidthCh } from './ui.jsx'
+import { NumberField, Stepper, numWidthCh } from './ui.tsx'
 import { setLang } from '../lib/i18n.js'
 import { _setLangState } from '../lib/i18n-core.js'
 import { fmtNum, fmtWeight } from '../lib/format.js'

@@ -11,7 +11,7 @@ vi.mock('../store/useStore.js', () => {
   useStore.getState = () => ({ S: mocks.S, update })
   return { useStore }
 })
-import NewExDefaultsSheet, { newExLine } from './NewExDefaultsSheet.jsx'
+import NewExDefaultsSheet, { newExLine } from './NewExDefaultsSheet.tsx'
 
 let host, root
 beforeEach(() => { mocks.S = {}; host = document.createElement('div'); document.body.appendChild(host); root = createRoot(host) })

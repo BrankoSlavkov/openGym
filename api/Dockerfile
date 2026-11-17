@@ -7,7 +7,7 @@
 #           platform runtime entirely, so an owner who never wanted the Coach carries none of it.
 #   coach                                     — the same image plus the Claude Agent SDK.
 #
-# Build the opt-in one with:  docker build --pull --target coach ./api
+# Build the opt-in one with:  docker build --pull --target coach -f api/Dockerfile .
 # or through compose with:    API_TARGET=coach docker compose up --build
 #
 # The stage order matters: Docker builds the *last* stage when none is named, so `default` is
@@ -47,27 +47,26 @@ RUN apk upgrade --no-cache
 # an account is connected. It costs one line and no bytes worth measuring.
 RUN adduser -D -H -s /sbin/nologin coach
 
-COPY package.json bun.lock ./
-# --frozen-lockfile: the lockfile is the point of committing one, and the SDK's per-platform
-# runtime is resolved from it (musl on this base) rather than from whatever the build host
-# happened to be.
-RUN bun install --frozen-lockfile --production --omit=optional && rm -rf /root/.bun/install/cache
-
-# Every module server.js imports from the api root has to be named here: the image carries nothing
-# else, and one that is missing only shows at boot, as ERR_MODULE_NOT_FOUND.
-COPY server.ts http-app.ts push-messages.ts nudge.ts nudge-copy.ts wrapped.ts wrapped-copy.ts checkin-reminder.ts checkin-copy.ts verify-error.ts password.ts rate-limit.ts passkeys-store.ts device-link.ts media.ts queue.ts sync-stamps.ts durable.ts admin-socket.ts recover.ts net-guard.ts permissions.ts consent.ts share-log.ts tokens.ts oauth.ts budgets.ts role-claims.ts origin.ts live-session.ts ./
-COPY coach ./coach
-COPY library ./library
-COPY oidc ./oidc
-COPY integrations ./integrations
-COPY trainers ./trainers
-COPY sources ./sources
-# Fork: the OpenAPI route definitions, document and request checks (FORK.md).
-COPY openapi ./openapi
+# Built from the monorepo root; startup regenerates the OpenAPI client locally.
+COPY package.json bun.lock tsconfig.base.json ./
+COPY api/package.json ./api/package.json
+COPY frontend/package.json ./frontend/package.json
+COPY mcp/package.json ./mcp/package.json
+COPY packages/ ./packages/
+# Orval/esbuild need platform optional dependencies. Remove only the opt-in AI SDK.
+RUN bun install --frozen-lockfile --ignore-scripts \
+ && rm -rf node_modules/@anthropic-ai/claude-agent-sdk \
+           node_modules/.bun/@anthropic-ai+claude-agent-sdk@* \
+           api/node_modules/@anthropic-ai/claude-agent-sdk \
+           /root/.bun/install/cache
+COPY api/ ./api/
+COPY frontend/orval.config.ts ./frontend/orval.config.ts
+COPY frontend/src/lib/ ./frontend/src/lib/
+COPY scripts/start.ts ./scripts/start.ts
 ENV NODE_ENV=production
 ENV PORT=3000
 EXPOSE 3000
-CMD ["bun", "server.ts"]
+CMD ["bun", "run", "start"]
 
 # Every 30 s, so a fresh container reads "healthy" half a minute after it starts instead of after
 # five (TrueNAS and Portainer wait for it before they call the app running, #844).
@@ -83,7 +82,7 @@ HEALTHCHECK --interval=30s \
 # @anthropic-ai/claude-agent-sdk together with the one platform runtime this base needs
 # (linux-*-musl), both pinned by the lockfile.
 FROM base AS coach
-RUN bun install --frozen-lockfile --production && rm -rf /root/.bun/install/cache
+RUN bun install --frozen-lockfile --ignore-scripts && rm -rf /root/.bun/install/cache
 
 # Codex ships as a CLI rather than a library, so it is installed rather than resolved, and
 # bubblewrap is its sandbox — a Codex requirement, which is why neither appears in the default

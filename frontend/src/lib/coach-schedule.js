@@ -3,7 +3,7 @@
 // On a server the cadence tick runs them (api/coach/cadence.js). A phone in BYOK mode has no
 // server, and nothing ran them: "Weekly" and "After every few workouts" saved, and no review ever
 // came. There is no running JavaScript while the app is closed, so the phone asks while it is
-// open, with the server's rule (api/coach/core/due.js): on start, on every return to the
+// open, with the server's rule (api/coach/core/due.ts): on start, on every return to the
 // foreground, and once a minute while on screen. That last one is what catches a workout the
 // moment it is finished, and a weekly slot that passes with the app open.
 //
@@ -39,7 +39,7 @@ export async function checkScheduledReview(getStore, foreground = false) {
   if (running || (!own && !paired)) return null
   running = true
   try {
-    const api = await import('./coach-api.js')
+    const api = await import('./coach-api.ts')
     return await (own ? api.scheduledReview() : api.scheduledNotice())
   } catch { return null } finally { running = false }
 }

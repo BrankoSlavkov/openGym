@@ -4,9 +4,9 @@ import { useUI } from '../store/useUI.js'
 import { t, tn } from '../lib/i18n.js'
 import { todayISO, fmtDate } from '../lib/format.js'
 import { workoutsToDelete, deleteWorkoutsOnly, restoreWorkouts } from '../lib/delete-workouts.js'
-import DateField from './DateField.jsx'
-import Icon from './Icon.jsx'
-import { Button, Row, Switch } from './ui.jsx'
+import DateField from './DateField.tsx'
+import Icon from './Icon.tsx'
+import { Button, Row, Switch } from './ui.tsx'
 
 // Settings → Data → Delete workouts only (gm-journal): a clean slate for the log without losing the
 // plan. What goes and what stays is said in plain words, a backup is offered first (and is the

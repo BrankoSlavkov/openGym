@@ -4,10 +4,10 @@
 import { useEffect, useState } from 'react'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
-import { api } from '../lib/api.js'
+import { api } from '../lib/api.ts'
 import { t } from '../lib/i18n.js'
 import { oidcOn, oidcLabel, startWebSignIn, oidcArrival, clearOidcArrival, oidcErrorText, oidcOkText } from '../lib/oidc.js'
-import { Row } from './ui.jsx'
+import { Row } from './ui.tsx'
 import { ProveOwner, passwordError } from './PasswordAuth.jsx'
 
 const ui = () => useUI.getState()

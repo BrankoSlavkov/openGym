@@ -6,7 +6,7 @@ import { EXDB } from './lib/exercises.js'
 import { useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
 import { exConfigSheet, setsLine } from './sheets.jsx'
-import { bindUI } from './components/ui.jsx'
+import { bindUI } from './components/ui.tsx'
 
 // Sets to failure: "Last set to failure" on the exercise's settings, written only when on.
 const ex = EXDB.find(e => e.id === '0009')

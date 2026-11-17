@@ -5,8 +5,8 @@ import { t } from '../lib/i18n.js'
 import { fmtDate } from '../lib/format.js'
 import { RULE_IDS, NEW_PROFILE_RULE, currentRule, streakRuleOf, setStreakRule, EXCUSE_CHOICES, excuseCapOf, setExcuseCap } from '../lib/streak-rule.js'
 import { ruleLabel, ruleDesc, fromNowOn } from '../lib/streak-explain.js'
-import Icon from './Icon.jsx'
-import { Button, Row, Segmented } from './ui.jsx'
+import Icon from './Icon.tsx'
+import { Button, Row, Segmented } from './ui.tsx'
 
 /* How forgiving the week streak is (lib/streak-rule.js): no freezes, one, or two. Picked on a
    new profile's Home (StreakRuleWelcome) and in Settings → Look & Home (StreakRuleRow). It takes
@@ -54,7 +54,7 @@ export const streakRuleSheet = () => useUI.getState().openSheet(close => <Streak
 
 /**
  * Settings → Look & Home: how many missed weeks a year a sick, travel or injured day note keeps
- * the streak through (api/coach/core/streak.js). Off leaves those weeks to the freezes.
+ * the streak through (api/coach/core/streak.ts). Off leaves those weeks to the freezes.
  */
 export function StreakExcuseRow () {
   const cap = useStore(s => excuseCapOf(s.S))

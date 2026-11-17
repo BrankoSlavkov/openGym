@@ -28,8 +28,8 @@ import {
 } from '../lib/set-videos.js'
 import { useMediaPicker } from './CustomMediaField.jsx'
 import { useMediaUrl, CustomThumb } from './CustomMedia.jsx'
-import { Button, Row, Switch } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Button, Row, Switch } from './ui.tsx'
+import Icon from './Icon.tsx'
 import { isOn } from '../lib/modules.js'
 
 const toast = m => useUI.getState().toast(m)

@@ -10,7 +10,7 @@ vi.mock('./lib/sound.js', () => ({
   setPlayOnSilent: vi.fn(), setVibrate: vi.fn(), setAlarmBuzzer: vi.fn(),
   beep: vi.fn(), chime: vi.fn(), vibrate: vi.fn(), alertBuzz: vi.fn(), unlock: vi.fn(),
 }))
-vi.mock('./lib/api.js', async importOriginal => ({
+vi.mock('./lib/api.ts', async importOriginal => ({
   ...await importOriginal(), api: vi.fn(() => Promise.resolve({})), beacon: vi.fn(),
 }))
 globalThis.IS_REACT_ACT_ENVIRONMENT = true

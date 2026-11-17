@@ -10,7 +10,7 @@ import Admin from './Admin.jsx'
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 
 const mocks = vi.hoisted(() => ({ answers: {}, sheets: [], posts: [] }))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: (path, opts) => {
     if (opts?.method === 'POST') { mocks.posts.push([path, JSON.parse(opts.body)]); return Promise.resolve({ ok: true }) }
     const key = path.split('?')[0]

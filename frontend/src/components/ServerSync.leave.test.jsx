@@ -27,7 +27,7 @@ vi.mock('../store/useUI.js', () => {
 })
 vi.mock('../lib/media-sync.js', () => ({ syncMedia: vi.fn() }))
 vi.mock('../lib/mobile.js', () => ({ MOBILE: false }))
-vi.mock('../lib/api.js', () => ({ passkeyLogin: vi.fn(), webauthnOK: () => true }))
+vi.mock('../lib/api.ts', () => ({ passkeyLogin: vi.fn(), webauthnOK: () => true }))
 vi.mock('../sheets.jsx', () => ({ askAddDeviceData: vi.fn() }))
 vi.mock('../views/MobileOnboarding.jsx', () => ({ ConnectSheet: () => null }))
 

@@ -18,19 +18,19 @@ import { MOBILE } from '../lib/mobile.js'
 import { CATEGORY_TEXT } from '../lib/coach.js'
 import { getApiKey, setApiKey, clearApiKey } from '../lib/coach-secrets.js'
 import { coachLimits, clampCoachLimit, COACH_LIMITS } from '../lib/coach-device.js'
-import { HTTP_PROVIDERS, HTTP_PROVIDER_IDS, baseUrlFor, validateBaseUrl, phoneMayCall, providerOfKey, priceTier } from '../../../api/coach/core/providers.js'
-import { DATA_CATEGORIES } from '../../../api/coach/core/categories.js'
+import { HTTP_PROVIDERS, HTTP_PROVIDER_IDS, baseUrlFor, validateBaseUrl, phoneMayCall, providerOfKey, priceTier } from '../../../api/coach/core/providers.ts'
+import { DATA_CATEGORIES } from '../../../api/coach/core/categories.ts'
 import { ConnectSheet } from './MobileOnboarding.jsx'
 import { AiConsentSection } from '../components/CoachConsentSheet.jsx'
-import Icon from '../components/Icon.jsx'
-import { Section, Row, Button, TextField } from '../components/ui.jsx'
+import Icon from '../components/Icon.tsx'
+import { Section, Row, Button, TextField } from '../components/ui.tsx'
 
 // Literal t() calls, so check-source-strings sees the three lines; t(s) over a list of keys hid them.
 const STEPS = () => [t('Loading the exercise catalogue…'), t('Checking the endpoint…'), t('Ready')]
 
 // The phone calls the provider through CapacitorHttp, native networking. A model on the home
 // network (llama.cpp, Ollama, LM Studio on 192.168.x.x) has no certificate a phone trusts, so
-// plain http:// is allowed there (#913), and only there: providers.js phoneMayCall says what
+// plain http:// is allowed there (#913), and only there: providers.ts phoneMayCall says what
 // counts as the home network. Android lets the app speak cleartext to any host
 // (network_security_config.xml, #428: it cannot scope that to address ranges) and iOS to local
 // addresses (Info.plist NSAllowsLocalNetworking), so this check is what keeps a key and training
@@ -215,7 +215,7 @@ export default function CoachSetup() {
   const findLocal = async () => {
     setBusy(true); setFound(null)
     try {
-      const { candidatesFor, discoverLocal } = await import('../../../api/coach/core/local-discovery.js')
+      const { candidatesFor, discoverLocal } = await import('../../../api/coach/core/local-discovery.ts')
       const { loadRemote } = await import('../lib/remote.js')
       const remote = await loadRemote().catch(() => null)
       const hosts = [hostOf(remote?.url || '').replace(/:\d+$/, ''), 'localhost', 'ollama.local', 'lmstudio.local'].filter(Boolean)

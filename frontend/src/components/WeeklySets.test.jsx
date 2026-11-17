@@ -7,7 +7,7 @@ import { createRoot } from 'react-dom/client'
 import { DEF, useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { todayISO } from '../lib/format.js'
-import { WeeklySetsHomeLine, muscleTargetsSheet } from './WeeklySets.jsx'
+import { WeeklySetsHomeLine, muscleTargetsSheet } from './WeeklySets.tsx'
 
 const BENCH = '0025'
 const mounted = []

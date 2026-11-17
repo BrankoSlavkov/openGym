@@ -20,7 +20,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = snap
   return { useUI }
 })
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: vi.fn(async (path, opts) => {
     const body = opts?.body ? JSON.parse(opts.body) : null
     mocks.calls.push([path, body])
@@ -30,11 +30,11 @@ vi.mock('../lib/api.js', () => ({
   appBase: () => '/',
   remoteAuth: () => null,
 }))
-vi.mock('../lib/clipboard.js', () => ({ copyText: vi.fn(async () => true) }))
+vi.mock('../lib/clipboard.ts', () => ({ copyText: vi.fn(async () => true) }))
 vi.mock('../sheets.jsx', () => ({ confirmSheet: o => { mocks.confirm = o } }))
 
 const { default: ApiTokensPage } = await import('./ApiTokens.jsx')
-const { tokenLine, mcpAddress } = await import('../lib/api-tokens.js')
+const { tokenLine, mcpAddress } = await import('../lib/api-tokens.ts')
 
 let host, root
 const render = async el => { await act(async () => { root.render(el) }); await act(async () => {}) }

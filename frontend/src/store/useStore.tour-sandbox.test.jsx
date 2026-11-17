@@ -5,11 +5,11 @@
    was, and a push that was waiting goes then. */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../lib/api.js', () => ({ api: vi.fn() }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn() }))
 const { toast } = vi.hoisted(() => ({ toast: vi.fn() }))
 vi.mock('./useUI.js', () => ({ useUI: { getState: () => ({ toast }) } }))
 
-import { api } from '../lib/api.js'
+import { api } from '../lib/api.ts'
 import { DEF, useStore } from './useStore.js'
 
 const clone = value => JSON.parse(JSON.stringify(value))

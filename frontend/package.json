@@ -9,17 +9,20 @@
     "preview": "vp preview",
     "test": "vp test run",
     "test:watch": "vp test",
-    "check": "vp check",
-    "typecheck": "tsc -p .",
+    "check": "node scripts/api-client.mjs && vp check",
+    "typecheck": "node scripts/api-client.mjs && tsc -p .",
     "test:fatigue-probe": "node scripts/fatigue-monotonic-probe.mjs",
-    "pdf:check": "node scripts/pdf/render-samples.mjs --out pdf-samples --langs en --paper A4,Letter --check"
+    "pdf:check": "node scripts/pdf/render-samples.mjs --out pdf-samples --langs en --paper A4,Letter --check",
+    "api:generate": "orval --config orval.config.ts"
   },
   "license": "AGPL-3.0-or-later",
   "dependencies": {
+    "@tanstack/react-query": "5.108.0",
     "@tanstack/react-router": "1.170.46",
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "zustand": "5.1.0"
+    "zustand": "5.1.0",
+    "orval": "8.48.0"
   },
   "devDependencies": {
     "@types/node": "26.6.6",
@@ -29,6 +32,7 @@
     "@vitest/coverage-v8": "5.1.0",
     "fast-check": "4.10.2",
     "happy-dom": "21.0.4",
+    "lightningcss": "1.33.0",
     "linkedom": "0.18.15",
     "typescript": "7.0.2",
     "vite": "npm:@voidzero-dev/vite-plus-core@1.6.0",

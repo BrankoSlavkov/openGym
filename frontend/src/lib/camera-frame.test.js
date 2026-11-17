@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { containRect, captureSize, overlayOpacity, captureName } from './camera-frame.js'
+import { containRect, captureSize, overlayOpacity, captureName } from './camera-frame.ts'
 
 describe('camera frame', () => {
   it('shows the whole frame in the box, centred', () => {

@@ -70,7 +70,7 @@ describe.skipIf(!HAVE_API)('the connector sign-in with the official MCP client',
     fs.writeFileSync(path.join(dataDir, 'secret'), SECRET, { mode: 0o600 })
     fs.writeFileSync(path.join(dataDir, 'db.json'), JSON.stringify({ users: [{ id: UID, name: 'Ana', created: new Date().toISOString() }], creds: [], subs: [], invites: [] }))
     fs.writeFileSync(path.join(dataDir, `state-${UID}.json`), JSON.stringify(DOC))
-    child = spawn(process.execPath, ['server.js'], {
+    child = spawn(process.env.BUN_EXEC_PATH || 'bun', ['server.ts'], {
       cwd: API, stdio: ['ignore', 'pipe', 'pipe'],
       env: { ...process.env, PORT: '0', DATA_DIR: dataDir, ORIGIN: origin, RP_ID: 'localhost', MCP: 'on' },
     })
@@ -81,7 +81,7 @@ describe.skipIf(!HAVE_API)('the connector sign-in with the official MCP client',
       child.once('exit', code => { clearTimeout(give); reject(new Error(`server exited (${code}):\n${log}`)) })
     })
     delete process.env.OPENGYM_DATA
-    const { createMcpHandler } = await import('../src/http.js')
+    const { createMcpHandler } = await import('../src/http.ts')
     handle = createMcpHandler({ apiUrl: `http://127.0.0.1:${apiPort}`, allowedOrigins: [origin], publicOrigin: origin })
   }, 30000)
   afterAll(() => { child?.kill('SIGKILL'); front?.close(); fs.rmSync(dataDir, { recursive: true, force: true }) })

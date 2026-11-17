@@ -10,10 +10,10 @@
  * handle stands in), passkey and credential material, push subscriptions, invite data, theme
  * and appearance settings, and every other profile's everything.
  */
-import { glyphStr } from './glyphs.js';
+import { glyphStr } from './glyphs.ts';
 import { LIBRARY, LIB_BY_ID, libraryHas, libraryName, librarySlice, swapSlice, isStretch, MAX_LIBRARY, ownsNoDumbbells, gymMachines } from './library.js';
 import { muscleLoad, gymOf, challengesOf, recordsOf, measurementsOf, healthOf, rotationOf } from './context.js';
-import { shareOf } from './categories.js';
+import { shareOf } from './categories.ts';
 import { asksForBodyweight, cleanHits } from './routine-library.js';
 
 export const CONTRACT = 1;
@@ -124,7 +124,7 @@ function cleanProfile(profile) {
 /* ---------- the data categories the consent screen names (FR-09/10) ----------
    Kept here, next to the code that acts on it, and rendered by the consent UI from the same
    list — a screen that drifts from the payload is worse than no screen. */
-export { DATA_CATEGORIES } from './categories.js';
+export { DATA_CATEGORIES } from './categories.ts';
 
 /* ---------- reading a session the way the engine reads it ----------
    Duplicated from frontend/src/lib/history.js rather than shared: the two runtimes have no

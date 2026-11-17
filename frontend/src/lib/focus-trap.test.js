@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from 'vitest'
-import { trapTab, canTakeFocusBack } from './focus-trap.js'
+import { trapTab, canTakeFocusBack } from './focus-trap.ts'
 
 const all = () => true
 function dialog(html) {

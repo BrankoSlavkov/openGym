@@ -4,7 +4,7 @@ import { parseHTML } from 'linkedom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Workout from './Workout.jsx'
 import { effortPickerSheet } from '../sheets.jsx'
-import { menuItemsOf } from '../lib/menu-items.js'
+import { menuItemsOf } from '../lib/menu-items.ts'
 
 // A menu's actions in order, whether it came as one list or in groups (menuSheet `sections`).
 
@@ -58,7 +58,7 @@ vi.mock('../sheets.jsx', () => ({
 }))
 vi.mock('../components/Media.jsx', () => ({ default: () => null }))
 vi.mock('../components/Modals.jsx', () => ({ afterScrollRestore: mocks.afterScrollRestore, scrollRestorePending: mocks.scrollRestorePending }))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: vi.fn(() => Promise.resolve({})), IS_APPLE: false, IS_ANDROID: false, BIO: 'biometrics',
 }))
 

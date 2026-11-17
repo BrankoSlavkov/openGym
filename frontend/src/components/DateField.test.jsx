@@ -9,7 +9,7 @@ import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { setLang } from '../lib/i18n.js'
 import { todayISO } from '../lib/format.js'
-import DateField from './DateField.jsx'
+import DateField from './DateField.tsx'
 import { pickDate, dateValue } from './DateField.test-util.js'
 
 const mounted = []

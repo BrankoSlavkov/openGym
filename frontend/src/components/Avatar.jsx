@@ -12,9 +12,9 @@ import { mediaStore } from '../lib/media-store.js'
 import { avatarOf, initialOf, setAvatarPhoto, setAvatarPreset, clearAvatar, AVATAR_PRESETS, clampCrop, coverScale, zoomAround, ZOOM_MAX, openAvatarImage, renderAvatar } from '../lib/avatar.js'
 import { useMediaUrl } from './CustomMedia.jsx'
 import { mediaErrorText } from './CustomMediaField.jsx'
-import Glyph from './Glyph.jsx'
-import Icon from './Icon.jsx'
-import { Section, Row, Button } from './ui.jsx'
+import Glyph from './Glyph.tsx'
+import Icon from './Icon.tsx'
+import { Section, Row, Button } from './ui.tsx'
 
 const toast = m => useUI.getState().toast(m)
 const VIEW = 264   // px, the crop viewport: fits a 320 px phone inside the sheet's padding

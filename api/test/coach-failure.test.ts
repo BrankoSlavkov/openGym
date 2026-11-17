@@ -11,9 +11,9 @@ import assert from 'node:assert/strict';
 import { tempData } from './helpers.ts';
 
 tempData();
-const { classifyFailure, statusOf, redact, userMessageFor, USER_MESSAGE } = await import('../coach/core/failure.js');
+const { classifyFailure, statusOf, redact, userMessageFor, USER_MESSAGE } = await import('../coach/core/failure.ts');
 const { attemptOnce } = await import('../coach/core/pipeline.js');
-const openai = (await import('../coach/core/adapters/openai.js')).default;
+const openai = (await import('../coach/core/adapters/openai.ts')).default;
 
 const payload = { plan: { routines: [], week: {} } };
 const env = { OPENAI_API_KEY: 'sk-oa-1' };

@@ -16,7 +16,7 @@ vi.mock('../sheets.jsx', () => ({
 }))
 vi.mock('../components/LineChart.jsx', () => ({ default: () => null }))
 vi.mock('../components/Heatmap.jsx', () => ({ default: () => null }))
-vi.mock('../components/BodyMap.jsx', () => ({ default: () => null, BodyMapLegend: () => null }))
+vi.mock('../components/BodyMap.tsx', () => ({ default: () => null, BodyMapLegend: () => null }))
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 const day = n => { const t = Date.now() - n * 86400000; return { t, d: new Date(t).toISOString().slice(0, 10) } }

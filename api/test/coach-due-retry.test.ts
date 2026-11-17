@@ -3,7 +3,7 @@
 // reached the provider. It now settles the round; a passing failure waits a quarter of an hour.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { reviewedAtOf, retryWaiting, RETRY_AFTER_MS } from '../coach/core/due.js';
+import { reviewedAtOf, retryWaiting, RETRY_AFTER_MS } from '../coach/core/due.ts';
 
 const rev = (outcome, at, extra = {}) => ({ kind: 'review', trigger: 'scheduled', outcome, at, ...extra });
 

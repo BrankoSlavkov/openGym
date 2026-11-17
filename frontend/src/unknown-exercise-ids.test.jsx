@@ -25,7 +25,7 @@ import Library from './views/Library.jsx'
 import StructuralBalance from './views/StructuralBalance.jsx'
 
 vi.mock('./lib/sound.js', () => ({ beep: vi.fn(), vibrate: vi.fn(), alertBuzz: vi.fn(), unlock: vi.fn(), restOver: vi.fn() }))
-vi.mock('./lib/api.js', async importOriginal => ({ ...(await importOriginal()), api: vi.fn(() => Promise.resolve({})), beacon: vi.fn() }))
+vi.mock('./lib/api.ts', async importOriginal => ({ ...(await importOriginal()), api: vi.fn(() => Promise.resolve({})), beacon: vi.fn() }))
 
 const clone = v => JSON.parse(JSON.stringify(v))
 // An id no catalogue of this build knows: v1.3.11 shipped this test with '4321', which v1.4.0 made a

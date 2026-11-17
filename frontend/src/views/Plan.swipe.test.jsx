@@ -7,7 +7,7 @@ import { createRoot } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DEF, useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
-import { closeOpenRow } from '../lib/use-swipe-row.js'
+import { closeOpenRow } from '../lib/use-swipe-row.ts'
 import { restoreRoutine, routineSnapshot, deleteRoutine } from '../lib/routines.js'
 import Plan, { deleteRoutineWithUndo, takeOutOfLoop } from './Plan.jsx'
 import { chooseFixedWeek, saveRotation, scheduleModeOf } from '../lib/rotation.js'
@@ -15,7 +15,7 @@ import { chooseFixedWeek, saveRotation, scheduleModeOf } from '../lib/rotation.j
 const nav = vi.fn()
 vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => nav }))
 vi.mock('../lib/sound.js', () => ({ beep: vi.fn(), chime: vi.fn(), vibrate: vi.fn(), alertBuzz: vi.fn(), unlock: vi.fn() }))
-vi.mock('../lib/api.js', () => ({ api: vi.fn(() => Promise.resolve({})), beacon: vi.fn(), appBase: () => '/' }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn(() => Promise.resolve({})), beacon: vi.fn(), appBase: () => '/' }))
 const confirmSheet = vi.hoisted(() => vi.fn())
 vi.mock('../sheets.jsx', () => ({
   dayAssignSheet: vi.fn(), starterPlanSheet: vi.fn(), menuSheet: vi.fn(), confirmSheet,

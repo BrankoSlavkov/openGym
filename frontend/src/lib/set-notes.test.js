@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { setNoteOf, withSetNote, SET_NOTE_MAX } from './set-notes.js'
+import { setNoteOf, withSetNote, SET_NOTE_MAX } from './set-notes.ts'
 
 describe('a note on one set', () => {
   test('is kept trimmed and short, and a blank one is no note', () => {

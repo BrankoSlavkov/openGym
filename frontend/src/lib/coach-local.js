@@ -7,7 +7,7 @@
 //
 // This module is the one static importer of the core, which makes `import('./coach-local.js')`
 // the whole lazy chunk: the exercise catalogue, the prompts and the validator arrive together
-// and only after the user chose this mode. coach-api.js dispatches here the same way it
+// and only after the user chose this mode. coach-api.ts dispatches here the same way it
 // dispatches to the demo provider, so the screens never learn that there is no server.
 //
 // What is different from the server, and on purpose:
@@ -19,16 +19,16 @@
 //     riding into a backup or a sync.
 import * as payloadLib from '../../../api/coach/core/payload.js'
 import { runPipeline } from '../../../api/coach/core/pipeline.js'
-import { waitingProposal } from '../../../api/coach/core/pending.js'
-import { isDue, FINAL_FAILURES, RETRY_AFTER_MS } from '../../../api/coach/core/due.js'
-import { HTTP_PROVIDERS, baseUrlFor, phoneMayCall } from '../../../api/coach/core/providers.js'
-import anthropic from '../../../api/coach/core/adapters/anthropic.js'
-import openai from '../../../api/coach/core/adapters/openai.js'
-import gemini from '../../../api/coach/core/adapters/gemini.js'
-import minimax from '../../../api/coach/core/adapters/minimax.js'
-import openrouter from '../../../api/coach/core/adapters/openrouter.js'
-import compatible from '../../../api/coach/core/adapters/compatible.js'
-import { modelSubstitute, compatProfile, rememberCompatProfile } from '../../../api/coach/core/adapters/http.js'
+import { waitingProposal } from '../../../api/coach/core/pending.ts'
+import { isDue, FINAL_FAILURES, RETRY_AFTER_MS } from '../../../api/coach/core/due.ts'
+import { HTTP_PROVIDERS, baseUrlFor, phoneMayCall } from '../../../api/coach/core/providers.ts'
+import anthropic from '../../../api/coach/core/adapters/anthropic.ts'
+import openai from '../../../api/coach/core/adapters/openai.ts'
+import gemini from '../../../api/coach/core/adapters/gemini.ts'
+import minimax from '../../../api/coach/core/adapters/minimax.ts'
+import openrouter from '../../../api/coach/core/adapters/openrouter.ts'
+import compatible from '../../../api/coach/core/adapters/compatible.ts'
+import { modelSubstitute, compatProfile, rememberCompatProfile } from '../../../api/coach/core/adapters/http.ts'
 import { nativeFetch } from './capacitor-fetch.js'
 import { getApiKey } from './coach-secrets.js'
 import { loadCoachDevice, saveCoachDevice, coachLimits } from './coach-device.js'
@@ -58,7 +58,7 @@ export function setNotifier(fn) { notify = fn }
 /* ---------- what this phone is configured with ---------- */
 
 // Every request the phone's Coach sends goes through here: https:// anywhere, plain http:// only
-// to an address on the home network (#913, providers.js phoneMayCall). The setup screen refuses
+// to an address on the home network (#913, providers.ts phoneMayCall). The setup screen refuses
 // anything else up front; this is the same rule at the moment of the call, for a device file
 // written some other way and for every URL the adapters derive from the base.
 export const guardedFetch = (url, init) => (phoneMayCall(url)
@@ -95,7 +95,7 @@ async function bumpDaily() {
   await saveCoachDevice({ daily: { d: todayISO(), n: used + 1 } })
 }
 
-/* ---------- the API surface coach-api.js dispatches to ---------- */
+/* ---------- the API surface coach-api.ts dispatches to ---------- */
 
 export async function localStatus() {
   const d = await loadCoachDevice()
@@ -131,7 +131,7 @@ export const localAdapt = async (S, { today, entry, reason, text, activeId } = {
 /* Automatic reviews. On a server the cadence tick runs them (api/coach/cadence.js); a phone with
    its own key has no server, and for a long time nothing ran them at all: the setting saved, the
    reviews never came (Discord, 10-19). So the phone asks the same question, with the same rule
-   (core/due.js), whenever the app is open (lib/coach-schedule.js): right after a workout, and on
+   (core/due.ts), whenever the app is open (lib/coach-schedule.js): right after a workout, and on
    the first open after a weekly slot. `reviewedAt` in the device file is the run marker, kept
    the way the server keeps its job history: a review the model answered counts, whether it
    proposed something, found nothing to change, or answered unusably (paid for all the same).
@@ -243,7 +243,7 @@ async function run(S, kind, opts, d, adapter) {
       : null)
     lastError = { errorClass: attempt.errorClass, detail }
     last = { id: job.id, kind, outcome: 'failed', errorClass: attempt.errorClass, at: Date.now() }
-    // A failure no retry fixes settles the round, as on the server (core/due.js); a passing one
+    // A failure no retry fixes settles the round, as on the server (core/due.ts); a passing one
     // waits a quarter of an hour before the schedule tries again, instead of every minute.
     if (kind === 'review' && FINAL_FAILURES.has(attempt.errorClass)) await markReviewed()
     else if (kind === 'review' && opts.scheduled) scheduledFailAt = Date.now()

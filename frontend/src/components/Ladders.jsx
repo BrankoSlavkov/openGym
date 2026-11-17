@@ -2,15 +2,15 @@ import { useRef, useState } from 'react'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t, exerciseNameFor, exerciseNameClass } from '../lib/i18n.js'
-import { nameIn, said } from '../lib/a11y-name.js'
+import { nameIn, said } from '../lib/a11y-name.ts'
 import { uid, exerciseNameText } from '../lib/format.js'
 import { exOr } from '../lib/exercises.js'
 import { allLadders, reachedRung, saveLadder, deleteLadder, STEPS_MAX, NAME_MAX } from '../lib/ladders.js'
 import { LADDER_TOP, LADDER_BOTTOM } from '../lib/progression.js'
 import { exerciseDetailSheet, exercisePicker, confirmSheet } from '../sheets.jsx'
 import { DEFAULT_GLYPH, glyphOf } from '../lib/glyphs.js'
-import Icon from './Icon.jsx'
-import { Button, TextField } from './ui.jsx'
+import Icon from './Icon.tsx'
+import { Button, TextField } from './ui.tsx'
 
 /* Skill ladders (lib/ladders.js): bodyweight chains from easier to harder. Exercises → Ladders
    lists each one with the rungs you reached, and Train it puts the next rung into a routine on

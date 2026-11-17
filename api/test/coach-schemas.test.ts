@@ -14,9 +14,9 @@
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { CREATE_SCHEMA, REVIEW_SCHEMA } from '../coach/core/schemas.js';
-import { strictSchema } from '../coach/core/adapters/openai.js';
-import { geminiSchema, geminiSpec } from '../coach/core/adapters/gemini.js';
+import { CREATE_SCHEMA, REVIEW_SCHEMA } from '../coach/core/schemas.ts';
+import { strictSchema } from '../coach/core/adapters/openai.ts';
+import { geminiSchema, geminiSpec } from '../coach/core/adapters/gemini.ts';
 import { validatePlan } from '../coach/core/validate.js';
 
 const DAYS = ['0', '1', '2', '3', '4', '5', '6'];

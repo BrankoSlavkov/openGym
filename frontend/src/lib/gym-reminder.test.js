@@ -8,7 +8,7 @@ const mocks = vi.hoisted(() => ({
   get: null, configure: null, status: null, auth: null,
 }))
 vi.mock('./mobile.js', () => ({ get MOBILE() { return mocks.MOBILE } }))
-vi.mock('./api.js', () => ({ remoteAuth: () => mocks.auth }))
+vi.mock('./api.ts', () => ({ remoteAuth: () => mocks.auth }))
 vi.mock('@capacitor/core', () => ({
   Capacitor: { getPlatform: () => mocks.platform },
   registerPlugin: name => {

@@ -6,9 +6,9 @@ import { fmtDate, fmtNum, todayISO, uid } from '../lib/format.js'
 import { NOTE_MAX } from '../lib/history.js'
 import { tappable, useSheetKeyboard } from '../lib/use-sheet-keyboard.js'
 import { SPORTS, SPORT_LABEL, SPORT_ICON, SPORT_PRESETS, ACTIVITY_MIN_MAX, activitiesOf, withActivity, activityName } from '../lib/activities.js'
-import DateField from './DateField.jsx'
-import Icon from './Icon.jsx'
-import { Button, Stepper } from './ui.jsx'
+import DateField from './DateField.tsx'
+import Icon from './Icon.tsx'
+import { Button, Stepper } from './ui.tsx'
 
 // Activities (lib/activities.js): a run, a ride, a padel match. Most arrive by themselves from
 // Apple Health or Health Connect, or from an import; this sheet logs one by hand (web, no watch)

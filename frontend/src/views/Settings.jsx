@@ -1,4 +1,4 @@
-import { showsDashboard } from '../lib/trainer-api.js'
+import { showsDashboard } from '../lib/trainer-api.ts'
 import { recordHintsOn } from '../lib/set-records.js'
 import { setRecoveryHint } from '../lib/recovery-hint.js'
 import { useEffect, useRef, useState, forwardRef, useSyncExternalStore } from 'react'
@@ -10,7 +10,7 @@ import { phoneSessionSupported } from '../lib/phone-workout.js'
 import { workoutControls } from '../lib/workout-controls.js'
 import { speedUnitOf } from '../lib/speed.js'
 import { formulaOf, FORMULA_NAMES } from '../lib/onerm.ts'
-import { copyText } from '../lib/clipboard.js'
+import { copyText } from '../lib/clipboard.ts'
 import { useUI } from '../store/useUI.js'
 import { activeGym, gymLabel, switchGym } from '../lib/gym-inventory.js'
 import { startTour, TUTORIALS, TUTORIAL_COPY, tutorialDone } from '../lib/tour.js'
@@ -20,7 +20,7 @@ import { BAR_TYPES, ownBarDefault } from '../lib/bar.js'
 import { dumbbellsOf, ownsNoDumbbells } from '../lib/dumbbells.js'
 import { activeProfile as activeEquipment, benchKindOf, withBench, profileEquipment, ACC_V } from '../lib/equipment.js'
 import { effortOf } from '../lib/history.js'
-import NewExDefaultsSheet, { newExLine } from '../components/NewExDefaultsSheet.jsx'
+import NewExDefaultsSheet, { newExLine } from '../components/NewExDefaultsSheet.tsx'
 import { figureOf } from '../lib/exercises.js'
 import { unlock, chime, playOnSilentSupported, vibrateSupported, appleTouchDevice } from '../lib/sound.js'
 import { REST_SOUND_IDS, restSoundOf } from '../lib/rest-sounds.js'
@@ -43,13 +43,13 @@ import VoiceSettings from '../components/VoiceSettings.jsx'
 import { bandsSheet } from '../components/Bands.jsx'
 import { bandsOf } from '../lib/bands.js'
 import { sampleCue } from '../lib/spoken-cues.js'
-import { muscleTargetsSheet } from '../components/WeeklySets.jsx'
+import { muscleTargetsSheet } from '../components/WeeklySets.tsx'
 import { aboutYouSheet } from '../components/StrengthLevel.jsx'
-import { api, webauthnOK, passkeyRegister, passkeyError, IS_ANDROID } from '../lib/api.js'
+import { api, webauthnOK, passkeyRegister, passkeyError, IS_ANDROID } from '../lib/api.ts'
 import { pushSupported, enablePush, disablePush, sendTestPush, syncPushSubscription } from '../lib/push.js'
 import { wakeLockSupported } from '../lib/wakelock.js'
 import { t, tn, LANGS, INSTR_LANGS, EXERCISE_NAME_LANGS, baseLang, dateLocale } from '../lib/i18n.js'
-import { nameIn, said } from '../lib/a11y-name.js'
+import { nameIn, said } from '../lib/a11y-name.ts'
 import { effectiveLang } from '../lib/default-lang.js'
 import { DEMO, REPO } from '../lib/demo.js'
 import { MOBILE, isAndroid, shareExport, shareExportBlob, syncReminder } from '../lib/mobile.js'
@@ -65,15 +65,15 @@ import { checkForUpdate, downloadAndInstall, fetchChecksum, forgetDownloadedUpda
 import { APK_VARIANT, VARIANT_NAMES } from '../lib/apk-variant.js'
 import { BUILTIN_PX } from '../lib/anim-quality.js'
 import { getChannel, gymReminderBuilt } from '../lib/channel.js'
-import { forgetCoach } from '../lib/coach-api.js'
+import { forgetCoach } from '../lib/coach-api.ts'
 import { coachAvailable } from '../lib/coach.js'
 import { REST_MAX, REST_PAUSE_MIN, REST_PAUSE_MAX, fmtRest, fmtDuration } from '../lib/duration.js'
 import { starterPlanSheet, confirmSheet, importFromApp, importFromHevy, equipmentProfileSheet, plateInventorySheet, dumbbellInventorySheet, barDefaultsSheet, menuSheet } from '../sheets.jsx'
-import Icon from '../components/Icon.jsx'
+import Icon from '../components/Icon.tsx'
 import { durationSheet } from '../components/DurationWheel.jsx'
 import { showsConnection, showsLocalLine } from '../components/SyncBanner.jsx'
 import BackupFolderRow, { useBackupFolder, autoBackupSubtitle } from '../components/BackupFolderRow.jsx'
-import AppIconRow from '../components/AppIconRow.jsx'
+import AppIconRow from '../components/AppIconRow.tsx'
 import { AnimationQualityRow } from '../components/Animations.jsx'
 import { ServerSyncSection, KeptChangesRows, leaveServer, connectServer, passkeySignIn } from '../components/ServerSync.jsx'
 import { passwordOn, PasswordRow, openPasswordSignIn, openPasswordRegister } from '../components/PasswordAuth.jsx'
@@ -82,10 +82,10 @@ import { OidcRow } from '../components/OidcAccount.jsx'
 import { DeleteAccountRow } from '../components/DeleteAccount.jsx'
 import { warmupAutoOf } from '../lib/warmup-ramp.js'
 import { MACHINE_EQ, machinesSummary } from '../lib/machine-kinds.js'
-import { Section, Row, SelectRow, Switch, Segmented, Button, TextField, SearchField } from '../components/ui.jsx'
+import { Section, Row, SelectRow, Switch, Segmented, Button, TextField, SearchField } from '../components/ui.tsx'
 import LiveWidgetSettings, { LiveWidgetCustomise } from '../components/LiveWidgetSettings.jsx'
 import { liveOff } from '../lib/live-activity.js'
-import ForgottenRows from '../components/ForgottenRows.jsx'
+import ForgottenRows from '../components/ForgottenRows.tsx'
 import { POLICIES_FOR, POLICY_NAME, POLICY_DESC, profileRule } from '../lib/progression.js'
 import { STEPS, profileStep, stepOverrides, applyStepToAll, fmtStepLabel } from '../lib/weight-step.js'
 import { PAGES, ROOT_GROUPS, WATCH_PAGES, pageVisible, onRoot, searchSettings, pageTrail } from './settings-pages.js'
@@ -97,12 +97,12 @@ import WearSettingsPage from './WearSettings.jsx'
 import IntegrationsPage from './Integrations.jsx'
 import ApiTokensPage from './ApiTokens.jsx'
 import MyTrainerPage from './MyTrainer.jsx'
-import { libraryOn } from '../lib/shared-api.js'
+import { libraryOn } from '../lib/shared-api.ts'
 import ModulesPage from './Modules.jsx'
 import { isOn, presetOf } from '../lib/modules.js'
 import { presetCopy } from '../lib/modules-copy.js'
-import { reportSheet } from '../components/ReportSheet.jsx'
-import { csvExportSheet } from '../components/CsvExportSheet.jsx'
+import { reportSheet } from '../components/ReportSheet.tsx'
+import { csvExportSheet } from '../components/CsvExportSheet.tsx'
 import GymReminderPage, { GymEditPage, GymFindPage } from './GymReminder.jsx'
 import { readGymConfig } from '../lib/gym-reminder.js'
 import { THEMES, shownThemes, inSeason, seasonChoice, activeSeason } from '../lib/seasonal.js'
@@ -110,14 +110,14 @@ import { adventOf, adventOpenable } from '../lib/advent.js'
 import { openSeasonal } from '../components/Seasonal.jsx'
 import { useNfcSupported, nfcStickerSheet } from '../components/Nfc.jsx'
 import { dailyModeOf, settleAll } from '../lib/weigh-ins.js'
-import { voiceShortcutsSheet, voiceRowTitle } from '../components/VoiceShortcuts.jsx'
+import { voiceShortcutsSheet, voiceRowTitle } from '../components/VoiceShortcuts.tsx'
 import { readOrientation, setOrientation } from '../lib/orientation.js'
 import { AvatarFace, AvatarSection } from '../components/Avatar.jsx'
 import { useOfflineBuild } from '../lib/use-offline-build.js'
 import { offlineBuild } from '../lib/build-caps.js'
 import NetworkLogPage, { NetworkLogRow } from './NetworkLog.jsx'
 import ReminderSounds from '../components/ReminderSounds.jsx'
-import DisplayRows from '../components/DisplayRows.jsx'
+import DisplayRows from '../components/DisplayRows.tsx'
 
 /* Settings (v1.3.11). The root is one screen: an account card, a row per page under four headings
    (/settings/<page>), and a search over every row. Rare things live one level further down
@@ -1085,7 +1085,7 @@ export default function Settings({ page = null, find = null, via = null, entryKe
         </div>
         {/* The little pictures in the app (the streak flame, medals, freezes, the advent calendar):
             openGym's own icons by default, which follow the accent and the theme, or the phone's
-            emoji for those who like them (components/Glyph.jsx). Synced like the theme. */}
+            emoji for those who like them (components/Glyph.tsx). Synced like the theme. */}
         <Row icon="sparkles" iconTint="var(--orange)" title={t('Icons')} subtitle={t('The flame, the medals and friends.')}>
           <Segmented className="seg-inline"
             options={[{ value: 'opengym', label: 'openGym' }, { value: 'emoji', label: t('Emoji') }]}
@@ -1144,7 +1144,7 @@ export default function Settings({ page = null, find = null, via = null, entryKe
         {/* NFC stickers (components/Nfc.jsx): only where the phone or the browser can write one. */}
         {nfcOK && <Row icon="nfc" iconTint="var(--blue)" title={t('Set up an NFC sticker')}
           subtitle={t('Tap it at the gym to start your workout.')} accessory="chevron" onClick={nfcStickerSheet} />}
-        {/* Siri & Shortcuts / Assistant (components/VoiceShortcuts.jsx): the phone app only. */}
+        {/* Siri & Shortcuts / Assistant (components/VoiceShortcuts.tsx): the phone app only. */}
         {MOBILE && platformNow() && <Row icon="chat" iconTint="var(--purple)" title={voiceRowTitle()}
           subtitle={platformNow() === 'android' ? t('Start a workout or log your weight from the app icon.') : t('Start a workout or log your weight by voice.')} accessory="chevron" onClick={voiceShortcutsSheet} />}
         {/* The Home summary is optional; hiding it leaves weight logging, history and Stats intact. */}
@@ -1165,7 +1165,7 @@ export default function Settings({ page = null, find = null, via = null, entryKe
           subtitle={t('A small card when a new week or month starts: what the last one added up to.')}>
           <Switch aria-label={t('Week and month recap')} checked={S.recap !== false} onChange={v => update(s => { s.recap = v })} />
         </Row>}
-        {/* This week's sets for the muscle with the most room, under the streak (components/WeeklySets.jsx). */}
+        {/* This week's sets for the muscle with the most room, under the streak (components/WeeklySets.tsx). */}
         <Row icon="figureStrength" iconTint="var(--teal)" title={t('Weekly sets on Home')}
           subtitle={t('The muscle with the most room left this week, under your streak.')}>
           <Switch aria-label={t('Weekly sets on Home')} checked={S.homeMuscleSets === true} onChange={v => update(s => { s.homeMuscleSets = v })} />

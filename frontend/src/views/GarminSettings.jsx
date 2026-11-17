@@ -4,7 +4,7 @@
 // Garmin Connect's own pairing is the list. The words come from lib/garmin-view.js.
 import { useEffect, useState } from 'react'
 import { t } from '../lib/i18n.js'
-import { Section, Row, Switch } from '../components/ui.jsx'
+import { Section, Row, Switch } from '../components/ui.tsx'
 import { readWatchPrefs, writeWatchPrefs, onWatchPrefs } from '../lib/watch-settings.js'
 import { garminCall } from '../lib/watch-sync.js'
 import { garminView, garminDeviceLine, GARMIN_STORE } from '../lib/garmin-view.js'

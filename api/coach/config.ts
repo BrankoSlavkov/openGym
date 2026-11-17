@@ -26,9 +26,9 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { HTTP_PROVIDERS, baseUrlFor } from './core/providers.js';
+import { HTTP_PROVIDERS, baseUrlFor } from './core/providers.ts';
 import { on as chatgptPlanOn } from './chatgpt-plan.ts';
-import { MAX_OUTPUT_TOKENS } from './core/adapters/http.js';
+import { MAX_OUTPUT_TOKENS } from './core/adapters/http.ts';
 
 const DATA = process.env.DATA_DIR || '/data';
 const FILE = path.join(DATA, 'coach.json');
@@ -67,7 +67,7 @@ export const PROVIDERS = {
     apiKeyEnv: 'CODEX_API_KEY', oauthEnv: null, credentialHomeEnv: 'CODEX_HOME'
   },
   // The plain-HTTPS providers — Anthropic, OpenAI, Gemini and any OpenAI-compatible endpoint.
-  // Described once in core/providers.js so the phone's picker and this table cannot disagree.
+  // Described once in core/providers.ts so the phone's picker and this table cannot disagree.
   // They spawn nothing and need no runtime in the image: the default api image runs them.
   ...HTTP_PROVIDERS,
   // A ChatGPT Plus or Pro plan through Sign in with ChatGPT (chatgpt-plan.js), a preview behind

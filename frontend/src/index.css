@@ -267,7 +267,7 @@ button,.chip,.tile,.item,.wday,.cal-d,.swatch,.hm-c,.lrow,.seg button,.stp butto
 
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 
-/* A glyph (components/Glyph.jsx): openGym's icon by default, the system emoji with Settings →
+/* A glyph (components/Glyph.tsx): openGym's icon by default, the system emoji with Settings →
    Icons on Emoji (data-icons on <html>, set by App.jsx). Both sit in the page, one shows. */
 .glyph{display:inline-flex;align-items:center;vertical-align:-.125em;line-height:1}
 .glyph > svg{display:block}
@@ -473,7 +473,7 @@ h4.sec{
 /* The body-weight card header (Home and Stats): title on the left, Goal + Log on the right. In
    German the title and the two buttons ("Ziel", "+ Eintragen") outgrow a 320px card by about
    55px, so the button pair may drop to a second line — still flush right, hence the auto margin. */
-/* One card header for Home (components/CardHead.jsx, redesign 1.4.5 P2): icon, a small line, a
+/* One card header for Home (components/CardHead.tsx, redesign 1.4.5 P2): icon, a small line, a
    17/600 title, an optional subtitle, at most one trailing control. */
 .card-head{display:flex;align-items:center;gap:8px;min-width:0}
 .card-head-main{display:flex;align-items:center;gap:10px;flex:1;min-width:0;text-align:start;color:inherit}
@@ -1025,7 +1025,7 @@ body.chips-dragging *{cursor:inherit}
 .measure-select{margin-bottom:10px;background:var(--surface-2)}
 .measure-preview{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:11px;padding-top:10px;border-top:1px solid var(--sep);font-size:var(--fs-caption);color:var(--label-2)}
 .measure-preview b{color:var(--label);font-weight:500}
-/* Body composition from the health hub (components/HealthBodyCard.jsx): two tiles a row. */
+/* Body composition from the health hub (components/HealthBodyCard.tsx): two tiles a row. */
 .hc-body{margin-top:12px}
 .hc-body-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 10px;margin-top:10px}
 .hc-body-cell{min-width:0;display:flex;flex-direction:column;gap:2px}
@@ -1782,7 +1782,7 @@ button.whdr-gym{color:var(--acc-ink);cursor:pointer}
 .setrow.done .stp .val i,.setrow.done .effcell.is-empty{color:var(--label)}
 .setrow.done .n{background:var(--acc);color:var(--on-acc)}
 
-/* Swipe on sets (v1.3.11, components/SwipeRow.jsx). The row slides over two panes: Copy at the
+/* Swipe on sets (v1.3.11, components/SwipeRow.tsx). The row slides over two panes: Copy at the
    start of the line, Delete at its end, each as wide as the swipe has gone and zero wide at rest.
    pan-y leaves vertical scroll to the browser and hands sideways moves to the row. */
 .swrow{position:relative;overflow:hidden;border-radius:10px;touch-action:pan-y;-webkit-touch-callout:none}
@@ -2014,7 +2014,7 @@ button.whdr-gym{color:var(--acc-ink);cursor:pointer}
 .setnote-line span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 @media (max-width:359px){.setnote-line{padding-inline-start:24px}}
 .setnote-mark{display:inline-block;margin-inline-start:3px;font-size:var(--fs-caption2);color:var(--gold-ink);vertical-align:-1px}
-/* Records on the set (lib/set-records.js, components/SetRecord.jsx). The trophy line arrives once,
+/* Records on the set (lib/set-records.js, components/SetRecord.tsx). The trophy line arrives once,
    the moment the set is ticked: a short rise from just under full size, then it sits still. Rare
    enough to earn a little motion; reduced motion keeps only the fade. The hint before a set is
    quieter still, the same size and colour as the plan line. */
@@ -2559,7 +2559,7 @@ body.no-tabbar #timer.countin{box-shadow:inset 0 var(--hair) 0 var(--acc),0 -10p
 }
 .bm-v{flex:1;min-width:0;height:auto;max-height:min(46vh,340px)}
 .bm-ph{height:200px}                       /* holds the space while the geometry loads */
-/* The thumbnail beside a routine's name (components/MiniBodyMap.jsx): front and back, row height. */
+/* The thumbnail beside a routine's name (components/MiniBodyMap.tsx): front and back, row height. */
 .bm-mini-wrap{flex:none;display:flex}
 .bodymap.bm-mini{gap:2px;--bm-base:color-mix(in srgb,var(--label) 26%,var(--surface))}
 .bodymap.bm-mini .bm-v{flex:none;height:46px;width:auto;max-height:none}
@@ -2955,7 +2955,7 @@ button.mchip{border:none;font:inherit;font-size:var(--fs-caption);cursor:pointer
 body.no-tabbar #toast{bottom:calc(24px + var(--sab))}
 body.no-tabbar.resting #toast{bottom:calc(100px + var(--sab))}
 
-/* --- back to top (components/ScrollTopButton.jsx) --- */
+/* --- back to top (components/ScrollTopButton.tsx) --- */
 /* Above the tab bar, at the end of the 560px column on a computer, and up over the rest bar while
    it is there. Only transform and opacity move: it pops in with a small overshoot and eases out
    without one. Visibility goes last on the way out, so a hidden button takes no taps or focus.
@@ -3093,7 +3093,7 @@ button.cal-wk:active{background:var(--press-fill)}
 .streak-howto li .wk-legend-g{margin-top:1px}
 @keyframes howto-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){.streak-howto{animation:none}}
-/* --- openGym date field + picker (#809, components/DateField.jsx) ---
+/* --- openGym date field + picker (#809, components/DateField.tsx) ---
    The field is a button dressed as the field or row value it replaces; the picker reuses the
    calendar's cells above. Cells are at least 44px tall: at 320px seven columns cannot also be
    44px wide, so the grid gives up gap before it gives up height. */
@@ -3638,12 +3638,12 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 .stp .val .stp-word{font-weight:600;min-width:2.5em;text-align:center;display:inline-block}
 
 /* ------------------------------------------------- 1.4.5 insight cards -- */
-/* Weekly sets per muscle (components/WeeklySets.jsx), strength levels (StrengthLevel.jsx) and the
+/* Weekly sets per muscle (components/WeeklySets.tsx), strength levels (StrengthLevel.jsx) and the
    week/month recap (Recap.jsx). Folded in from insights.css in the 1.4.5 features pass, on the
    shared tokens: text roles, the status inks, rows that divide with the list's hairline rule
    (between rows only, never above the first), 44px rows for what is tapped. */
 
-/* Stats redesign: the one bar system (components/StatBars.jsx). Every list of amounts on Stats is a
+/* Stats redesign: the one bar system (components/StatBars.tsx). Every list of amounts on Stats is a
    .sbar-row: the name, a track with the fill, an optional target band and an optional plan tick,
    and the value with tabular figures at the end. Fill colours by tone: grey for what supports the
    screen and for room left under a range, the green ink in range, the orange ink past it (the
@@ -4270,7 +4270,7 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 .ladder-tag{flex:none;font-size:var(--fs-caption);font-weight:600;color:var(--acc-ink)}
 .ladder-edit-list{list-style:none;padding:0}
 .ladder-num{flex:none;width:22px;text-align:center;color:var(--label-2);font-variant-numeric:tabular-nums}
-/* Your own kit (components/KitChips.jsx): the chips, then a field with a plus to name a new one. */
+/* Your own kit (components/KitChips.tsx): the chips, then a field with a plus to name a new one. */
 .kit-add{display:flex;align-items:center;gap:8px}
 .kit-add .input{flex:1;min-width:0}
 
@@ -4299,7 +4299,7 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 @keyframes voice-rec-pulse{from{opacity:1}to{opacity:.55}}
 @media (prefers-reduced-motion:reduce){.voice-rec .lrow-i{animation:none}}
 
-/* Settings → Look & Home → Text size (components/DisplayRows.jsx): the preview over the choices,
+/* Settings → Look & Home → Text size (components/DisplayRows.tsx): the preview over the choices,
    a set row's three lines in the app's own roles, so it grows exactly as the app does. */
 .tsz-preview{background:var(--surface);border-radius:var(--r-card);padding:12px 16px;margin-bottom:14px;text-align:start;overflow-wrap:anywhere}
 .tsz-p-t{font-size:var(--fs-title3);line-height:var(--lh-title);font-weight:600;letter-spacing:var(--ls-title)}
@@ -4314,7 +4314,7 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 .auto-ended-s{font-size:var(--fs-footnote);color:var(--label-2);margin-top:2px}
 .auto-ended .btn{flex:none;margin-inline-start:auto}
 
-/* "Still training?" / "Looks like you left the gym" (components/ForgottenPrompt.jsx). */
+/* "Still training?" / "Looks like you left the gym" (components/ForgottenPrompt.tsx). */
 .fgt{text-align:center;padding:6px 2px 2px}
 .fgt-i{display:grid;place-items:center;width:52px;height:52px;margin:0 auto 10px;border-radius:99px;background:var(--acc-soft);color:var(--acc-ink);font-size:var(--fs-title2)}
 .fgt h3{margin:0 0 6px}
@@ -4525,7 +4525,7 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 .gl-and-img{width:44px;height:44px;border-radius:50%;background:#fff;flex:none;display:block;overflow:hidden}
 .gl-and-acts{display:flex;flex-wrap:wrap;gap:4px 20px;padding-top:2px;font-size:.875rem;font-weight:600;color:var(--acc-ink)}
 
-/* The strip on the workout screen (components/LiveCard.jsx). */
+/* The strip on the workout screen (components/LiveCard.tsx). */
 .gl-card{padding:12px 14px;--gl-ink:var(--label);--gl-ink-2:var(--label-2)}
 .gl-card-preview{margin:0}
 .gl-strip{display:flex;flex-direction:column;gap:4px;min-width:0}

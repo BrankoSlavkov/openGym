@@ -45,7 +45,7 @@ describe.skipIf(!HAVE_API)('log_workout against the real api', () => {
     fs.writeFileSync(path.join(dataDir, 'secret'), SECRET, { mode: 0o600 })
     fs.writeFileSync(path.join(dataDir, 'db.json'), JSON.stringify({ users: [{ id: UID, name: 'Matt', created: new Date().toISOString() }], creds: [], subs: [], invites: [] }))
     fs.writeFileSync(path.join(dataDir, `state-${UID}.json`), JSON.stringify(DOC))
-    child = spawn(process.execPath, ['server.js'], {
+    child = spawn(process.env.BUN_EXEC_PATH || 'bun', ['server.ts'], {
       cwd: API, stdio: ['ignore', 'pipe', 'pipe'],
       env: { ...process.env, PORT: '0', DATA_DIR: dataDir, ORIGIN: 'http://localhost:8080', RP_ID: 'localhost' },
     })
@@ -65,9 +65,9 @@ describe.skipIf(!HAVE_API)('log_workout against the real api', () => {
     // The read tools read the same directory the server writes, as on a real install.
     process.env.OPENGYM_DATA = dataDir
     process.env.OPENGYM_UID = UID
-    ;({ logWorkout } = await import('../src/write-tools.js'))
-    ;({ getState } = await import('../src/state.js'))
-    ;({ TOOLS } = await import('../src/tools.js'))
+    ;({ logWorkout } = await import('../src/write-tools.ts'))
+    ;({ getState } = await import('../src/state.ts'))
+    ;({ TOOLS } = await import('../src/tools.ts'))
   }, 30000)
   afterAll(() => {
     child?.kill('SIGKILL')

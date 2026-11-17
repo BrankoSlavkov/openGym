@@ -8,8 +8,8 @@ import { t, tn, dateLocale } from '../lib/i18n.js'
 import { netLog, subscribeNetLog, hostsOf } from '../lib/net-log.js'
 import { useOfflineBuild } from '../lib/use-offline-build.js'
 import { useStore } from '../store/useStore.js'
-import { Section, Row } from '../components/ui.jsx'
-import Icon from '../components/Icon.jsx'
+import { Section, Row } from '../components/ui.tsx'
+import Icon from '../components/Icon.tsx'
 
 // netLog() hands out the same object until something is logged, so the snapshot is stable.
 let snap = null

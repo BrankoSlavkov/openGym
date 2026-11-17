@@ -78,8 +78,8 @@ export const SKIP_TESTS = [
   "install channel > the Play flavour says \"play\" and leaves the updater out",
   "install channel > the F-Droid flavour carries nothing from Google Play services",
   // src/lib/coach-api.i18n.test.js
-  "a language picked after coach-api.js loaded > changes what the same map says, and switching back restores the English",
-  "a language picked after coach-api.js loaded > reaches the own-key phone lines, with the provider detail still attached",
+  "a language picked after coach-api.ts loaded > changes what the same map says, and switching back restores the English",
+  "a language picked after coach-api.ts loaded > reaches the own-key phone lines, with the provider detail still attached",
   // src/lib/da-locale.test.js
   "Danish locale > is selectable, with Danish dates, and a Danish browser picks it",
   "Danish locale > speaks Danish, keeps the contributor’s words and the numbers in their sentences",

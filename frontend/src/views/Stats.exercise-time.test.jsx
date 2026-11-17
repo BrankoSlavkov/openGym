@@ -13,7 +13,7 @@ vi.mock('../sheets.jsx', () => ({
 }))
 vi.mock('../components/Heatmap.jsx', () => ({ default: () => React.createElement('div') }))
 vi.mock('../components/LineChart.jsx', () => ({ default: () => React.createElement('div') }))
-vi.mock('../components/BodyMap.jsx', () => ({ default: () => React.createElement('div'), BodyMapLegend: () => null }))
+vi.mock('../components/BodyMap.tsx', () => ({ default: () => React.createElement('div'), BodyMapLegend: () => null }))
 
 import { ExerciseTimeCard } from './Stats.jsx'
 

@@ -5,11 +5,11 @@
    logged during the hold, with nothing stashed. (QA 2026-10-06, also in v1.3.9.) */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../lib/api.js', () => ({ api: vi.fn(), setRemoteAuth: vi.fn() }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn(), setRemoteAuth: vi.fn() }))
 vi.mock('./useUI.js', () => ({ useUI: { getState: () => ({ toast: vi.fn(), stopRest: vi.fn(), abandonWork: vi.fn() }) } }))
 vi.mock('../sheets.jsx', () => ({ askAddDeviceData: async () => true }))
 
-import { api } from '../lib/api.js'
+import { api } from '../lib/api.ts'
 import { DEF, useStore } from './useStore.js'
 
 const clone = v => JSON.parse(JSON.stringify(v))

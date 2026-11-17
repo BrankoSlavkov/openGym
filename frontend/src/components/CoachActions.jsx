@@ -8,7 +8,7 @@ import { useUI } from '../store/useUI.js'
 import { EXIDX } from '../lib/exercises.js'
 import { confirmSheet, exerciseDetailSheet, customExSheet, startBuiltSession, startFlow, planImportSheet } from '../sheets.jsx'
 import { parsePlan } from '../lib/plan-share.js'
-import Icon from './Icon.jsx'
+import Icon from './Icon.tsx'
 
 const exName = id => (EXIDX[id]?.n) || t('Unknown exercise')
 const itemLine = it => `${exName(it.id)} · ${it.sec ? t('{0} × {1} s', it.sets, it.sec) : t('{0} × {1}', it.sets, it.reps)}`

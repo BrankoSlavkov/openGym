@@ -19,7 +19,7 @@ import { MEASUREMENT_FIELDS, builtinCsvColumn, customCsvColumn, customDisplayVal
 import { hasCompletedWork, isWarmupRow, isFailureSet, isSideSet, dropsOf } from './workout-model.js'
 import { bandsCell, bandsOf } from './bands.js'
 import { workoutDay } from './history.js'
-import { setNoteOf } from './set-notes.js'
+import { setNoteOf } from './set-notes.ts'
 import { setTagCell } from './set-tags.js'
 import { hasLevel } from './incline.js'
 
@@ -89,6 +89,8 @@ function exerciseFor(S, id) {
  * Rows of the workout file. `from`/`to` limit it to a stretch of days. Only completed sets are
  * written, the way the history and the text export count them: an unticked set never happened.
  */
+/** @param {import('./domain-types.ts').AppState} S
+ * @param {{from?: string | null, to?: string | null}} [range] */
 export function workoutRows(S, { from = null, to = null } = {}) {
   const unit = S.unit === 'lb' ? 'lb' : 'kg'
   const rows = []
@@ -103,7 +105,7 @@ export function workoutRows(S, { from = null, to = null } = {}) {
       const exCells = [name, e.id, ex?.bp || '', e.sg ? groups.get(e.sg) : '']
       let no = 0, noteLeft = e.note || ''
       // The entry's note rides on its first row only: the importer keeps one note per exercise.
-      // A set's own note (lib/set-notes.js) on that set's row, its first one for a per-side set.
+      // A set's own note (lib/set-notes.ts) on that set's row, its first one for a per-side set.
       // The tempo the set was done at (#572): its own, else the exercise's; blank without one.
       // The bands a set was done with (lib/bands.js), by name: "Red + Yellow"; blank without any.
       // The set's colour tag (lib/set-tags.js) on every row of that set, drops and sides too.
@@ -153,6 +155,8 @@ export const workoutsCSV = (S, range) => csvText(WORKOUT_COLUMNS, workoutRows(S,
  * column each, under their own name with their unit in brackets and their values in it (#718;
  * lib/measurements.js customCsvColumn).
  */
+/** @param {import('./domain-types.ts').AppState} S
+ * @param {{from?: string | null, to?: string | null}} [range] */
 export function bodyCSV(S, { from = null, to = null } = {}) {
   const unit = S.unit === 'lb' ? 'lb' : 'kg'
   const inside = d => d && (!from || d >= from) && (!to || d <= to)

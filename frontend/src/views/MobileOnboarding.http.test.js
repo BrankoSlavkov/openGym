@@ -6,8 +6,8 @@ import { describe, expect, it, vi } from 'vitest'
 vi.mock('../store/useStore.js', () => ({ useStore: () => ({}) }))
 vi.mock('../store/useUI.js', () => ({ useUI: { getState: () => ({}) } }))
 vi.mock('../sheets.jsx', () => ({ askAddDeviceData: () => {} }))
-vi.mock('../components/Icon.jsx', () => ({ default: () => null }))
-vi.mock('../components/ui.jsx', () => ({ Button: () => null }))
+vi.mock('../components/Icon.tsx', () => ({ default: () => null }))
+vi.mock('../components/ui.tsx', () => ({ Button: () => null }))
 
 const { plainHttp } = await import('./MobileOnboarding.jsx')
 

@@ -9,7 +9,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t, exerciseNameFor } from '../lib/i18n.js'
-import { nameIn } from '../lib/a11y-name.js'
+import { nameIn } from '../lib/a11y-name.ts'
 import { EXIDX } from '../lib/exercises.js'
 import { countsWarmups, workoutDay } from '../lib/history.js'
 import { todayISO } from '../lib/format.js'
@@ -27,8 +27,8 @@ import {
   SHARE_TEMPLATES, SHARE_LOOKS, SHARE_FORMATS, SHARE_FORMAT_IDS, SHARE_BG_PRESETS, SHARE_INK_PRESETS, SHARE_HI_PRESETS, ZOOM_MAX,
 } from '../lib/share-card.js'
 import { CustomThumb } from './CustomMedia.jsx'
-import { Button, Segmented, Slider } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Button, Segmented, Slider } from './ui.tsx'
+import Icon from './Icon.tsx'
 
 const toast = m => useUI.getState().toast(m)
 
@@ -158,11 +158,11 @@ export default function ShareWorkout({ w, close }) {
   const show = shownElements(hidden)
   const photos = useMemo(() => workoutPhotos(w), [w])
 
-  // The body drawing is ~90 KB and lazy everywhere else too (components/BodyMap.jsx).
+  // The body drawing is ~90 KB and lazy everywhere else too (components/BodyMap.tsx).
   useEffect(() => {
     if (!model.levels || !show.map || body) return
     let alive = true
-    import('../lib/body-geometry.js').then(m => { if (alive) setBody(m.default) }).catch(() => {})
+    import('../lib/body-geometry.ts').then(m => { if (alive) setBody(m.default) }).catch(() => {})
     return () => { alive = false }
   }, [model.levels, show.map, body])
 

@@ -7,7 +7,7 @@ import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t, tn } from '../lib/i18n.js'
 import { fmtAgo, changeCount } from '../lib/format.js'
-import { passkeyLogin, passkeyError, webauthnOK } from '../lib/api.js'
+import { passkeyLogin, passkeyError, webauthnOK } from '../lib/api.ts'
 import { MOBILE, shareExport } from '../lib/mobile.js'
 import { offlineBuild } from '../lib/build-caps.js'
 import { syncMedia } from '../lib/media-sync.js'
@@ -15,7 +15,7 @@ import { DEMO } from '../lib/demo.js'
 import { askAddDeviceData, menuSheet } from '../sheets.jsx'
 import { ConnectSheet, CfAccessSheet } from '../views/MobileOnboarding.jsx'
 import { passwordOn, openPasswordSignIn } from './PasswordAuth.jsx'
-import { Section, Row, Button } from './ui.jsx'
+import { Section, Row, Button } from './ui.tsx'
 
 const ui = () => useUI.getState()
 const toast = m => ui().toast(m)

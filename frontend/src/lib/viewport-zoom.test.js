@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
-import { WEB_VIEWPORT, MOBILE_VIEWPORT, mobileViewport, isIosSafari, guardFocusZoom } from './viewport-zoom.js'
+import { WEB_VIEWPORT, MOBILE_VIEWPORT, mobileViewport, isIosSafari, guardFocusZoom } from './viewport-zoom.ts'
 
 const html = readFileSync(new URL('../../index.html', import.meta.url), 'utf8')
 const docWith = content => {

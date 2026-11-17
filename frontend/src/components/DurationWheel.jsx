@@ -21,7 +21,7 @@ import { t } from '../lib/i18n.js'
 import { vibrate } from '../lib/sound.js'
 import { useUI } from '../store/useUI.js'
 import { REST_MAX, clampDuration, splitDuration, joinDuration, fmtDuration, durationText } from '../lib/duration.js'
-import { Button } from './ui.jsx'
+import { Button } from './ui.tsx'
 
 // One row of a wheel, in CSS px. Kept in step with --dw-item in index.css.
 export const WHEEL_ITEM = 40

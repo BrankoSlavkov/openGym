@@ -6,11 +6,11 @@
    reload of a signed-in browser is not one. */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../lib/api.js', () => ({ api: vi.fn(), setRemoteAuth: vi.fn() }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn(), setRemoteAuth: vi.fn() }))
 vi.mock('./useUI.js', () => ({ useUI: { getState: () => ({ toast: vi.fn() }) } }))
 vi.mock('../sheets.jsx', () => ({ askAddDeviceData: vi.fn(async () => 'skip') }))
 
-import { api } from '../lib/api.js'
+import { api } from '../lib/api.ts'
 import { useStore } from './useStore.js'
 
 const bootSignedIn = async () => {

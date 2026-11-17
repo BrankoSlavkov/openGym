@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef } from 'react'
 import { useUI } from '../store/useUI.js'
 import { keyboardOpen } from '../lib/viewport-guard.js'
 import { dismissesOnRelease, scrolledAboveTop } from '../lib/sheet-dismiss.js'
-import { trapTab, canTakeFocusBack } from '../lib/focus-trap.js'
+import { trapTab, canTakeFocusBack } from '../lib/focus-trap.ts'
 
 // Putting the page back after a sheet closes takes up to three goes (see the un-pin below): now,
 // next frame, and once the keyboard's dismiss animation is over. Anything else that wants to
@@ -240,7 +240,7 @@ export default function Modals() {
     if (!sheets.length) return
     const onKey = e => {
       if (e.key === 'Escape') { const top = useUI.getState().sheets[useUI.getState().sheets.length - 1]; if (top && !top.locked) useUI.getState().closeSheet(top.id) }
-      // Tab stays inside the sheet on top (lib/focus-trap.js).
+      // Tab stays inside the sheet on top (lib/focus-trap.ts).
       if (e.key === 'Tab') {
         const boxes = document.querySelectorAll('#modal-root [role="dialog"]')
         const to = trapTab(boxes[boxes.length - 1], document.activeElement, e.shiftKey)

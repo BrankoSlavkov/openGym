@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { photoNudge, monthGroups, photoCounts } from './photo-gallery.js'
+import { photoNudge, monthGroups, photoCounts } from './photo-gallery.ts'
 
 const P = (d, key = d) => ({ d, key })
 

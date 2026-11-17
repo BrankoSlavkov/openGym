@@ -3,8 +3,8 @@
 // sheets.jsx startFlow; switched in Settings → Workout → Before and during.
 import { useEffect, useState } from 'react'
 import { t } from '../lib/i18n.js'
-import { Button, Segmented } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Button, Segmented } from './ui.tsx'
+import Icon from './Icon.tsx'
 import { FORM_KEYS, isRough, sleepRatingOf } from '../lib/daily-form.js'
 import { fmtNum } from '../lib/format.js'
 

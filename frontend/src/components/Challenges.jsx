@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useStore } from '../store/useStore.js'
 import { t } from '../lib/i18n.js'
-import Icon from './Icon.jsx'
-import CardHead from './CardHead.jsx'
+import Icon from './Icon.tsx'
+import CardHead from './CardHead.tsx'
 import { Medal, PartyBanner, PARTY_MS, TIERS } from './Streak.jsx'
 import {
   monthKeyOf, shiftMonth, monthChallenges, progressOf, newlyDone, savePicks, markDone, isGold,

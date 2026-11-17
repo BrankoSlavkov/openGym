@@ -8,8 +8,8 @@ import {
   deloadCycleOf, deloadWhy, nextDeloadWeek, deloadSuggestion, plusWeeks, pushBack, skipDeload, addDeload,
   dismissSuggestion, setDeloadEvery, setDeloadAuto, EVERY_CHOICES, DELOAD_SET_SHARE,
 } from '../lib/deload-cycle.js'
-import CardHead from './CardHead.jsx'
-import { Button, Row, Segmented, Switch } from './ui.jsx'
+import CardHead from './CardHead.tsx'
+import { Button, Row, Segmented, Switch } from './ui.tsx'
 
 /* Deload weeks without a programme (lib/deload-cycle.js). Home says it when this week or next
    week is one, with a one-tap way to move it, and asks when the numbers (and the daily form,

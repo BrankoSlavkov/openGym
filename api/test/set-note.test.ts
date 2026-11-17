@@ -1,4 +1,4 @@
-/* A note on one set (frontend lib/set-notes.js, v1.4.5) follows the rule a workout's own note
+/* A note on one set (frontend lib/set-notes.ts, v1.4.5) follows the rule a workout's own note
    follows: it rides along in the full workouts a review or a question reads, and nowhere else. */
 import test from 'node:test';
 import assert from 'node:assert/strict';

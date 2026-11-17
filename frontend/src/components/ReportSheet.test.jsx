@@ -16,7 +16,7 @@ vi.mock('../store/useStore.js', () => {
 })
 vi.mock('../lib/report-print.js', () => ({ printReport: (...a) => mocks.printReport(...a) }))
 
-const { ReportSheet } = await import('./ReportSheet.jsx')
+const { ReportSheet } = await import('./ReportSheet.tsx')
 const { todayISO } = await import('../lib/format.js')
 const { reportRange } = await import('../lib/report.js')
 

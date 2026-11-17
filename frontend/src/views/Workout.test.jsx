@@ -3,14 +3,14 @@ import { createRoot } from 'react-dom/client'
 import { parseHTML } from 'linkedom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Workout from './Workout.jsx'
-import { api, beacon } from '../lib/api.js'
+import { api, beacon } from '../lib/api.ts'
 import { nextPrescription } from '../lib/progression.js'
 import { buildCombinedEntries } from '../lib/session-merge.js'
 import { buildCompletedWorkout } from '../lib/finish-workout.js'
 import { isWarmupRow } from '../lib/workout-model.js'
 import { discardedFor } from '../lib/watch-sync.js'
 import { finishWorkout, finishWorkoutSheet } from '../sheets.jsx'
-import { menuItemsOf } from '../lib/menu-items.js'
+import { menuItemsOf } from '../lib/menu-items.ts'
 
 // A menu's actions in order, whether it came as one list or in groups (menuSheet `sections`).
 
@@ -125,7 +125,7 @@ vi.mock('../components/SetVideo.jsx', async () => {
     ActiveSetVideo: ({ m, at }) => React.createElement('div', { className: 'fv-inline', 'data-hash': m.hash, 'data-at': at.entry + ':' + at.set }),
   }
 })
-vi.mock('../components/WorkoutThumb.jsx', () => ({
+vi.mock('../components/WorkoutThumb.tsx', () => ({
   default: ({ onExpand }) => React.createElement('button', { className: 'wthumb', 'aria-label': 'Expand', onClick: onExpand }),
   hasWorkoutMedia: () => true,
 }))
@@ -133,7 +133,7 @@ vi.mock('../components/DurationWheel.jsx', () => ({ durationSheet: mocks.duratio
 vi.mock('../components/WorkoutSettingsSheet.jsx', () => ({ workoutSettingsSheet: mocks.workoutSettingsSheet }))
 // api.js reads navigator.userAgent at module scope. This file installs its own DOM inside the
 // tests rather than declaring a vitest environment, so it must not depend on an ambient one.
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: vi.fn(() => Promise.resolve({})),
   beacon: vi.fn(),
   IS_APPLE: false, IS_ANDROID: false, BIO: 'biometrics',

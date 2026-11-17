@@ -9,10 +9,10 @@ import { useWrappedUI, openWrapped, openMonthStory } from '../lib/wrapped-ui.js'
 import { homeCardYear, wrappedYears, wrappedNow, withYear, notifyOn } from '../lib/wrapped.js'
 import { syncWrappedNotification, onWrappedNotificationOpen } from '../lib/wrapped-notify.js'
 import { t } from '../lib/i18n.js'
-import { Button } from './ui.jsx'
-import Icon from './Icon.jsx'
-import CardHead from './CardHead.jsx'
-import { EmojiText } from './Glyph.jsx'
+import { Button } from './ui.tsx'
+import Icon from './Icon.tsx'
+import CardHead from './CardHead.tsx'
+import { EmojiText } from './Glyph.tsx'
 
 const Wrapped = lazy(() => import('./Wrapped.jsx'))
 

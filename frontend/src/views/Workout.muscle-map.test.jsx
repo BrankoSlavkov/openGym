@@ -14,12 +14,12 @@ import { musclesOf } from '../lib/muscles.js'
 // already ticked, in every layout, behind a switch that is on by default.
 
 const maps = vi.hoisted(() => [])
-vi.mock('../components/BodyMap.jsx', () => ({
+vi.mock('../components/BodyMap.tsx', () => ({
   default: props => { maps.push(props); return React.createElement('div', { 'data-body-map': props.className || '' }) },
   BodyMapLegend: () => null,
 }))
 vi.mock('../lib/sound.js', () => ({ beep: vi.fn(), chime: vi.fn(), vibrate: vi.fn(), alertBuzz: vi.fn(), unlock: vi.fn() }))
-vi.mock('../lib/api.js', () => ({ api: vi.fn(() => Promise.resolve({})), beacon: vi.fn(), appBase: () => '/' }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn(() => Promise.resolve({})), beacon: vi.fn(), appBase: () => '/' }))
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 const BENCH = '0289'

@@ -4,7 +4,7 @@ import { create } from 'zustand'
 
 // One server for both devices, with the newest-stamp-wins rule of api/live-session.js.
 const server = { doc: { active: null, unit: 'kg', at: 0 } }
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: vi.fn(async (path, opts) => {
     if (path !== '/api/live') throw Object.assign(new Error('nope'), { status: 404 })
     if (!opts || !opts.method) return JSON.parse(JSON.stringify(server.doc))

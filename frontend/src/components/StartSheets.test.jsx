@@ -6,7 +6,7 @@ import { createRoot } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DEF, useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
-import { bindUI } from './ui.jsx'
+import { bindUI } from './ui.tsx'
 import { todayISO } from '../lib/format.js'
 
 const started = vi.hoisted(() => [])

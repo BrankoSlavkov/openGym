@@ -9,7 +9,7 @@ import { DEF, useStore } from '../store/useStore.js'
 import { estimate1RM } from '../lib/onerm.ts'
 import { dots } from '../lib/calculators.js'
 
-vi.mock('../lib/api.js', () => ({ api: vi.fn(() => Promise.resolve({})) }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn(() => Promise.resolve({})) }))
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 const clone = value => JSON.parse(JSON.stringify(value))
 

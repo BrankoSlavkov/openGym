@@ -5,7 +5,7 @@
 //
 // A change here goes up shortly after it is made; the server's copy is read every few seconds
 // while the app is visible, and on every return to it.
-import { api } from '../lib/api.js'
+import { api } from '../lib/api.ts'
 import { inUnitOf } from '../lib/sync-merge.js'
 import { decide, stampAfter, sameSession } from '../lib/live-session.js'
 

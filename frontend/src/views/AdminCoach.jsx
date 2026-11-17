@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useUI } from '../store/useUI.js'
 import { useStore } from '../store/useStore.js'
-import { api } from '../lib/api.js'
-import Icon from '../components/Icon.jsx'
-import { Button, Switch, TextArea, TextField } from '../components/ui.jsx'
+import { api } from '../lib/api.ts'
+import Icon from '../components/Icon.tsx'
+import { Button, Switch, TextArea, TextField } from '../components/ui.tsx'
 import { confirmSheet } from '../sheets.jsx'
 
 /* The operator's side of the Coach, laid out as a guided setup: one master switch, numbered

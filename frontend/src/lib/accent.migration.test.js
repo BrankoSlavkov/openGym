@@ -7,7 +7,7 @@
 // freshState writes the new one into the copy it makes.
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('./api.js', () => ({ api: vi.fn(), setRemoteAuth: vi.fn() }))
+vi.mock('./api.ts', () => ({ api: vi.fn(), setRemoteAuth: vi.fn() }))
 vi.mock('../store/useUI.js', () => ({ useUI: { getState: () => ({ toast: vi.fn() }) } }))
 
 import { DEF, freshState, restartedState, restoredStateFor, useStore } from '../store/useStore.js'

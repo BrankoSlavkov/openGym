@@ -8,7 +8,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('./mobile.js', () => ({ MOBILE: true }))
 
-import { api, beacon, setRemoteAuth } from './api.js'
+import { api, beacon, setRemoteAuth } from './api.ts'
 
 afterEach(() => { vi.unstubAllGlobals(); setRemoteAuth('', null) })
 

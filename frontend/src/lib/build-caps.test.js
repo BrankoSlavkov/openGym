@@ -3,7 +3,7 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { setOfflineBuild, offlineBuild, networkBuilt, subscribeBuildCaps, OFFLINE_OFF_CARDS } from './build-caps.js'
 import { isOn, moduleBuilt, presetOf, applyPreset } from './modules.js'
-import { youtubeId, youtubeSearchUrl, youtubeLinks } from './youtube.js'
+import { youtubeId, youtubeSearchUrl, youtubeLinks } from './youtube.ts'
 import { directory } from './integrations.js'
 import { coachAvailable } from './coach.js'
 import { findPlaces, addressAt } from './gym-places.js'

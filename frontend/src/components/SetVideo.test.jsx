@@ -13,7 +13,7 @@ vi.mock('../lib/media-ingest.js', () => ({ ingestMediaFile: (...a) => h.ingest(.
 import { DEF, useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { _setLangState } from '../lib/i18n-core.js'
-import { bindUI } from './ui.jsx'
+import { bindUI } from './ui.tsx'
 import { createMediaStore, memoryBackend, _setMediaStore } from '../lib/media-store.js'
 import { filmSetSheet, FormVideosSection, FormVideoPlayer, CompareVideos } from './SetVideo.jsx'
 import { formVideosFor } from '../lib/set-videos.js'

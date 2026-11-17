@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { youtubeId, youtubeLinks } from './youtube.js'
+import { youtubeId, youtubeLinks } from './youtube.ts'
 
 describe('YouTube exercise links', () => {
   it('accepts only known hosts and complete video IDs', () => {

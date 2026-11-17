@@ -4,7 +4,7 @@
 // values.
 import { estimate1RM, DEFAULT_FORMULA } from './onerm.ts'
 import { repFactor } from './set-records.js'
-import { snapDown } from './warmup-snap.js'
+import { snapDown } from './warmup-snap.ts'
 
 export const LB_PER_KG = 2.2046226218
 export const CM_PER_IN = 2.54

@@ -9,7 +9,7 @@ import MyTrainerPage from './MyTrainer.jsx'
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 
 const mocks = vi.hoisted(() => ({ answers: {}, posts: [], sheets: [], toasts: [], search: '' }))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: (path, opts) => {
     const key = path.split('?')[0]
     if (opts?.method === 'POST') {

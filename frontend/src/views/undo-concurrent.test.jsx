@@ -8,9 +8,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('../router/hooks.tsx', () => ({ useNavigate: () => vi.fn(), useParams: () => ({}) }))
 vi.mock('../lib/sound.js', () => ({ beep: vi.fn(), chime: vi.fn(), vibrate: vi.fn(), alertBuzz: vi.fn(), unlock: vi.fn() }))
-vi.mock('../lib/api.js', () => ({ api: vi.fn(() => Promise.resolve({})), beacon: vi.fn(), appBase: () => '/' }))
+vi.mock('../lib/api.ts', () => ({ api: vi.fn(() => Promise.resolve({})), beacon: vi.fn(), appBase: () => '/' }))
 vi.mock('../components/Media.jsx', () => ({ Thumb: () => null }))
-vi.mock('../components/BodyMap.jsx', () => ({ default: () => null }))
+vi.mock('../components/BodyMap.tsx', () => ({ default: () => null }))
 
 import { DEF, useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'

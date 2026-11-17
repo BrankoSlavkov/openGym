@@ -1,6 +1,6 @@
 // Web Push subscribe/unsubscribe — requires a signed-in profile (subscriptions are stored
 // server-side per user, same as everything else under /api).
-import { api } from './api.js'
+import { api } from './api.ts'
 
 // main.jsx registers the service worker on https only, so on any other origin there is no
 // worker and `navigator.serviceWorker.ready` never settles — the toggle looked usable and hung.

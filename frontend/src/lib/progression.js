@@ -19,7 +19,7 @@
 import { modeOf, repStep, rerampWarmups, isBw, isPerSide, entryExcluded, entryRoutineId, lastAcrossRoutines } from './history.js'
 import { EXIDX, isAssisted, isLoadedEq, defaultIncrement } from './exercises.js'
 import { isWarmupRow, isSideSet, syncSideAggregate, makeSideSet } from './workout-model.js'
-import { normalizeRepRange } from './rep-range.js'
+import { normalizeRepRange } from './rep-range.ts'
 import { nextRung } from './ladders.js'
 import { gymSplitView } from './gym-split.js'
 import { isPyramid } from './pyramid.js'

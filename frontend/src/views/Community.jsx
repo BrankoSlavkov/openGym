@@ -1,7 +1,7 @@
 // Community (docs/dev/SHARED-LIBRARY-API.md): what people on this server chose to share, one tab per
 // kind, with search, New / Popular, a preview and one tap to take a copy. Every card says who
 // shared it and when, always. Sharing one of your own things goes through a consent per item.
-// Only a signed-in profile on a server with LIBRARY=on sees any of this (lib/shared-api.js
+// Only a signed-in profile on a server with LIBRARY=on sees any of this (lib/shared-api.ts
 // libraryOn); guests and phones on their own get a friendly line instead.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from '../router/hooks.tsx'
@@ -9,17 +9,17 @@ import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t, baseLang } from '../lib/i18n.js'
 import { fmtDate, isoOf, exCount } from '../lib/format.js'
-import { remoteAuth } from '../lib/api.js'
+import { remoteAuth } from '../lib/api.ts'
 import {
   libraryOf, libraryOn, listShared, getShared, publishShared, editShared, withdrawShared, importShared, reportShared,
   sharedMediaBlob, libraryConsentWords, REPORT_REASONS, reasonLabel, sharedError,
-} from '../lib/shared-api.js'
+} from '../lib/shared-api.ts'
 import { TYPE, browseTypes, ownItems, applyImport, importedRefs, cardLine, bylineOf, hasCopy, newerThanCopy, typeWords } from '../lib/shared-items.js'
 import { exerciseNameFor, exerciseNameClass } from '../lib/i18n.js'
 import { exOr } from '../lib/exercises.js'
 import { initialOf } from '../lib/avatar.js'
-import { Button, SearchField, Segmented, Check, TextField, TextArea } from '../components/ui.jsx'
-import Icon from '../components/Icon.jsx'
+import { Button, SearchField, Segmented, Check, TextField, TextArea } from '../components/ui.tsx'
+import Icon from '../components/Icon.tsx'
 import { confirmSheet } from '../sheets.jsx'
 import { useRevealActiveChip } from '../lib/use-sheet-keyboard.js'
 import { pathBefore, historyIndex } from '../lib/nav.js'

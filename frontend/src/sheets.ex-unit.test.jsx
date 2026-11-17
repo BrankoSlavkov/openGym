@@ -8,7 +8,7 @@ import { useStore, DEF } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
 import { exConfigSheet, barWeightSheet, dumbbellInventorySheet } from './sheets.jsx'
 import { withExUnit } from './lib/ex-unit.js'
-import { bindUI } from './components/ui.jsx'
+import { bindUI } from './components/ui.tsx'
 import { EXIDX } from './lib/exercises.js'
 
 const BENCH = '0025'   // barbell bench press

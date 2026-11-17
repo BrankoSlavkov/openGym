@@ -22,7 +22,7 @@ const mocks = vi.hoisted(() => ({
     jobsToday: 0, lastSuccess: null, lastError: null, recent: [],
   },
 }))
-vi.mock('../lib/api.js', () => ({
+vi.mock('../lib/api.ts', () => ({
   api: async (path, opts) => {
     mocks.calls.push([path, opts?.method || 'GET'])
     if (path === '/api/admin/coach') return structuredClone(mocks.status)

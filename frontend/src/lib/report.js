@@ -1,3 +1,4 @@
+import { reportRange } from './report-range.ts'
 // The performance report: everything a stretch of training adds up to, as plain data. The PDF
 // (lib/report-print.js) draws it; this file only counts, so every number on the paper is tested
 // here without a browser.
@@ -33,24 +34,7 @@ const validIso = s => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) && 
  * not one day too long). 'custom' takes `from`/`to`; swapped ends are put the right way round,
  * and an end in the future is cut to today.
  */
-export function reportRange(range, { from, to, today = todayISO() } = {}) {
-  let start, end = today
-  if (range === '7d') start = addDays(today, -6)
-  else if (range === '4w') start = addDays(today, -27)
-  else if (range === '3m') {
-    const d = dateOf(today); const day = d.getDate()
-    d.setDate(1); d.setMonth(d.getMonth() - 3)
-    d.setDate(Math.min(day, new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate()))
-    start = addDays(isoOf(d), 1)
-  } else {
-    start = validIso(from) ? from : addDays(today, -27)
-    end = validIso(to) ? to : today
-    if (start > end) [start, end] = [end, start]
-    if (end > today) end = today
-    if (start > end) start = end
-  }
-  return { from: start, to: end, days: daysBetween(start, end) + 1 }
-}
+export { reportRange } from './report-range.ts'
 
 // Ticked work sets: warm-ups left out, a per-side set counted once per side.
 export const workSetsOf = w => (w.entries || []).reduce((n, e) => n + (e.sets || []).reduce((m, s) => m + (isWarmupRow(s) ? 0 : doneUnits(s)), 0), 0)

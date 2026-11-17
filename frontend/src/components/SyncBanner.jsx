@@ -4,7 +4,7 @@ import { useStore } from '../store/useStore.js'
 import { DEMO } from '../lib/demo.js'
 import { t } from '../lib/i18n.js'
 import { connectionView, actionLabel, syncNowWithToast, pairAgain, connectServer, signInAgain, useOnline } from './ServerSync.jsx'
-import Icon from './Icon.jsx'
+import Icon from './Icon.tsx'
 
 // How long a change may sit unsent while the server is reachable before it is worth a word: the
 // push after an edit, or the one boot owes, lands well within this, and saying "not synced" for

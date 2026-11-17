@@ -7,7 +7,7 @@ const calls = []
 // api() throws one (message and status). Empty: { ok: true }.
 const subscribeAnswers = []
 const refusal = (status, message) => Object.assign(new Error(message), { status })
-vi.mock('./api.js', () => ({
+vi.mock('./api.ts', () => ({
   api: vi.fn(async (path, opts) => {
     calls.push([path, opts?.method || 'GET', opts?.body ? JSON.parse(opts.body) : null])
     if (path === '/api/push/public-key') return { key: KEY }
@@ -89,7 +89,7 @@ describe('against a server that applies the writes, the second boot writes nothi
   const serverKeeps = v => (typeof v === 'string' && /^[A-Za-z0-9_-]{8,64}$/.test(v) ? v : null)
   const bootTwice = async () => {
     const { syncPushSubscription } = await import('./push.js')
-    const { api } = await import('./api.js')
+    const { api } = await import('./api.ts')
     const real = api.getMockImplementation()
     api.mockImplementation(async (path, opts) => {
       const answer = await real(path, opts)

@@ -22,7 +22,7 @@ import { isOn } from './modules.js'
 import { modeOf, isBw, isPerSide } from './history.js'
 import { isWarmupRow, makeSideSet } from './workout-model.js'
 import { exerciseOf, isAssisted } from './exercises.js'
-import { rungWeight } from './warmup-snap.js'
+import { rungWeight } from './warmup-snap.ts'
 import { isoRun } from './bidi.js'
 
 export const WARMUP_AUTO = ['off', 'compounds', 'all']
@@ -134,7 +134,7 @@ export function autoRungs({ work, kg, bar = 0, compound = false, bw = false, ass
  * The rungs turned into set rows on real weights, for a work weight of `work`. A rung that rounds
  * onto the one before it, or up to the work weight, is left out: two identical warm-ups are one
  * warm-up, and a warm-up at the work weight is a work set. A per-side lift gets L/R rows with the
- * rung's reps on each side. `grid` and `floor` as warmup-snap.js reads them.
+ * rung's reps on each side. `grid` and `floor` as warmup-snap.ts reads them.
  */
 export function rungRows(rungs, { work, grid, floor = 0, perSide = false }) {
   const out = []

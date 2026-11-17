@@ -5,13 +5,13 @@ import { useState } from 'react'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t, tn } from '../lib/i18n.js'
-import { nameIn } from '../lib/a11y-name.js'
+import { nameIn } from '../lib/a11y-name.ts'
 import { exerciseNameText } from '../lib/format.js'
 import {
   MACHINE_GROUPS, MACHINE_KINDS, KIND_IDS, KIND_BY_ID, KIND_COUNT, searchKinds, withoutKind, removableKind,
 } from '../lib/machine-kinds.js'
-import Icon from './Icon.jsx'
-import { Button, SearchField } from './ui.jsx'
+import Icon from './Icon.tsx'
+import { Button, SearchField } from './ui.tsx'
 
 function MachinePicker({ gymName, initial, onDone, close }) {
   const [on, setOn] = useState(() => new Set(initial))

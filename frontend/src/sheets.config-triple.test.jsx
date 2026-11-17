@@ -6,7 +6,7 @@ import { EXDB } from './lib/exercises.js'
 import { useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
 import { exConfigSheet } from './sheets.jsx'
-import { bindUI } from './components/ui.jsx'
+import { bindUI } from './components/ui.tsx'
 
 // Triple progression (issue #179) on the exercise's settings: picked like any rule, with the set
 // ceiling next to the rep range.

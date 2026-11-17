@@ -33,7 +33,7 @@ export const WORK_EDGE = 1280               // px, the working copy the crop ste
 export const ZOOM_MAX = 4
 
 // Built-in pictures for people who would rather not use a photo: openGym's icon, or the emoji
-// with Settings → Icons on emoji (components/Glyph.jsx).
+// with Settings → Icons on emoji (components/Glyph.tsx).
 export const AVATAR_PRESETS = [
   { id: 'lifter', icon: 'figureStrength', emoji: '🏋️' },
   { id: 'arm', icon: 'arm', emoji: '💪' },

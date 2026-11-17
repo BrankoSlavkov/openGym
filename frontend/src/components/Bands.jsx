@@ -7,8 +7,8 @@ import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
 import { fmtNum } from '../lib/format.js'
 import { bandsOf, cleanBands, starterBands, newBandId, setBandsOf, bandLabel, BAND_COLORS, BAND_NAME_MAX, BAND_LEVEL_MAX, MAX_BANDS } from '../lib/bands.js'
-import { Button, TextField, NumberField } from './ui.jsx'
-import Icon from './Icon.jsx'
+import { Button, TextField, NumberField } from './ui.tsx'
+import Icon from './Icon.tsx'
 
 const KG_PER_LB = 0.45359237
 const update = (...a) => useStore.getState().update(...a)

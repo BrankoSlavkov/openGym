@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { compareCanvasLayout } from './compare-image.js'
-import { compareRows } from './photo-compare.js'
+import { compareRows } from './photo-compare.ts'
 
 describe('compareCanvasLayout', () => {
   it('lays rows out centred, every cell the same shape', () => {

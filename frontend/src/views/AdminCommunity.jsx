@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { fmtDate, isoOf } from '../lib/format.js'
-import { libraryOf, adminShared, moderateShared, banSharing } from '../lib/shared-api.js'
+import { libraryOf, adminShared, moderateShared, banSharing } from '../lib/shared-api.ts'
 import { TYPE } from '../lib/shared-items.js'
-import { Button } from '../components/ui.jsx'
+import { Button } from '../components/ui.tsx'
 
 const day = ms => fmtDate(isoOf(new Date(ms || 0)))
 const REASON = { spam: 'spam', offensive: 'rude or not okay', 'not-theirs': 'not theirs', licensed: 'licensed material', personal: 'personal data', other: 'other' }

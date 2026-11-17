@@ -4,7 +4,7 @@ import {
   importRoutineLink, importedRoutineName, linkFor, toBase64Url, fromBase64Url, cleanFrom, LINK_FMT, MAX_LINK,
 } from './routine-link.js'
 import { EXIDX, registerCustom } from './exercises.js'
-import { youtubeSearchUrl } from './youtube.js'
+import { youtubeSearchUrl } from './youtube.ts'
 
 const BENCH = '0025', CURL = '0463', PLANK = '8221', RAISE = '0334'
 const custom = { id: 'cx1', n: 'Zercher carry ü 💪', bp: 'upper legs', eq: 'barbell', custom: true }

@@ -3,7 +3,7 @@ import { MUSCLES } from '../lib/muscles.js'
 import { t } from '../lib/i18n.js'
 import MuscleExplorer from '../components/MuscleExplorer.jsx'
 import { exerciseDetailSheet, addToRoutineSheet } from '../sheets.jsx'
-import Icon from '../components/Icon.jsx'
+import Icon from '../components/Icon.tsx'
 import { sessionBuilderSheet } from '../components/SessionBuilder.jsx'
 
 // `?m=<muscle>` opens on that muscle (Stats' untrained muscles, #553), and back goes where it came from.
