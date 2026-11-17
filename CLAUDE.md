@@ -4,6 +4,8 @@
 > first.** Much of the map below (phone and watch apps, locales, docs/, website/, helm/) is
 > removed here (.fork/removed-paths). Don't add code to removed paths, don't add translations,
 > pin exact dependency versions, and prefer new files over edits to upstream ones.
+> Upstream changes are **ported, never merged**: use the `port-upstream` skill
+> (`.claude/skills/port-upstream/SKILL.md`, `.fork/upstream-base`, `scripts/upstream-changes.mjs`).
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 For people, the same map with diagrams is [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).

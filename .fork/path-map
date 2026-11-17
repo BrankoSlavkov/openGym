@@ -1,0 +1,8 @@
+# Upstream path -> this fork's path, for files that moved or were split here (see
+# .claude/skills/port-upstream). One mapping per line: "<upstream path><TAB><fork path>".
+# scripts/upstream-changes.mjs already follows these on its own, so they need no line here:
+#   - the same path,
+#   - the same path with .js -> .ts / .tsx or .jsx -> .tsx (the TypeScript conversion),
+#   - anything matched by .fork/removed-paths (reported as removed).
+# Add a line when a file is renamed beyond that, split, or merged into another; use "-" as the
+# fork path for a file whose job is gone here without being in removed-paths.

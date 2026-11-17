@@ -1,5 +1,5 @@
-# Paths this fork deletes. scripts/sync-upstream.sh removes them again after every merge from
-# upstream, including files upstream adds or changes there. One git pathspec per line.
+# Paths this fork deletes. scripts/upstream-changes.mjs reports upstream changes here as "removed"
+# and the port-upstream skill skips them. One path (file or folder) per line.
 
 # Phone, watch and store apps
 frontend/android
