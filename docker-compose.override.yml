@@ -1,0 +1,13 @@
+# This fork's images (FORK.md). docker compose reads this file next to docker-compose.yml, so the
+# services are tagged locally and never replaced by upstream's prebuilt ghcr images, which do not
+# carry this fork's changes. Always start with --build after pulling new code.
+services:
+  api:
+    image: opengym-fork-api:local
+    pull_policy: build
+  web:
+    image: opengym-fork-web:local
+    pull_policy: build
+  mcp:
+    image: opengym-fork-mcp:local
+    pull_policy: build

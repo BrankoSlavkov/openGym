@@ -1,5 +1,10 @@
 # CLAUDE.md
 
+> **This checkout is a fork: web-only, English-only, synced from upstream. Read [FORK.md](FORK.md)
+> first.** Much of the map below (phone and watch apps, locales, docs/, website/, helm/) is
+> removed here (.fork/removed-paths). Don't add code to removed paths, don't add translations,
+> pin exact dependency versions, and prefer new files over edits to upstream ones.
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 For people, the same map with diagrams is [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 

@@ -1,0 +1,67 @@
+# Paths this fork deletes. scripts/sync-upstream.sh removes them again after every merge from
+# upstream, including files upstream adds or changes there. One git pathspec per line.
+
+# Phone, watch and store apps
+frontend/android
+frontend/ios
+frontend/garmin
+frontend/resources
+frontend/capacitor.config.json
+watch-zepp
+fastlane
+scripts/android
+scripts/ios
+scripts/store
+scripts/media
+
+# Translations (the app is English-only)
+frontend/src/locales
+frontend/scripts/check-locales.mjs
+frontend/scripts/check-locales.test.mjs
+frontend/scripts/check-source-strings.mjs
+frontend/scripts/check-native-localizations.mjs
+frontend/scripts/pt-br-inheritance-fingerprint.mjs
+api/scripts/build-checkin-copy.mjs
+api/scripts/build-nudge-copy.mjs
+api/scripts/build-trainer-copy.mjs
+api/scripts/build-wrapped-copy.mjs
+api/test/nudge-copy.test.js
+api/test/trainer-copy.test.js
+
+# Mobile build checks
+frontend/scripts/app-icons.mjs
+frontend/scripts/app-icons.test.mjs
+frontend/scripts/check-app-media.mjs
+frontend/scripts/check-app-media.test.mjs
+frontend/scripts/check-mobile-bundle.mjs
+frontend/scripts/check-mobile-bundle.test.mjs
+frontend/scripts/check-season-clock.mjs
+
+# Zepp OS watch relay
+api/watch-relay.js
+api/test/watch-relay.test.js
+api/test/server-watch-relay.test.js
+frontend/src/lib/watch-relay.js
+frontend/src/lib/watch-relay.test.js
+frontend/src/views/ZeppSettings.jsx
+frontend/src/views/ZeppSettings.test.jsx
+
+# Website, docs, other deploy recipes, upstream project admin
+website
+docs
+assets
+helm
+kubernetes
+contrib
+cloudflare
+.github
+scripts/site
+scripts/brand
+scripts/ci
+scripts/build-api-docs.mjs
+api/test/k8s-web-port.test.js
+package.json
+package-lock.json
+ROADMAP.md
+CLA.md
+renovate.json
