@@ -6,6 +6,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { lazyAssets, stampSw } from './scripts/sw-stamp.mjs'
 import { mobileViewport } from './src/lib/viewport-zoom.js'
+import { webOnlyAlias } from './web-only/alias.js'
+import { webOnlyTestConfig } from './web-only/test-config.js'
 
 const backend = process.env.API_TARGET || 'http://127.0.0.1:3000'
 // The API refuses a state-changing request that a browser sent from anywhere other than its own
@@ -108,6 +110,7 @@ export default defineConfig({
   // with VITE_SEASON_CLOCK=1 for screenshots. false everywhere else, so the hook is compiled out.
   define: { __APP_VERSION__: JSON.stringify(appVersion), __SEASON_CLOCK__: JSON.stringify(process.env.VITE_SEASON_CLOCK === '1') },
   plugins: [react(), umami, flavor, swStamp, catalogueMedia],
+  resolve: { alias: webOnlyAlias },
   base: './',
   server: {
     // The Coach's core (payload, validator, prompts, HTTP adapters) lives in ../api/coach/core
@@ -127,5 +130,5 @@ export default defineConfig({
   // lower, scripts/check-bundle-syntax.mjs catches (its test builds the bundle).
   build: { chunkSizeWarningLimit: 1500, target: ['safari15', 'chrome100', 'firefox100', 'edge100'] },
   // Gives happy-dom tests a working localStorage on Node 24+ (#733).
-  test: { setupFiles: ['./src/test-setup.js'] }
+  test: { setupFiles: ['./src/test-setup.js'], ...webOnlyTestConfig }
 })

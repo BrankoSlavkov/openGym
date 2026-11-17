@@ -50,10 +50,3 @@ test('the push speaks the profile language, de-CH without ß', () => {
   assert.ok(checkinPush('xx', 'both').body.length > 0);
   assert.ok(!/ß/.test(checkinPush('de-CH', 'measure').body + checkinPush('de-CH', 'measure').title));
 });
-
-test('api/checkin-copy.js matches the frontend strings (node scripts/build-checkin-copy.mjs)', async t => {
-  if (!fs.existsSync(path.join(API, '..', 'frontend', 'src', 'lib', 'checkin-reminder.js'))) return t.skip('no frontend next to the api');
-  const { buildCheckinCopy } = await import('../scripts/build-checkin-copy.mjs');
-  assert.equal(fs.readFileSync(path.join(API, 'checkin-copy.js'), 'utf8'), await buildCheckinCopy(),
-    'api/checkin-copy.js is out of date: run node scripts/build-checkin-copy.mjs in api/');
-});

@@ -58,10 +58,3 @@ test('the push is fixed words and the year: nothing from the profile rides along
   assert.equal(wrappedPush('xx-nope', 2026).title, wrappedPush('en', 2026).title);
   assert.ok(JSON.stringify(wrappedPush('ar', 2026)).length < 600);
 });
-
-test('api/wrapped-copy.js matches the frontend strings (node scripts/build-wrapped-copy.mjs)', async t => {
-  if (!fs.existsSync(path.join(API, '..', 'frontend', 'src', 'lib', 'wrapped-copy.js'))) return t.skip('no frontend next to the api');
-  const { buildWrappedCopy } = await import('../scripts/build-wrapped-copy.mjs');
-  assert.equal(fs.readFileSync(path.join(API, 'wrapped-copy.js'), 'utf8'), await buildWrappedCopy(),
-    'api/wrapped-copy.js is out of date: run node scripts/build-wrapped-copy.mjs in api/');
-});

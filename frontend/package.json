@@ -6,24 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:mobile": "VITE_MOBILE=1 vite build && node scripts/check-season-clock.mjs dist && node ../scripts/catalogue/stage-media.mjs dist && cap sync && node scripts/check-mobile-bundle.mjs",
     "preview": "vite preview",
-    "test": "vitest run && npm run check:native-localizations",
+    "test": "vitest run",
     "test:watch": "vitest",
     "test:fatigue-probe": "node scripts/fatigue-monotonic-probe.mjs",
-    "pdf:check": "node scripts/pdf/render-samples.mjs --out pdf-samples --langs en,de,ar --paper A4,Letter --check",
-    "check:native-localizations": "node scripts/check-native-localizations.mjs"
+    "pdf:check": "node scripts/pdf/render-samples.mjs --out pdf-samples --langs en --paper A4,Letter --check"
   },
   "license": "AGPL-3.0-or-later",
   "dependencies": {
-    "@aparajita/capacitor-secure-storage": "8.0.1",
-    "@capacitor-mlkit/barcode-scanning": "8.2.2",
-    "@capacitor/app": "8.1.2",
-    "@capacitor/core": "8.6.2",
-    "@capacitor/filesystem": "8.1.5",
-    "@capacitor/local-notifications": "8.3.1",
-    "@capacitor/share": "8.0.3",
-    "@capacitor/splash-screen": "8.0.2",
     "jsqr": "1.4.0",
     "leaflet": "1.9.4",
     "lean-qr": "2.7.4",
@@ -33,9 +23,6 @@
     "zustand": "5.1.0"
   },
   "devDependencies": {
-    "@capacitor/android": "8.6.2",
-    "@capacitor/cli": "8.6.2",
-    "@capacitor/ios": "8.6.2",
     "@vitejs/plugin-react": "6.3.0",
     "@vitest/coverage-v8": "5.1.0",
     "fast-check": "4.10.2",
