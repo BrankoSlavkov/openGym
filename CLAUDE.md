@@ -27,9 +27,9 @@ frontend/   React 19 + Vite app (src/views, src/components, src/store, src/lib, 
             android/wear is the Wear OS watch app (Kotlin, Compose; docs/WEAR_OS.md), on the same
             watch protocol as the Apple Watch (lib/watch-sync.js). garmin/ is the Garmin Connect IQ
             watch app (Monkey C; docs/GARMIN.md), on a cut-down snapshot (lib/garmin-snapshot.js).
-api/        Backend: server.js (plain node:http) plus small testable modules beside it.
+api/        Backend: server.ts (fork: TypeScript on Bun, Hono router) plus small testable modules beside it.
             coach/ is the optional AI coach; coach/core/ is shared with the phone apps.
-            openapi.yaml documents every route.
+            openapi/ defines every route (zod), the OpenAPI 3.2 document is built from it.
 web/        Multi-stage Dockerfile (builds frontend, adds catalogue/media, serves with nginx) and
             nginx.conf.template (serves the app, proxies /api).
 catalogue/  The exercise database: exercises/<id>.json, i18n/, licensed 180 px media/.
@@ -58,6 +58,9 @@ cd frontend && vp test run src/lib/progression.test.js      # one file
 cd frontend && vp test run -t "some test name"              # one test by name
 cd frontend && vp check                                     # format (TS only), lint, types
 cd api && bun run test                           # fork: Bun's runner over the node:test files
+cd api && bun run typecheck                      # tsc, 0 errors (not strict yet)
+cd api && bun run openapi                        # rewrite api/openapi.json (OpenAPI 3.2, for Orval)
+cd api && bun run openapi:check                  # the suite with every JSON answer checked against the spec
 cd mcp && npm test
 
 # Checks besides the suites
@@ -125,18 +128,19 @@ machine, never in CI (see "Exercise media" below and docs/APP_STORES.md).
   `i18n-core.js`). A new `t()` string goes into every pack; pt-BR inherits from pt and has a
   fingerprint test (`scripts/pt-br-inheritance-fingerprint.mjs`).
 
-### API (`api/server.js`)
+### API (`api/server.ts`)
 
-Fork: runs on Bun, routed by Hono (`api/http-app.js`, FORK.md "The api on Bun and Hono"); the
-handlers still take node's `req`/`res`. Requests are dispatched through a `routes` object keyed by
-`'METHOD /path'` (e.g. `routes['GET /api/health']`); add an endpoint by adding a key and its entry
-in `openapi.yaml` (`openapi-routes.test.js` compares them). State is JSON under `DATA_DIR`:
+Fork: TypeScript on Bun, routed by Hono (`api/http-app.ts`, FORK.md "The api on Bun and Hono");
+the handlers still take node's `req`/`res`. The OpenAPI 3.2 spec is code in `api/openapi/`
+(zod; validated requests, `/api/openapi.json`, `/api/docs`). Requests are dispatched through a `routes` object keyed by
+`'METHOD /path'` (e.g. `routes['GET /api/health']`); add an endpoint by adding a key and its definition
+in `api/openapi/routes/` (`openapi-routes.test.ts` compares them; `bun run openapi` rewrites `api/openapi.json`). State is JSON under `DATA_DIR`:
 `db.json` (users, credentials, push subscriptions, invites) and `state-<uid>.json` per user,
-written temp-then-rename (`durable.js`). Custom-exercise photos and videos live in
-`DATA_DIR/uploads` (`media.js`). Auth is WebAuthn passkeys (`@simplewebauthn/server`), an optional
+written temp-then-rename (`durable.ts`). Custom-exercise photos and videos live in
+`DATA_DIR/uploads` (`media.ts`). Auth is WebAuthn passkeys (`@simplewebauthn/server`), an optional
 password, and a signed session cookie (HMAC with `DATA_DIR/secret`); paired phones get the same
 session as a bearer token. Optional pieces are gated by env vars: `ADMIN_UIDS`, `INVITE_ONLY`,
-`ALLOW_GUEST`, `PASSWORD_LOGIN`, `AUDIT_*`, `API_TOKENS` (scoped `ogt_` tokens, `tokens.js`,
+`ALLOW_GUEST`, `PASSWORD_LOGIN`, `AUDIT_*`, `API_TOKENS` (scoped `ogt_` tokens, `tokens.ts`,
 docs/API_TOKENS.md: never a session, only `/api/token/*`), `INTEGRATIONS` (`api/integrations/`: providers, sealed
 connections in `DATA_DIR/integrations/`, the outbound webhook; docs/INTEGRATIONS.md). Web Push (`web-push`, VAPID keys in `data/vapid.json`)
 drives rest-timer and reminder notifications.
@@ -151,9 +155,9 @@ and per field, so the newest edit of each wins and deletions stay deleted.
 ### Code that exists twice on purpose
 
 The API image cannot import the frontend, so some rules are hand-copied. Change both sides
-together: `lib/sync-merge.js` and `api/sync-stamps.js` (parity test), `lib/glyphs.js` and
-`api/coach/core/glyphs.js` (parity test), `lib/nudge.js` and `api/nudge.js`, `lib/queue.js` and
-`api/queue.js` (mirrored test cases only, nothing compares the code), and the workout card's
+together: `lib/sync-merge.js` and `api/sync-stamps.ts` (parity test), `lib/glyphs.js` and
+`api/coach/core/glyphs.js` (parity test), `lib/nudge.js` and `api/nudge.ts`, `lib/queue.js` and
+`api/queue.ts` (mirrored test cases only, nothing compares the code), and the workout card's
 button moves in `android/.../WorkoutCard.java` and `LiveActivityTick` in
 `ios/App/App/WorkoutActivity.swift` (each has its own tests). The other way round,
 `lib/coach-local.js` imports `api/coach/core/` directly so the phones run the same coach pipeline.

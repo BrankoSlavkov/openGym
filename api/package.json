@@ -3,18 +3,30 @@
   "version": "1.4.5",
   "private": true,
   "type": "module",
-  "main": "server.js",
+  "main": "server.ts",
   "license": "AGPL-3.0-or-later",
   "scripts": {
-    "start": "node server.js",
-    "test": "node --test test/*.test.js"
+    "start": "bun server.ts",
+    "test": "bun test --parallel --timeout 120000 ./test/",
+    "typecheck": "tsc -p .",
+    "openapi": "bun scripts/openapi.ts",
+    "openapi:check": "bun scripts/openapi-check.ts"
   },
   "dependencies": {
+    "@asteasolutions/zod-to-openapi": "9.1.0",
+    "@hono/node-server": "2.1.5",
+    "@hono/zod-openapi": "1.6.3",
     "@simplewebauthn/server": "14.1.0",
-    "undici": "8.12.4",
-    "web-push": "4.0.0"
+    "hono": "4.13.13",
+    "swagger-ui-dist": "5.34.1",
+    "web-push": "4.0.0",
+    "zod": "4.6.7"
   },
   "optionalDependencies": {
     "@anthropic-ai/claude-agent-sdk": "0.3.326"
+  },
+  "devDependencies": {
+    "@types/bun": "1.4.4",
+    "typescript": "7.0.2"
   }
 }

@@ -94,7 +94,7 @@ describe('a language picked after coach-api.js loaded', () => {
 describe('every refusal the server sends has a line here', () => {
   // Read by path, like Library.test.jsx reads index.css: under a DOM environment import.meta.url is
   // not a file URL. The suite runs from frontend/.
-  const routes = readFileSync(resolve(process.cwd(), '../api/coach/routes.js'), 'utf8')
+  const routes = readFileSync(resolve(process.cwd(), '../api/coach/routes.ts'), 'utf8')
 
   // The guard in front of every Coach route answers 503 while the Coach is switched off or has
   // no provider. Its body carried the words and no class, so the app toasted the server's English.

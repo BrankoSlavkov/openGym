@@ -63,13 +63,21 @@ reworked several times).
   Upstream's new tests are the best spec of the change; convert them to our test setup.
 - **Code that exists twice** (CLAUDE.md: sync-merge/sync-stamps, glyphs, nudge, queue): if upstream
   changed one side, both sides must match here too.
-- **api/ and mcp/** are still upstream-shaped JavaScript: their changes usually apply almost
-  verbatim (`git show <sha> -- api/ | git apply -3` is fine there when it applies cleanly; review it).
-  The api runs on Bun and routes through Hono (FORK.md, "The api on Bun and Hono"): an upstream
-  change to the dispatcher at the bottom of `server.js` goes into its `cors` / `routePathOf` /
-  `guard` / `fail` functions, a new `{param}` needs its pattern in `api/http-app.js` `PARAMS`, a
-  change to `api/package.json` is made with `bun add --exact` (there is no package-lock.json), and
-  a Node-only trick in a test (V8 flags, undici) needs its Bun equivalent.
+- **mcp/** is still upstream-shaped JavaScript: its changes usually apply almost verbatim
+  (`git show <sha> -- mcp/ | git apply -3` is fine when it applies cleanly; review it).
+- **api/** is TypeScript on Bun, routed by Hono (FORK.md, "The api on Bun and Hono" and "The
+  OpenAPI spec"), but its handlers keep upstream's shape, so a change usually ports line for line:
+  - upstream's `api/x.js` is `api/x.ts` here (`git show <sha> -- api/x.js` and apply it by hand, or
+    rewrite the paths: `git apply` will not find the renamed file). A new upstream file is renamed
+    with `bun api/scripts/ts-convert.ts api/new.js`. `bun run typecheck` stays at 0.
+  - a change to upstream's dispatcher at the bottom of `server.js` goes into `server.ts`'s `cors` /
+    `routePathOf` / `guard` / `fail`; a new `{param}` needs its pattern in `api/http-app.ts`
+    `PARAMS`.
+  - `api/openapi.yaml` is gone: its changes go into `api/openapi/` (routes/<tag>.ts, schemas.ts),
+    then `bun run openapi`. A new route needs a definition there (openapi-routes.test.ts), and
+    `bun run openapi:check` has to keep passing when an answer changes shape.
+  - `api/package.json` changes are made with `bun add --exact` (there is no package-lock.json);
+    a Node-only trick in a test (V8 flags, undici) needs its Bun equivalent.
 - **A conflict with a fork feature** (FORK.md lists them, `git log upstream/main..main`): keep the
   fork's behaviour and adapt upstream's change around it; if they truly clash, ask the user.
 
@@ -89,7 +97,7 @@ Run the checks before each commit (or at least before the last one):
 
 ```bash
 cd frontend && vp check && vp test && vp build    # format, lint, types, tests, build
-cd api && bun run test
+cd api && bun run typecheck && bun run test && bun run openapi:check
 cd mcp && npm test
 ```
 

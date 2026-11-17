@@ -4,7 +4,7 @@
 import { describe, expect, it } from 'vitest'
 import { sortMembers, flagText, changeText, changeLines, assignOutcome, assignResult, showsDashboard, trainerRoles, trainerError, initials, attentionOf } from './trainer-api.js'
 import { mergeStates } from './sync-merge.js'
-import { applyOps, cleanOps } from '../../../api/trainers/ops.js'
+import { applyOps, cleanOps } from '../../../api/trainers/ops.ts'
 
 const m = (id, name, summary = {}, extra = {}) => ({ grantId: 'g' + id, member: { id, name }, summary: { flags: [], ...summary }, ...extra })
 

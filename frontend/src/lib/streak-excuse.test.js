@@ -5,7 +5,7 @@ import { streakInfo } from './streak.js'
 import { setExcuseCap, excuseCapOf, EXCUSE_DEFAULT } from './streak-rule.js'
 import { explainWeek, excuseLabel, excuseLine } from './streak-explain.js'
 import { streakWeeks } from './streak-explain.js'
-import { streakWeeks as serverStreak } from '../../../api/trainers/projections.js'
+import { streakWeeks as serverStreak } from '../../../api/trainers/projections.ts'
 
 const mondays = list => list.map(d => ({ d }))
 // Weekly workouts on Mondays of Sep/Oct 2026, with the weeks of 5 and 12 Oct missed.

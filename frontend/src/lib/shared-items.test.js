@@ -17,7 +17,7 @@ describe('the library gate', () => {
     expect(browseTypes(config.shared).map(x => x.id)).toEqual(['sound'])
   })
   it('the consent text is the server\'s canonical one', async () => {
-    const { currentConsent } = await import('../../../api/consent.js')
+    const { currentConsent } = await import('../../../api/consent.ts')
     expect(currentConsent('library').text).toBe(LIBRARY_CONSENT)
     expect(LIBRARY_CONSENT).toMatch(/public to everyone on this server/)
     expect(LIBRARY_CONSENT).not.toMatch(/—/)

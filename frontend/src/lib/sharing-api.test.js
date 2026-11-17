@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { levelsFor, summarize, logLine, sharingError, consentWords, TRAINER_CONSENT, sharingOn } from './sharing-api.js'
-import { CONSENT_TEXTS } from '../../../api/consent.js'
+import { CONSENT_TEXTS } from '../../../api/consent.ts'
 
 describe('sharing helpers', () => {
   it('offers only the levels a category can reach, and the lead row only See', () => {

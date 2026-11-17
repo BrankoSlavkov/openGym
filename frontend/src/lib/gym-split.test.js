@@ -4,7 +4,7 @@ import { lastEntryFor } from './history.js'
 import { nextPrescription } from './progression.js'
 import { buildCompletedWorkout } from './finish-workout.js'
 import { mergeStates, STAMPED_MAPS } from './sync-merge.js'
-import { STAMPED_MAPS as API_STAMPED_MAPS } from '../../../api/sync-stamps.js'
+import { STAMPED_MAPS as API_STAMPED_MAPS } from '../../../api/sync-stamps.ts'
 
 // 0160 is a cable row in the catalogue; the numbers are what matters here.
 const EX = '0160'

@@ -36,7 +36,7 @@ describe('jobErrorText for a job refused at start for safety', () => {
   })
 
   it('says it in the same words the enqueue refusal answers with (api/coach/routes.js)', () => {
-    const routes = readFileSync(new URL('../../../api/coach/routes.js', import.meta.url), 'utf8')
+    const routes = readFileSync(new URL('../../../api/coach/routes.ts', import.meta.url), 'utf8')
     const atEnqueue = routes.match(/^\s*unprivileged: '([^']+)'/m)?.[1]
     expect(atEnqueue).toBeTruthy()
     expect(JOB_ERRORS.unprivileged.toLowerCase()).toBe(atEnqueue.toLowerCase() + '.')

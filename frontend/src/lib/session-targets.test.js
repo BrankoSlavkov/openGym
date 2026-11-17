@@ -5,7 +5,7 @@ import { buildSessionEntries } from './session-start.js'
 import { buildCompletedWorkout } from './finish-workout.js'
 import { modeOf, isPerSide } from './history.js'
 import { mergeStates, STAMPED_MAPS } from './sync-merge.js'
-import { STAMPED_MAPS as API_STAMPED_MAPS } from '../../../api/sync-stamps.js'
+import { STAMPED_MAPS as API_STAMPED_MAPS } from '../../../api/sync-stamps.ts'
 
 const helpers = { modeOf, isPerSide }
 const DAY = '2026-11-09'

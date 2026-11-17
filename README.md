@@ -242,8 +242,8 @@ frontend, sync, the exercise media and the watch.
 
 The training logic (progression rules, 1RM, how a logged session is read back) lives in pure
 functions under `frontend/src/lib/` with tests beside them. The HTTP API is documented as an
-OpenAPI spec in [`api/openapi.yaml`](api/openapi.yaml), browsable at
-[opengym.ch/api.html](https://opengym.ch/api.html).
+OpenAPI 3.2 document generated from [`api/openapi/`](api/openapi/) (in this fork: served at
+`/api/openapi.json`, browsable at `/api/docs`, and written to [`api/openapi.json`](api/openapi.json)).
 
 ### How sync works
 

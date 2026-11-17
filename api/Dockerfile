@@ -1,7 +1,9 @@
 # Two targets from one file.
 #
+# Fork: the api runs on Bun (FORK.md), from oven/bun's Alpine image, installed from bun.lock.
+#
 #   default (built when no --target is given) — what every instance has always got. No AI
-#           runtime, no AI dependency: `npm ci --omit=optional` skips the Agent SDK and its
+#           runtime, no AI dependency: `--omit=optional` skips the Agent SDK and its
 #           platform runtime entirely, so an owner who never wanted the Coach carries none of it.
 #   coach                                     — the same image plus the Claude Agent SDK.
 #
@@ -11,7 +13,7 @@
 # The stage order matters: Docker builds the *last* stage when none is named, so `default` is
 # deliberately last and `coach` sits above it.
 
-FROM node:26-alpine AS base
+FROM oven/bun:1.4.4-alpine AS base
 
 # Declared on the base stage so both targets inherit the labels and the healthcheck.
 ARG VERSION=dev
@@ -31,9 +33,9 @@ LABEL maintainer="Duarte Santos https://github.com/DuarteSantos8" \
 
 WORKDIR /app
 
-# The base image is rebuilt on node's schedule, not alpine's: between two node releases the
-# alpine packages it ships (openssl above all) fall behind their fixes. Taking the upgrades at
-# build time keeps the published image at alpine's current state without waiting for node.
+# The base image is rebuilt on Bun's schedule, not alpine's: between two Bun releases the
+# alpine packages it ships fall behind their fixes. Taking the upgrades at build time keeps the
+# published image at alpine's current state without waiting for Bun.
 RUN apk upgrade --no-cache
 
 # The unprivileged user Coach jobs drop to. Its uid cannot read /data, which is the control that
@@ -45,25 +47,27 @@ RUN apk upgrade --no-cache
 # an account is connected. It costs one line and no bytes worth measuring.
 RUN adduser -D -H -s /sbin/nologin coach
 
-COPY package.json package-lock.json* ./
-# `npm ci` rather than `npm install`: the lockfile is the point of committing one, and the SDK's
-# per-platform runtime is resolved from it (musl on this base) rather than from whatever the
-# build host happened to be.
-RUN npm ci --omit=dev --omit=optional && npm cache clean --force
+COPY package.json bun.lock ./
+# --frozen-lockfile: the lockfile is the point of committing one, and the SDK's per-platform
+# runtime is resolved from it (musl on this base) rather than from whatever the build host
+# happened to be.
+RUN bun install --frozen-lockfile --production --omit=optional && rm -rf /root/.bun/install/cache
 
 # Every module server.js imports from the api root has to be named here: the image carries nothing
 # else, and one that is missing only shows at boot, as ERR_MODULE_NOT_FOUND.
-COPY server.js push-messages.js nudge.js nudge-copy.js wrapped.js wrapped-copy.js checkin-reminder.js checkin-copy.js verify-error.js password.js rate-limit.js passkeys-store.js device-link.js media.js queue.js sync-stamps.js durable.js admin-socket.js recover.js net-guard.js permissions.js consent.js share-log.js tokens.js oauth.js budgets.js role-claims.js origin.js live-session.js ./
+COPY server.ts http-app.ts push-messages.ts nudge.ts nudge-copy.ts wrapped.ts wrapped-copy.ts checkin-reminder.ts checkin-copy.ts verify-error.ts password.ts rate-limit.ts passkeys-store.ts device-link.ts media.ts queue.ts sync-stamps.ts durable.ts admin-socket.ts recover.ts net-guard.ts permissions.ts consent.ts share-log.ts tokens.ts oauth.ts budgets.ts role-claims.ts origin.ts live-session.ts ./
 COPY coach ./coach
 COPY library ./library
 COPY oidc ./oidc
 COPY integrations ./integrations
 COPY trainers ./trainers
 COPY sources ./sources
+# Fork: the OpenAPI route definitions, document and request checks (FORK.md).
+COPY openapi ./openapi
 ENV NODE_ENV=production
 ENV PORT=3000
 EXPOSE 3000
-CMD ["node", "server.js"]
+CMD ["bun", "server.ts"]
 
 # Every 30 s, so a fresh container reads "healthy" half a minute after it starts instead of after
 # five (TrueNAS and Portainer wait for it before they call the app running, #844).
@@ -79,14 +83,16 @@ HEALTHCHECK --interval=30s \
 # @anthropic-ai/claude-agent-sdk together with the one platform runtime this base needs
 # (linux-*-musl), both pinned by the lockfile.
 FROM base AS coach
-RUN npm ci --omit=dev && npm cache clean --force
+RUN bun install --frozen-lockfile --production && rm -rf /root/.bun/install/cache
 
 # Codex ships as a CLI rather than a library, so it is installed rather than resolved, and
 # bubblewrap is its sandbox — a Codex requirement, which is why neither appears in the default
-# target or anywhere in this tree until now.
-RUN apk add --no-cache bubblewrap \
+# target or anywhere in this tree until now. Fork: its launcher is a Node script, and the Bun
+# base has no Node, so this target alone carries Alpine's nodejs (npm only for the install).
+RUN apk add --no-cache bubblewrap nodejs npm \
  && npm install -g @openai/codex@0.160.0 \
- && npm cache clean --force
+ && npm cache clean --force \
+ && apk del npm
 
 # Where Codex keeps its refreshable login cache. Deliberately a sibling of /data rather than a
 # path inside it: docs/SELF_HOSTING tells owners to back up with `tar czf … data/`, and a live
@@ -97,9 +103,5 @@ VOLUME ["/coach-auth"]
 
 # ---------------------------------------------------------------------------------------------
 # Last, so that a plain `docker build --pull ./api` keeps producing the runtime-free image.
+# Fork: the Bun base never had npm, so there is nothing to strip here any more.
 FROM base AS default
-# npm itself is only a build-time tool here: the server is started with `node server.js` and
-# nothing in it spawns npm. Its bundled dependency tree (tar, brace-expansion, ...) is where
-# every vulnerability the image scan ever reported lived — none of them was in a package the
-# app uses. Gone from the published image; the coach target keeps npm for the Codex CLI.
-RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx

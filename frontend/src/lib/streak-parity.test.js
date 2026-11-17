@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { streakInfo } from './streak.js'
 import { setStreakRule } from './streak-rule.js'
 import { weekKey, isoOf } from './format.js'
-import { streakWeeks, summarize } from '../../../api/trainers/projections.js'
+import { streakWeeks, summarize } from '../../../api/trainers/projections.ts'
 import { weekKeyOf } from '../../../api/coach/core/streak.js'
 
 const day = (iso, n) => { const d = new Date(iso + 'T12:00:00'); d.setDate(d.getDate() + n); return isoOf(d) }

@@ -66,33 +66,79 @@ Phases, each ending with green tests and a working image (branch `migrate/vite-p
    `lib/onerm.ts`).
 3. TanStack Router in place of react-router-dom (done; see "Routing" below).
 4. TypeScript conversion by layer: `lib/`, `store/`, `components/`, `views/`, then `sheets.jsx`.
-5. The api on Bun and Hono (below).
+5. The api on Bun and Hono, in TypeScript, with its OpenAPI 3.2 spec in code (below).
 
-`mcp/` stays upstream-shaped JavaScript on Node. `api/` stays upstream-shaped JavaScript too, but
-runs on Bun and routes through Hono.
+`mcp/` stays upstream-shaped JavaScript on Node. `api/` is TypeScript on Bun, routed by Hono; its
+handlers keep upstream's shape so upstream's api commits stay portable.
 
 ### The api on Bun and Hono
 
-- **Runtime:** Bun (`oven/bun` Alpine image, `bun.lock`, `bun server.js`). Tests are upstream's
+- **Runtime:** Bun (`oven/bun` Alpine image, `bun.lock`, `bun server.ts`). Tests are upstream's
   `node:test` files run by Bun's runner: `cd api && bun run test` (`--parallel` gives each file its
   own process, which the tests rely on for their `DATA_DIR`).
-- **Router:** `api/http-app.js` turns the route table into a Hono app. The table and the modules
+- **TypeScript:** every file under `api/` is `.ts` and runs as is (Bun strips the types);
+  `bun run typecheck` (tsc 7) has to stay at 0 errors. The baseline is **not strict** yet
+  (`"strict": false`): the JavaScript's own loose shapes were typed where they are (option bags
+  get `{ key?: any; [key: string]: any }`, grown objects `Record<string, any>`, trailing
+  parameters optional), so that tightening can go file by file. New code is written to strict
+  standards. `api/coach/core/` stays JavaScript: the frontend imports it as `.js`, and it converts
+  with the frontend's phase 4 (`allowJs` is off, so its imports are untyped until then).
+  `api/scripts/ts-convert.ts` renames an upstream file that arrives as `.js` and rewrites the paths
+  that name it.
+- **Router:** `api/http-app.ts` turns the route table into a Hono app. The table and the modules
   beside it keep upstream's shape, `'METHOD /path': async (req, res) => {}` with `{name}`
   parameters, and handlers still get node's `req`/`res` (through `@hono/node-server`). That is
   what keeps upstream's api commits portable: they touch handlers, and handlers did not change.
   A path parameter needs its pattern in `PARAMS` there (a new one is refused at start).
-- **What changed in server.js:** only the dispatcher at the bottom, cut into `cors`,
-  `routePathOf`, `guard` and `fail` for `createApi`. An upstream commit that edits upstream's
-  dispatcher block is ported into those functions by hand.
-- **Hono-native routes:** wrap a handler in `native()` from `http-app.js`; it gets the Hono context
-  and returns a Response, behind the same guard and error answer. Convert a route only when the
-  fork needs to change it anyway; a converted route stops taking upstream's edits verbatim.
+- **What changed in server.ts:** the dispatcher at the bottom, cut into `cors`, `routePathOf`,
+  `guard` and `fail` for `createApi`; `json()` and `readBody()` gained the OpenAPI hooks below.
+  An upstream commit that edits upstream's dispatcher block is ported into those functions by hand.
+- **Hono-native routes:** wrap a handler in `native()` from `http-app.ts`; it gets the Hono context
+  and returns a Response, behind the same guard and error answer (`openapi/serve.ts` does).
+  Convert a route only when the fork needs to change it anyway.
 - **Behaviour kept on purpose:** HEAD is still a 404 (Hono would answer it with the GET route),
   the path check and body deadline still run on the raw request before Hono, and preflights are
   answered for any target. New: a request whose Host header is not a valid host is a 400.
-- **Gone:** undici. Bun's fetch has no 300-second headers timeout, so `coach/node-fetch.js` is a
+- **Gone:** undici. Bun's fetch has no 300-second headers timeout, so `coach/node-fetch.ts` is a
   plain fetch with an abort budget; the coach target carries Alpine's `nodejs` only for the Codex
   launcher.
+
+### The OpenAPI spec (api/openapi/)
+
+Upstream's hand-written `api/openapi.yaml` (3.1) was turned into code once and removed. The spec is
+now zod (via `@hono/zod-openapi`), and the document is generated from it as **OpenAPI 3.2**
+(`@asteasolutions/zod-to-openapi`'s 3.2 generator; `@hono/zod-openapi` writes 3.0/3.1 only).
+
+- `schemas.ts`: the shared schemas (`#/components/schemas`; `ErrorBody` is the component `Error`,
+  so it does not shadow the global). `routes/<tag>.ts`: one definition per route, with upstream's
+  `operationId`s (three that had none were named the same way). `responses.ts`: shared answers.
+  `document.ts`: adds the answers the shared machinery gives on any route (400 invalid request,
+  403 origin refusal, 413, 415) and builds the document.
+- **Served:** `GET /api/openapi.json`, and Swagger UI at `GET /api/docs` (from `swagger-ui-dist`,
+  served by the api: the web container's CSP allows only same-origin scripts, and a LAN-only
+  instance may have no internet). `bun run openapi` writes the same document to `api/openapi.json`;
+  a test fails when that file is stale.
+- **Orval:** the frontend client is to be generated from `api/openapi.json` (a file, so the
+  frontend build needs no running api). Checked with Orval 8.46: a fetch client and every model,
+  0 errors under strict TypeScript. Orval names the error model `Error`; rename it in the Orval
+  config (`override.components.schemas`) if that clashes in the frontend.
+- **Requests are validated** (`openapi/validate.ts`), the shape only: a value of the wrong JSON
+  type, or outside an enum, is a 400 `{ error, code: 'invalid-request', issues }`. A missing or
+  null field, and lengths, sizes, patterns and formats, stay the handler's to answer in its own
+  words (a missing password is a wrong password, counted and audited). Bodies are checked where the
+  handler reads them (`readBody`), after its own sign-in check; queries after the route's guard.
+  `representative(schema)` marks a schema that documents without binding: the `State` document
+  (the server stores it as sent), `baseRev` (another type is a 409 by design) and the push
+  `deviceId` (junk is ignored, not refused).
+- **Responses are checked in tests:** `bun run openapi:check` runs the suite with
+  `OPENAPI_RESPONSES=check` and fails on any JSON answer its route does not describe (a status, a
+  field, a type). It passes; keep it passing when a handler's answer changes. The bun-test stack
+  runs with the check on and logs `openapi:` lines.
+- **Types:** `openapi/types.ts` (`Schemas['State']`, `JsonBody<typeof putData>`,
+  `JsonResponse<typeof getData, 200>`) for the api's own code.
+- **Porting:** a change upstream makes to `api/openapi.yaml` is made in `api/openapi/` instead
+  (then `bun run openapi`). A new upstream route needs a definition there, or
+  `openapi-routes.test.ts` fails.
 
 ### Routing
 

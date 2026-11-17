@@ -1,0 +1,56 @@
+# Fork: a second, separate stack for trying the api on Bun + Hono next to the real one.
+#
+#   docker compose -f docker-compose.bun-test.yml up -d --build      # start (builds the api only)
+#   open http://localhost:8792                                        # sign in with name + password
+#   docker compose -f docker-compose.bun-test.yml down                # stop and remove it
+#
+# Nothing here touches the main stack: its own project name (containers, network), its own image
+# tag (opengym-bun-test-api:local, so opengym-fork-api:local is never rebuilt or replaced), its own
+# port, and its own data folder, a copy of ./data made by scripts/bun-test-data.sh. The web image is
+# the one the main stack already built (opengym-fork-web:local), reused as is, not rebuilt.
+name: opengym-bun-test
+
+services:
+  api:
+    image: opengym-bun-test-api:local
+    pull_policy: build
+    build:
+      context: ./api
+      target: ${API_TARGET:-coach}
+    restart: "no"
+    env_file: .env
+    environment:
+      - PORT=3000
+      - DATA_DIR=/data
+      - TRUST_PROXY=1
+      # Passkeys are bound to the ngrok host, so this copy is reached on localhost and signed into
+      # with the profile name and password (PASSWORD_LOGIN in .env).
+      - RP_ID=localhost
+      - ORIGIN=http://localhost:8792
+      # The copy must not act for the real instance: no webhooks out, and no scheduled Coach
+      # reviews spending the provider account. Set COACH_DISABLED=0 to try the Coach on Bun.
+      - INTEGRATIONS=
+      - COACH_DISABLED=${BUN_TEST_COACH_DISABLED:-1}
+      - COACH_CREDENTIAL_DIR=/coach-auth
+      # Logs every JSON answer the OpenAPI spec does not describe, and every request the spec's
+      # check refused, as `openapi:` lines (docker compose -f docker-compose.bun-test.yml logs api).
+      - OPENAPI_RESPONSES=check
+    volumes:
+      - ./data-bun-test:/data
+      - ./coach-auth-bun-test:/coach-auth
+
+  web:
+    image: opengym-fork-web:local
+    pull_policy: never
+    restart: "no"
+    depends_on:
+      api:
+        condition: service_started
+    ports:
+      - "127.0.0.1:8792:80"
+    environment:
+      - NGINX_PORT=80
+      - BACKEND=api
+      - PORT=3000
+      - RESOLVER=127.0.0.11
+      - CF_CONNECTING_IP=

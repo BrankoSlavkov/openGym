@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import * as web from './sharing-scopes.js'
-import * as api from '../../../api/trainers/scopes.js'
+import * as api from '../../../api/trainers/scopes.ts'
 
 // Code that exists twice on purpose (CLAUDE.md): the app's copy of the scope catalog must give
 // the same answers as the server's, or the consent screen would offer levels the server refuses.
