@@ -14,7 +14,9 @@ import { aiConsents, withdrawAi, onAiConsentChange } from '../lib/coach-consent.
 import { emptyCoach } from '../lib/coach.js'
 import Icon from './Icon.tsx'
 import { Button, Section, Row } from './ui.tsx'
-import '../coach.css'
+import * as stylex from '@stylexjs/stylex'
+import { sx } from '../lib/sx.ts'
+import { ob } from '../coach.styles.ts'
 
 // Literal t() calls, so check-source-strings sees every line.
 const LINES = {
@@ -41,17 +43,17 @@ export function askAiConsent(target) {
 function ConsentSheet({ target, onAnswer }) {
   const server = target.via === 'server'
   return <div className="ai-consent">
-    <div className="ob-eyebrow">{t('Your data, your call')}</div>
+    <div {...sx('ob-eyebrow', ob.eyebrow)}>{t('Your data, your call')}</div>
     <h3>{t('Send your training to {0}?', target.name)}</h3>
     <p className="muted" style={{ lineHeight: 1.5, margin: '6px 0 12px' }}>
       {server
         ? t('To answer, the Coach sends this through your openGym server to {0}, an AI service outside openGym that your server’s admin picked:', target.name)
         : t('To answer, this device sends this straight to {0}, an AI service outside openGym, with your API key:', target.name)}
     </p>
-    <div className="ob-consent">
-      {sharedLines().map(line => <div key={line} className="ob-consent-row"><Icon name="check" /><div><span>{line}</span></div></div>)}
+    <div {...stylex.props(ob.consent)}>
+      {sharedLines().map(line => <div key={line} {...sx('ob-consent-row', ob.consentRow)}><Icon name="check" {...stylex.props(ob.consentIcon)} /><div><span {...stylex.props(ob.consentText)}>{line}</span></div></div>)}
     </div>
-    <div className="ob-fine">
+    <div {...stylex.props(ob.fine)}>
       <div>{t('Your name, email and sign-in stay put. {0} handles the rest under its own privacy terms.', target.name)}</div>
       <div>{t('Change your mind anytime under AI data sharing in the Coach menu.')}</div>
     </div>

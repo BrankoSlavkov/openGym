@@ -3,7 +3,7 @@ import SwipeCards from '../components/SwipeCards.jsx'
 import SwipeRow from '../components/SwipeRow.tsx'
 import { useNavigate } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
-import { workoutControls } from '../lib/workout-controls.js'
+import { workoutControls } from '../lib/workout-controls.ts'
 import { useUI } from '../store/useUI.js'
 import { autoHoldsFor, forecastHolds, nextAutoHold } from '../lib/auto-holds.js'
 import { autoRunRestSec } from '../lib/auto-run.js'
@@ -72,11 +72,11 @@ import { bindLiveActions } from '../lib/live-activity.js'
 import { bindWidgetActions } from '../lib/widget-logger.js'
 import { isWarmupRow, isFailureSet, toggleFailure, isDropSet, isRestPauseSet, isClusterSet, dropsOf, clustersOf, addDrop, addCluster, removeDropAt, removeClusterAt, setDropAt, setClusterAt, nextDropWeight, nextBurstReps, isSideSet, makeSideSet, setSideField, toggleSide, addSideDrop, removeSideDropAt, setSideDropAt, addSideCluster, removeSideClusterAt, setSideClusterAt, WEIGHT_ORIGIN_MANUAL, markWarmupEdited } from '../lib/workout-model.js'
 import { canMoveActiveWorkoutUnit, moveActiveWorkoutUnit, canMoveActiveWorkoutEntry, moveActiveWorkoutEntry } from '../lib/active-workout-order.js'
-import { nextOpenSet, workoutKeyAction } from '../lib/workout-keys.js'
+import { nextOpenSet, workoutKeyAction } from '../lib/workout-keys.ts'
 import { MUSCLE_NAME } from '../lib/muscles.js'
 import FocusView from './FocusView.jsx'
 import { startOrPreview } from '../components/StartSheets.jsx'
-import { isPaused, canPause, pauseWorkout, resumeWorkout } from '../lib/workout-pause.js'
+import { isPaused, canPause, pauseWorkout, resumeWorkout } from '../lib/workout-pause.ts'
 import { SeasonDeco } from '../components/Seasonal.jsx'
 import { entryDbLoad, bellsIn, ownedWeightsFor, stepOwned } from '../lib/dumbbells.js'
 import { sessionGymView, gymsOf, activeGym, gymLabel, switchGym, reRoundOpenSets } from '../lib/gym-inventory.js'
@@ -89,7 +89,7 @@ import { recordBaseline, entryRecords, recordHint, liveRecordsOn, recordHintsOn,
 import { RecordMark, RecordHintLine } from '../components/SetRecord.tsx'
 import { setNoteOf } from '../lib/set-notes.ts'
 import { SET_TAGS, setTagOf, setTagName, withSetTag } from '../lib/set-tags.js'
-import { isOn } from '../lib/modules.js'
+import { isOn } from '../lib/modules.ts'
 import CardioEffortChip from '../components/CardioEffortChip.tsx'
 import { tempoSheet, tempoGuideSheet, TempoTag } from '../components/Tempo.jsx'
 import { tempoOf, normalizeTempo, guideReps } from '../lib/tempo.js'
@@ -382,7 +382,7 @@ function ExerciseBlock({ entryIdx, compact, listed, dense, editing, onToggle, on
     const today = entry.target || {}
     // A pyramid reads as its targets, as on the routine row: "12 · 8 · 6 · Max · 12", never the
     // set count times the first target (#367). Its rows are the plan; nothing moves them.
-    if (isPyramid(today)) return <div className="small dim planline" style={{ marginBottom: 4 }}>{t('Plan: {0}', pyramidLabel(today.pyramid))}</div>
+    if (isPyramid(today)) return <div className="small dim planline" style={{ marginBottom: 'var(--planline-mb, 4px)' }}>{t('Plan: {0}', pyramidLabel(today.pyramid))}</div>
     const todaySets = today.sets || planned.sets || 1
     const inPlan = timed
       ? today.sec == null || today.sec === planned.sec
@@ -390,7 +390,7 @@ function ExerciseBlock({ entryIdx, compact, listed, dense, editing, onToggle, on
     const note = todaySets !== (planned.sets || 1) || !inPlan
       ? t('today {0}', setsRepsOf({ mode, sets: todaySets, reps: today.reps, sec: today.sec, m: today.m }))
       : entry.carried ? t('reps from your last session') : null
-    return <div className="small dim planline" style={{ marginBottom: 4 }}>
+    return <div className="small dim planline" style={{ marginBottom: 'var(--planline-mb, 4px)' }}>
       {/* A session stamped before `planned` kept a carry's metres: today's, not the 20 m default. */}
       {t('Plan: {0}', setsRepsOf({ ...(mode === 'distance' && today.m > 0 ? { m: today.m } : {}), ...planned, mode }))}{note ? ' · ' + note : ''}
     </div>

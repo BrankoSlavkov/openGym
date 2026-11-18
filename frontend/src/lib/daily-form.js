@@ -25,7 +25,7 @@
 import { applyAdapt } from './coach-adapt.js'
 import { isWarmupRow, hasCompletedWork } from './workout-model.js'
 import { setSessionNoProg } from './session-noprog.js'
-import { isOn } from './modules.js'
+import { isOn } from './modules.ts'
 import { setDailyFormSource } from './deload-cycle.js'
 
 export const FORM_KEYS = ['sleep', 'energy', 'sore', 'stress']

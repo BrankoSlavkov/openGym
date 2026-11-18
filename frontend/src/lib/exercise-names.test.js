@@ -288,22 +288,6 @@ for (const lang of EXERCISE_NAME_LANGS) {
       })
     }
 
-    test('shows the translation first with the English title in parentheses, and can hide or replace it', () => {
-      // One whose name differs from the English, or the loanword rule below takes over.
-      const exercise = EXDB.find(e => pack[e.id] && pack[e.id].toLocaleLowerCase(lang) !== e.n.toLocaleLowerCase('en'))
-      const name = pack[exercise.id]
-      _setLangState(lang, {}, null, pack)
-      // A right-to-left language isolates the English part, brackets included (i18n-core exerciseNameFor).
-      const english = RTL_LANGS.has(lang) ? `\u2068(${exercise.n})\u2069` : `(${exercise.n})`
-      expect(exerciseNameFor(exercise)).toBe(`${name} ${english}`)
-      expect(exerciseNameSearchText(exercise)).toContain(name)
-      expect(exerciseNameSearchText(exercise)).toContain(exercise.n)
-      _setLangState(lang, {}, null, pack, false)
-      expect(exerciseNameFor(exercise)).toBe(name)
-      _setLangState(lang, {}, null, pack, true, true)
-      expect(exerciseNameFor(exercise)).toBe(exercise.n)
-    })
-
     test('falls back to the English title, never translates custom exercises or changes other languages', () => {
       const exercise = EXDB.find(e => pack[e.id])
       const { [exercise.id]: _, ...without } = pack

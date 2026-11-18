@@ -7,6 +7,48 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { t } from '../lib/i18n.js'
 import { visibleBottom, NATIVE_KEYBOARD_EVENT } from '../lib/native-keyboard.js'
 import Icon from './Icon.tsx'
+import * as stylex from '@stylexjs/stylex'
+import { sx } from '../lib/sx.ts'
+
+// The Coach's message box (was in coach.css). The height is set below: as tall as the text, up to
+// 40% of the screen above the keyboard, or 70% opened into the tall editor.
+const styles = stylex.create({
+  box: {
+    flex: 1,
+    minHeight: 44,
+    resize: 'none',
+    borderRadius: 22,
+    padding: '11px 16px',
+    overflowY: 'auto',
+    fontSize: 'var(--fs-callout)',
+    lineHeight: 1.35,
+    backgroundColor: 'var(--surface)',
+    color: 'var(--label)',
+    border: 'none',
+    outline: 'none',
+    fontFamily: 'inherit',
+    letterSpacing: '-.008em',
+    boxShadow: { default: null, ':focus': 'inset 0 0 0 1.5px var(--acc)' },
+    '::placeholder': { color: 'var(--label-3)' },
+  },
+  boxTall: { borderRadius: 18 },
+  // The toggle between the growing box and the tall editor, on the box's top corner.
+  grow: {
+    position: 'absolute',
+    top: -30,
+    left: 4,
+    width: 28,
+    height: 28,
+    borderRadius: 99,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 'var(--fs-subhead)',
+    backgroundColor: 'var(--surface)',
+    color: 'var(--label-2)',
+    boxShadow: '0 1px 3px rgba(0,0,0,.18)',
+  },
+})
 
 export const MIN_HEIGHT = 44
 export const GROW_SHARE = 0.4
@@ -82,7 +124,7 @@ export default function ChatInput({
       {(tall || expanded) && (
         <button
           type="button"
-          className="composer-grow"
+          {...sx('composer-grow', styles.grow)}
           onClick={() => setExpanded(!expanded)}
           aria-label={expanded ? t('Make the box smaller') : t('Make the box bigger')}
           aria-pressed={expanded}
@@ -91,6 +133,7 @@ export default function ChatInput({
         </button>
       )}
       <textarea
+        {...stylex.props(styles.box, expanded && styles.boxTall)}
         ref={ref}
         rows={1}
         value={value}

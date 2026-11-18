@@ -1,0 +1,318 @@
+// Fork: Community's styles (was Community.css). Built from the app's own tokens (index.css), so
+// it follows the theme, the accent and dark mode. The one thing that stands out on purpose is the
+// byline: every card carries a face and a name, because who shared it is half of what it says.
+// Safari before 16.2 has no color-mix(): plain surfaces there (firstThatWorks).
+import * as stylex from '@stylexjs/stylex'
+
+const wide = '@media (min-width:900px)'
+const motionOk = '@media (prefers-reduced-motion:no-preference)'
+const pulse = stylex.keyframes({ to: { opacity: 0.35 } })
+const ellipsis = { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } as const
+const cover = { width: '100%', height: '100%', objectFit: 'cover' } as const
+
+export const styles = stylex.create({
+  page: { maxWidth: 1080, marginInline: 'auto' },
+  hdr: { alignItems: 'flex-end' },
+  sub: { maxWidth: '52ch' },
+  back: { alignSelf: 'flex-start', marginTop: 4 },
+  tabs: { marginBottom: 10 },
+  tabIcon: { fontSize: 'var(--fs-footnote)' },
+  tools: { display: 'grid', gap: 8, marginBottom: 12 },
+  sortRow: { display: 'flex', alignItems: 'center', gap: 8 },
+  sort: { flex: 1, maxWidth: 260 },
+  sortChip: { flex: 'none', minHeight: 36 },
+
+  list: {
+    display: 'grid',
+    gap: { default: 8, [wide]: 10 },
+    gridTemplateColumns: { default: null, [wide]: 'repeat(2,minmax(0,1fr))' },
+  },
+  card: {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: { default: 'var(--surface)', [stylex.when.descendant(':active')]: 'var(--press-fill)' },
+    borderRadius: 'var(--r-card)',
+    padding: '10px 12px',
+    minHeight: 76,
+    transition: 'background var(--fast)',
+  },
+  main: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: 3,
+    flex: 1,
+    minWidth: 0,
+    textAlign: 'start',
+    background: 'none',
+    border: 0,
+    padding: 0,
+    color: 'inherit',
+    font: 'inherit',
+  },
+  title: {
+    fontSize: 'var(--fs-body)',
+    fontWeight: 600,
+    letterSpacing: 'var(--ls-body)',
+    lineHeight: 'var(--lh-tight)',
+    overflowWrap: 'anywhere',
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
+  },
+  line: { color: 'var(--label-2)', fontSize: 'var(--fs-footnote)', ...ellipsis, maxWidth: '100%' },
+  capitalize: { textTransform: 'capitalize' },
+  side: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    gap: 4,
+    flex: 'none',
+    position: 'relative',
+    zIndex: 1,
+  },
+  count: { fontVariantNumeric: 'tabular-nums' },
+
+  // The byline: face + "by Anna · 3 Nov".
+  by: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 3,
+    maxWidth: '100%',
+    color: 'var(--label-2)',
+    fontSize: 'var(--fs-caption)',
+    fontWeight: 500,
+    lineHeight: 1.2,
+  },
+  byText: ellipsis,
+  face: {
+    flex: 'none',
+    display: 'inline-grid',
+    placeItems: 'center',
+    borderRadius: '50%',
+    overflow: 'hidden',
+    color: '#fff',
+    fontSize: 'var(--fs-caption2)',
+    fontWeight: 700,
+    boxShadow: '0 0 0 1.5px var(--surface),0 0 0 2.5px var(--sep)',
+  },
+  faceImg: { ...cover, display: 'block' },
+
+  // Previews: one 56 px tile per kind.
+  pre: {
+    flex: 'none',
+    width: 56,
+    height: 56,
+    borderRadius: 14,
+    display: 'grid',
+    placeItems: 'center',
+    backgroundColor: 'var(--surface-2)',
+    fontSize: '1.5rem',
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  preSm: { width: 36, height: 36, borderRadius: 10, fontSize: 'var(--fs-body)' },
+  preBig: { width: 84, height: 84, borderRadius: 18 },
+  preLook: {
+    gridAutoFlow: 'column',
+    gap: 2,
+    backgroundColor: stylex.firstThatWorks('color-mix(in srgb,var(--look) 16%,var(--surface-2))', 'var(--surface-2)'),
+  },
+  emoji: { fontSize: 'var(--fs-title2)', lineHeight: 1 },
+  swatch: { width: 26, height: 26, borderRadius: '50%' },
+  picImg: cover,
+  picWait: { display: 'block', width: '100%', height: '100%', backgroundColor: 'var(--surface-3)' },
+  preSound: {
+    backgroundColor: stylex.firstThatWorks('color-mix(in srgb,var(--blue) 14%,var(--surface-2))', 'var(--surface-2)'),
+  },
+  play: {
+    width: 40,
+    height: 40,
+    borderRadius: '50%',
+    border: 0,
+    display: 'grid',
+    placeItems: 'center',
+    backgroundColor: 'var(--blue)',
+    color: '#fff',
+    fontSize: 'var(--fs-body)',
+    transition: 'transform 140ms cubic-bezier(.23,1,.32,1)',
+    position: 'relative',
+    zIndex: 1,
+    transform: { default: null, ':active': 'scale(.94)' },
+    opacity: { default: null, ':disabled': 0.5 },
+  },
+  playing: { backgroundColor: 'var(--label)' },
+
+  status: { whiteSpace: 'nowrap' },
+  stPending: {
+    backgroundColor: stylex.firstThatWorks('color-mix(in srgb,var(--yellow) 22%,var(--surface-2))', 'var(--surface-2)'),
+    color: 'var(--label)',
+  },
+  stOff: {
+    backgroundColor: stylex.firstThatWorks('color-mix(in srgb,var(--red) 18%,var(--surface-2))', 'var(--surface-2)'),
+    color: 'var(--label)',
+  },
+  stWithdrawn: { color: 'var(--label-3)' },
+
+  empty: { padding: '28px 12px' },
+  emptyText: { maxWidth: '34ch', margin: '6px auto 12px', color: 'var(--label-2)' },
+  skel: { display: 'grid', gap: 8 },
+  skelRow: {
+    display: 'block',
+    height: 76,
+    borderRadius: 'var(--r-card)',
+    backgroundColor: 'var(--surface)',
+    opacity: 0.7,
+    animationName: { default: null, [motionOk]: pulse },
+    animationDuration: { default: null, [motionOk]: '1.2s' },
+    animationTimingFunction: { default: null, [motionOk]: 'ease-in-out' },
+    animationIterationCount: { default: null, [motionOk]: 'infinite' },
+    animationDirection: { default: null, [motionOk]: 'alternate' },
+  },
+  foot: { textAlign: 'center', margin: '18px auto 6px', maxWidth: '40ch' },
+  spacer: { height: 10 },
+
+  avatar: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: 'var(--surface)',
+    borderRadius: 'var(--r-card)',
+    padding: '10px 12px',
+    marginBottom: 12,
+    fontSize: 'var(--fs-footnote)',
+    color: 'var(--label-2)',
+  },
+  nowrap: { whiteSpace: 'nowrap', flex: 'none' },
+
+  // Sheets
+  sheet: { display: 'grid', gap: 10 },
+  consent: { gap: 14 },
+  h3: { margin: 0 },
+  sheetTop: { display: 'flex', alignItems: 'center', gap: 14 },
+  sheetTitle: { fontSize: 'var(--fs-title3)', overflowWrap: 'anywhere' },
+  desc: {
+    margin: 0,
+    color: 'var(--label)',
+    lineHeight: 'var(--lh-body)',
+    whiteSpace: 'pre-line',
+    overflowWrap: 'anywhere',
+  },
+  taken: { marginTop: -4 },
+  note: { margin: 0, padding: '8px 10px', borderRadius: 'var(--r-sm)' },
+  detail: {
+    listStyle: 'none',
+    margin: 0,
+    padding: 0,
+    backgroundColor: 'var(--surface-2)',
+    borderRadius: 'var(--r-card)',
+    overflow: 'hidden',
+  },
+  detailRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    padding: '10px 12px',
+    borderBottom: { default: '.5px solid var(--sep)', ':last-child': 0 },
+  },
+  detailIcon: { color: 'var(--label-3)' },
+  quote: {
+    margin: 0,
+    padding: '12px 14px',
+    borderInlineStart: '3px solid var(--yellow)',
+    backgroundColor: 'var(--surface-2)',
+    borderRadius: '0 var(--r-sm) var(--r-sm) 0',
+    fontSize: 'var(--fs-callout)',
+    lineHeight: 'var(--lh-body)',
+    whiteSpace: 'pre-line',
+  },
+  cite: {
+    display: 'block',
+    marginTop: 6,
+    fontStyle: 'normal',
+    fontSize: 'var(--fs-footnote)',
+    color: 'var(--label-2)',
+  },
+  video: {
+    width: '100%',
+    maxHeight: '52vh',
+    borderRadius: 'var(--r-card)',
+    backgroundColor: '#000',
+    aspectRatio: '16/9',
+  },
+  gallery: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(140px,1fr))', gap: 6 },
+  galPic: { aspectRatio: 1, borderRadius: 'var(--r-sm)', overflow: 'hidden', backgroundColor: 'var(--surface-2)' },
+  actions: { display: 'grid', gap: 6, marginTop: 4 },
+  reasons: { display: 'flex', flexWrap: 'wrap', gap: 6 },
+  reportGap: { height: 12 },
+  own: { display: 'grid', gap: 6, maxHeight: '50vh', overflow: 'auto' },
+  ownRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    padding: '8px 10px',
+    backgroundColor: 'var(--surface-2)',
+    borderRadius: 'var(--r-sm)',
+  },
+  ownTitle: { minWidth: 0, ...ellipsis },
+  ownEmpty: { padding: '8px 2px' },
+  server: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6,
+    margin: '-4px 0 0',
+    color: 'var(--label-2)',
+    fontWeight: 600,
+  },
+  // Title and "a few words": the label sits clear of its field like the app's other forms, the
+  // fields get room between them and the description is tall enough to write in.
+  field: { display: 'grid', gap: 6, fontSize: 'var(--fs-footnote)', color: 'var(--label-2)' },
+  fieldLabel: { paddingInline: 2 },
+  input: { backgroundColor: 'var(--surface)', minHeight: 48 },
+  textarea: { minHeight: 104 },
+  consentText: {
+    margin: 0,
+    padding: 12,
+    backgroundColor: 'var(--surface-2)',
+    borderRadius: 'var(--r-sm)',
+    lineHeight: 'var(--lh-body)',
+    fontSize: 'var(--fs-subhead)',
+  },
+  ownCheck: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 10,
+    padding: '10px 12px',
+    borderRadius: 'var(--r-sm)',
+    backgroundColor: 'var(--acc-soft)',
+    color: 'var(--label)',
+    fontSize: 'var(--fs-subhead)',
+    fontWeight: 500,
+    cursor: 'pointer',
+  },
+  check: { flex: 'none' },
+  warn: {
+    display: 'flex',
+    gap: 8,
+    alignItems: 'flex-start',
+    margin: 0,
+    padding: '10px 12px',
+    borderRadius: 'var(--r-sm)',
+    backgroundColor: stylex.firstThatWorks('color-mix(in srgb,var(--red) 14%,var(--surface-2))', 'var(--surface-2)'),
+    fontSize: 'var(--fs-subhead)',
+  },
+})
+
+/** The status tint of a shared thing of yours (pending, hidden, removed, withdrawn). */
+export const statusStyle = (status: string) =>
+  status === 'pending'
+    ? styles.stPending
+    : status === 'hidden' || status === 'removed'
+      ? styles.stOff
+      : status === 'withdrawn'
+        ? styles.stWithdrawn
+        : null

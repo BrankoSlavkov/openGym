@@ -18,7 +18,7 @@
 //   - a proposal waits in the device file, not in S, so it survives an app kill without
 //     riding into a backup or a sync.
 import * as payloadLib from '../../../api/coach/core/payload.js'
-import { runPipeline } from '../../../api/coach/core/pipeline.js'
+import { runPipeline } from '../../../api/coach/core/pipeline.ts'
 import { waitingProposal } from '../../../api/coach/core/pending.ts'
 import { isDue, FINAL_FAILURES, RETRY_AFTER_MS } from '../../../api/coach/core/due.ts'
 import { HTTP_PROVIDERS, baseUrlFor, phoneMayCall } from '../../../api/coach/core/providers.ts'

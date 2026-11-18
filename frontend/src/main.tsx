@@ -9,16 +9,14 @@ import { startMediaSync } from './lib/media-sync.js'
 import { startLiveSync } from './store/live-sync.js'
 import { startNativeKeyboard } from './lib/native-keyboard.js'
 import { registerDailyFormSource } from './lib/daily-form.js'
-// The Coach's and the admin dashboard's styles stay in the main stylesheet, in the place they
-// always had (before index.css), although their screens are now loaded on demand (App.jsx).
-import './admin.css'
-import './coach.css'
+// Fork: the Coach's and the admin dashboard's styles are StyleX now (coach.styles.ts,
+// views/Admin.styles.ts), compiled into the main stylesheet with the rest.
 import './index.css'
-import { hideBoot, handOverFromLaunchScreen } from './lib/boot.js'
+import { hideBoot, handOverFromLaunchScreen } from './lib/boot.ts'
 import { guardFocusZoom } from './lib/viewport-zoom.ts'
 import { initBuildCaps } from './lib/channel.js'
 import { startNetLog } from './lib/net-log.js'
-import { applyDisplay } from './lib/display-prefs.js'
+import { applyDisplay } from './lib/display-prefs.ts'
 
 // App.jsx restores per-route scroll itself; the browser's own attempt races it.
 // A script that dies before the app draws would otherwise leave the boot logo lifting forever.
@@ -36,13 +34,18 @@ applyDisplay()
 // Settings → About → Network log (lib/net-log.js): from the very first request on.
 if (MOBILE) startNetLog()
 
-const render = () => createRoot(document.getElementById('root')!).render(
-  <StrictMode><QueryClientProvider client={queryClient}><App /></QueryClientProvider></StrictMode>
-)
-// The phone app first asks which build it is (lib/build-caps.js): openGym Offline must never show
+const render = () =>
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </StrictMode>,
+  )
+// The phone app first asks which build it is (lib/build-caps.ts): openGym Offline must never show
 // a sync button, not even for a frame. The answer is a few milliseconds; a shell that never
 // answers still gets its app after a moment.
-if (MOBILE) Promise.race([initBuildCaps().catch(() => {}), new Promise(r => setTimeout(r, 700))]).then(render)
+if (MOBILE) Promise.race([initBuildCaps().catch(() => {}), new Promise((r) => setTimeout(r, 700))]).then(render)
 else render()
 
 // The photos and videos of custom exercises, in every build (the phone and the demo included):
@@ -62,7 +65,7 @@ if (!MOBILE && 'serviceWorker' in navigator && location.protocol === 'https:') {
   navigator.serviceWorker.register('sw.js').catch(() => {})
   // The plan's exercise media, kept by the worker for a workout opened without a network (#281).
   // It only fetches ahead while the page runs as the installed app; a tab keeps what it has shown.
-  import('./lib/media-prefetch.js').then(m => m.startMediaPrefetch(useStore)).catch(() => {})
-  // A deploy reaches an app left open too, not just the next fresh start (lib/app-refresh.js).
-  import('./lib/app-refresh.js').then(m => m.startAppRefresh()).catch(() => {})
+  import('./lib/media-prefetch.js').then((m) => m.startMediaPrefetch(useStore)).catch(() => {})
+  // A deploy reaches an app left open too, not just the next fresh start (lib/app-refresh.ts).
+  import('./lib/app-refresh.ts').then((m) => m.startAppRefresh()).catch(() => {})
 }

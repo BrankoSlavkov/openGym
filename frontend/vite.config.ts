@@ -4,11 +4,12 @@ import { join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig, lazyPlugins } from 'vite-plus'
 import react from '@vitejs/plugin-react'
+import stylex from '@stylexjs/unplugin/vite'
 import type { Plugin } from 'vite'
 import { lazyAssets, stampSw } from './scripts/sw-stamp.mjs'
 import { mobileViewport } from './src/lib/viewport-zoom.ts'
-import { webOnlyAlias } from './web-only/alias.js'
-import { webOnlyTestConfig } from './web-only/test-config.js'
+import { webOnlyAlias } from './web-only/alias.ts'
+import { webOnlyTestConfig } from './web-only/test-config.ts'
 import { apiClient } from './scripts/api-client.mjs'
 
 const backend = process.env.API_TARGET || 'http://127.0.0.1:3000'
@@ -132,7 +133,20 @@ export default defineConfig({
     __SEASON_CLOCK__: JSON.stringify(process.env.VITE_SEASON_CLOCK === '1'),
   },
   // lazyPlugins: `vp check`/`vp lint`/`vp fmt` read this config without running the plugins.
-  plugins: lazyPlugins(() => [apiClient(), react(), umami, flavor, swStamp, catalogueMedia]),
+  plugins: lazyPlugins(() => [
+    apiClient(),
+    stylex({
+      runtimeInjection: false,
+      // Existing component styles still use the global cascade during the migration.
+      useCSSLayers: false,
+      cssInjectionTarget: (fileName: string) => /(?:^|\/)index-[^/]+\.css$/.test(fileName),
+    }),
+    react(),
+    umami,
+    flavor,
+    swStamp,
+    catalogueMedia,
+  ]),
   resolve: { alias: webOnlyAlias },
   base: './',
   server: {

@@ -11,17 +11,19 @@ export default function CardioEffortChip({
   value,
   onOpen,
   disabled = false,
+  className = '',
 }: {
   value?: number | null
   onOpen: MouseEventHandler<HTMLButtonElement>
   disabled?: boolean
+  className?: string
 }) {
   const rated = value != null
   const tint = rated ? effortColor(10 - value) : null
   return (
     <button
       type="button"
-      className={'cardio-eff' + (rated ? ' on' : '')}
+      className={'cardio-eff' + (rated ? ' on' : '') + (className ? ' ' + className : '')}
       disabled={disabled}
       style={tint ? ({ '--eff': tint } as CSSProperties) : undefined}
       aria-label={rated ? t('How hard it felt: RPE {0}', fmtNum(value)) : t('Rate how hard it felt')}

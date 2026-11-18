@@ -78,7 +78,7 @@
 import { beatsWeight } from './exercises.js'
 import { bestWeightForEntry } from './history.js'
 import { convertStateUnit, convertBodyWeight } from './units.js'
-import { sanitizeAccent } from './accent.js'
+import { sanitizeAccent } from './accent.ts'
 import { readDayNote as readNote } from './day-notes.js'
 import { mergeAdvent } from './advent.js'
 import { mergeChallenges } from './challenges.js'

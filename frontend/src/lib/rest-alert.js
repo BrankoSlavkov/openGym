@@ -14,7 +14,7 @@
 // The web build keeps Web Push (useUI). This file no-ops there; MOBILE is a build-time flag.
 import { t } from './i18n-core.js'
 import { argb } from './format.js'
-import { accentPair } from './accent.js'
+import { accentPair } from './accent.ts'
 import { MOBILE, nativePlatform } from './mobile.js'
 import { REST_SOUNDS } from './rest-sounds.js'
 
@@ -27,7 +27,7 @@ export const REST_QUIET_CHANNEL_ID = 'rest-over-quiet'
 
 // One object the native side schedules. Public + high is what the notification shade can show.
 // The lock screen follows the user's notification settings.
-// `key` is a preset's key or the user's own colour as '#rrggbb' (lib/accent.js accentValue).
+// `key` is a preset's key or the user's own colour as '#rrggbb' (lib/accent.ts accentValue).
 export function accentColors(key) {
   const { accent, ink } = accentPair(key)
   return { accent: argb(accent), ink: argb(ink) }

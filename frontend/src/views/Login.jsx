@@ -4,7 +4,7 @@ import { webauthnOK, passkeyLogin, passkeyRegister, passkeyError, bio } from '..
 import { hasData } from '../store/useStore.js'
 import { t } from '../lib/i18n.js'
 import { DEMO, REPO } from '../lib/demo.js'
-import { guestAllowed } from '../lib/guest.js'
+import { guestAllowed } from '../lib/guest.ts'
 import { useState, useRef, useEffect } from 'react'
 import BrandLogo from '../components/BrandLogo.tsx'
 import { Button, Segmented } from '../components/ui.tsx'

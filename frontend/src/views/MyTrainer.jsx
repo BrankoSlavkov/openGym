@@ -18,7 +18,7 @@ import { confirmSheet } from '../sheets.jsx'
 import { Section, Row, SelectRow, Button, TextField } from '../components/ui.tsx'
 import Icon from '../components/Icon.tsx'
 import { getInbox, answerItem, markSeen, undoChange, previewGrant, changeLines, trainerError } from '../lib/trainer-api.ts'
-import { noticeText } from '../lib/trainer-notice-text.js'
+import { noticeText } from '../lib/trainer-notice-text.ts'
 import TrainerMember from '../components/TrainerMember.jsx'
 
 const ICON = { metrics: 'gauge', workouts: 'dumbbell', plans: 'calendar', bodyweight: 'scale', measurements: 'ruler', photos: 'image', notes: 'pencil', nutrition: 'heart' }

@@ -9,7 +9,7 @@ import { useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
 import { workoutDateSheet, workoutDetailSheet, workoutDurationSheet } from './sheets.jsx'
 import { backfillStart } from './lib/backfill.js'
-import { startTimeOf } from './lib/workout-date.js'
+import { startTimeOf } from './lib/workout-date.ts'
 import { pickDate } from './components/DateField.test-util.js'
 import { workoutOption } from './lib/workout-options.test-util.js'
 

@@ -61,7 +61,7 @@ beforeAll(async () => {
   ;({ useStore, DEF } = await import('./store/useStore.js'))
   H = await import('./lib/history.js')
   views = {
-    History: (await import('./views/History.jsx')).default,
+    History: (await import('./views/History.tsx')).default,
     Stats: (await import('./views/Stats.jsx')).default,
     Plan: (await import('./views/Plan.jsx')).default,
   }

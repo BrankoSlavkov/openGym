@@ -7,7 +7,7 @@ import { createRoot } from 'react-dom/client'
 import { useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
 import { exitWorkoutEdit, saveWorkoutEdits } from './sheets.jsx'
-import { setNav } from './lib/nav.js'
+import { setNav } from './lib/nav.ts'
 import { EXDB } from './lib/exercises.js'
 import { editCompletedSession } from './lib/session-edit.js'
 

@@ -1,14 +1,14 @@
 import type { CSSProperties } from 'react'
 import { useEffect, useState } from 'react'
 import { t } from '../lib/i18n.js'
-import { appIconState, setAppIcon } from '../lib/app-icon.js'
-import { APP_ICON_VARIANTS, offeredIcons } from '../lib/app-icon-variants.js'
+import { appIconState, setAppIcon } from '../lib/app-icon.ts'
+import { APP_ICON_VARIANTS, offeredIcons } from '../lib/app-icon-variants.ts'
 import { seasonNow } from '../lib/season-clock.js'
 import { useUI } from '../store/useUI.js'
 import Icon from './Icon.tsx'
 
 /* Settings → Look & Home → App icon: the icon on this phone's home screen. The phone keeps the
-   choice (lib/app-icon.js), so it is asked here and never synced. In a browser, or on a phone that
+   choice (lib/app-icon.ts), so it is asked here and never synced. In a browser, or on a phone that
    cannot switch icons, the row is not there at all. */
 export default function AppIconRow() {
   const [state, setState] = useState<{ name: string } | null>(null)

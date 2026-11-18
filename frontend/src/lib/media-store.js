@@ -271,7 +271,7 @@ export function _setMediaStore(s) { shared = s }
 
 /** The shared store under the name the rest of the app uses. A thin forwarder, so that importing
  *  it is free and a test can swap what it forwards to (_setMediaStore). */
-export const mediaStore = new Proxy({}, {
+export const mediaStore = new Proxy(/** @type {ReturnType<typeof createMediaStore>} */ ({}), {
   get(_, key) {
     const s = getMediaStore()
     const v = s[key]

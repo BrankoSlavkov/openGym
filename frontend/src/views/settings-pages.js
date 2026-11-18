@@ -7,8 +7,8 @@
 // and checks that each entry below really is a row there.
 import { t } from '../lib/i18n.js'
 import { ACCENT_NAMES } from '../lib/format.js'
-import { MODULES } from '../lib/modules.js'
-import { OFFLINE_OFF_MODULES } from '../lib/build-caps.js'
+import { MODULES } from '../lib/modules.ts'
+import { OFFLINE_OFF_MODULES } from '../lib/build-caps.ts'
 import { available, shownThemes } from '../lib/seasonal.js'
 
 // `mod`: the module (lib/modules.js) a page belongs to; with it off the page and its rows are gone,
@@ -87,7 +87,7 @@ export function pageVisible(page, ctx) {
   if (page === 'coach') return !!ctx.mobile && !ctx.offline
   // The phone app's network log: there only (a browser has its own developer tools for that).
   if (page === 'network') return !!ctx.mobile
-  // openGym Offline (lib/build-caps.js) has no network: nothing that needs a server or a connection.
+  // openGym Offline (lib/build-caps.ts) has no network: nothing that needs a server or a connection.
   if (ctx.offline && (page === 'api-tokens' || page === 'trainer')) return false
   // Only on a server that offers trainers, signed in: there is nobody to share with otherwise.
   if (page === 'trainer') return !!ctx.trainers && !!ctx.user && !ctx.demo
@@ -144,7 +144,7 @@ export const SEARCH = [
   ...MODULES.map(m => ({ page: 'modules', title: m.title, icon: m.icon, tint: m.tint,
     // Community is a row only where the server has a library (views/Modules.jsx).
     ...(m.id === 'community' ? { when: c => !!c.library } : {}),
-    // Not built into openGym Offline at all (lib/build-caps.js).
+    // Not built into openGym Offline at all (lib/build-caps.ts).
     ...(OFFLINE_OFF_MODULES.includes(m.id) ? { net: true } : {}),
     get kw() { return MODULE_KW[m.id] + (m.id === 'seasonal' ? ' ' + seasonKw() : '') + ' module turn on off hide' } })),
   { page: 'modules', title: 'Start from', icon: 'slider', tint: 'var(--blue)', kw: 'preset just training body everything custom modules' },
@@ -425,7 +425,7 @@ export function searchSettings(query, ctx, tr = t) {
     // A page under another that its own module hides (Look & Home → Seasonal themes).
     if (PAGES[e.page].mod && !pageVisible(e.page, ctx)) continue
     if (e.when && !e.when(ctx)) continue
-    // A row that needs the network is not there in openGym Offline (lib/build-caps.js).
+    // A row that needs the network is not there in openGym Offline (lib/build-caps.ts).
     if (e.net && ctx.offline) continue
     if (e.mod && ctx.mod && !ctx.mod(e.mod)) continue
     consider(e, false)

@@ -4,13 +4,14 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { stampPut } from '../sync-stamps.ts';
 
+type RoutineEntry = { id: string; sets: number; reps: number; weight: number; restOff?: boolean };
 const old = () => ({
   _ts: 100, unit: 'kg',
-  routines: [{ id: 'r1', name: 'Upper', _ts: 7, ex: [{ id: '0025', sets: 3, reps: 8, weight: 60 }] }],
+  routines: [{ id: 'r1', name: 'Upper', _ts: 7, ex: [{ id: '0025', sets: 3, reps: 8, weight: 60 }] as RoutineEntry[] }],
 });
 const withNew = () => {
   const S = old();
-  S.routines[0].ex[0] = { ...S.routines[0].ex[0], restOff: true } as any;
+  S.routines[0].ex[0] = { ...S.routines[0].ex[0], restOff: true };
   return S;
 };
 

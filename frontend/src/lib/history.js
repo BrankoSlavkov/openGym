@@ -1,7 +1,7 @@
 // Pure helpers over the state object S (ported 1:1 from the vanilla app).
 import { NEW_EX_DEFAULTS, newExDefaultsOf } from './new-ex-defaults.ts'
 import { syncSupersetMeta } from './superset-meta.js'
-import { isOn } from './modules.js'
+import { isOn } from './modules.ts'
 import { todayISO, isoOf, weekKey, weekStartOf, fmtNum } from './format.js'
 import { fmtSpeed, speedUnitOf } from './speed.js'
 import { cardioStartSpeed } from './cardio-kind.js'

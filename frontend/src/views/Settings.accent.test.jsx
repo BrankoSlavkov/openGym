@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Settings from './Settings.jsx'
 import { searchSettings } from './settings-pages.js'
 import { setRestAccent } from '../lib/rest-alert.js'
-import { readableIn } from '../lib/accent.js'
+import { readableIn } from '../lib/accent.ts'
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 

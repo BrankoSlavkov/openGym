@@ -136,14 +136,5 @@ describe('the catalogue', () => {
     for (const k of ['ex', 'still', 'setOf', 'next', 'weight', 'reps', 'effort', 'warm', 'time', 'dist', 'speed', 'incline', 'level', 'band', 'rest', 'elapsed', 'sets', 'volume', 'hr', 'hrZone', 'kcal', 'equip', 'partner', 'notes', 'pr', 'gym', 'clock']) expect(L.TILES[k]).toBeTruthy()
     for (const k of ['log', 'wDown', 'wUp', 'rDown', 'rUp', 'effort', 'warm', 'restAdd', 'restSkip', 'next', 'prev', 'pause', 'finish', 'addSet']) expect(L.ACTIONS[k]).toBeTruthy()
   })
-  it('has every label in every language pack (they are passed to t() by name)', async () => {
-    const { readdirSync } = await import('node:fs')
-    const { join } = await import('node:path')
-    const dir = join(__dirname, '..', 'locales')
-    const labels = [...Object.values(L.TILES), ...Object.values(L.ACTIONS)].map(x => x.label)
-    for (const f of readdirSync(dir).filter(n => n.endsWith('.js'))) {
-      const pack = (await import(join(dir, f))).default
-      expect(labels.filter(k => !(k in pack)), f).toEqual([])
-    }
-  }, 60000)
+
 })

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* Generates the two committed artefacts under api/coach/core/ that both runtimes import:
  *
- *   api/coach/core/library-data.js   the exercise catalogue, from frontend/src/lib/exercises-data.js
+ *   api/coach/core/library-data.ts   the exercise catalogue, from frontend/src/lib/exercises-data.js
  *   api/coach/core/prompts.ts        the prompt texts, from api/coach/prompts/*.md
  *
  *   node scripts/build-coach-assets.mjs           # write
@@ -57,8 +57,9 @@ const outputs = [];
     `export const GENERATED_FROM = 'frontend/src/lib/exercises-data.js';\n` +
     `export const COUNT = ${index.length};\n` +
     `export const TIER_STARTS = [${startOf(1)}, ${startOf(2)}];\n` +
-    'export const EXERCISES = ' + JSON.stringify(index) + ';\n';
-  outputs.push({ file: join(core, 'library-data.js'), body, note: `${index.length} exercises` });
+    'export interface CatalogueExercise { id: string; n: string; bp: string; tg: string; eq: string; mk?: string }\n' +
+    'export const EXERCISES: CatalogueExercise[] = ' + JSON.stringify(index) + ';\n';
+  outputs.push({ file: join(core, 'library-data.ts'), body, note: `${index.length} exercises` });
 }
 
 // --- prompts ---

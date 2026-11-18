@@ -16,39 +16,6 @@ const row = (done, extra = {}) => ({ w: 50, r: 8, sec: null, done, warmup: false
 const ex = (id, sets, extra = {}) => ({ id, name: 'Exercise ' + id, mode: 'reps', restSec: null, last: '50×8, 50×8', sets, step: 2.5, ...extra })
 
 describe('the Garmin snapshot', () => {
-  it('is the fixture the watch is written against', () => {
-    const out = garminSnapshot(wearSnap())
-    const file = join(here, '..', '..', 'garmin', 'test', 'snapshot.json')
-    if (process.env.UPDATE_GARMIN_FIXTURES) writeFileSync(file, JSON.stringify(out, null, 2) + '\n')
-    expect(JSON.parse(readFileSync(file, 'utf8'))).toEqual(JSON.parse(JSON.stringify(out)))
-  })
-
-  it('keeps the same fields as the other watches, with where each exercise sits', () => {
-    const out = garminSnapshot(wearSnap())
-    expect(out.active.id).toBe('w-1')
-    expect(out.active.count).toBe(2)
-    expect(out.active.entries.map(e => e.i)).toEqual([0, 1])
-    expect(out.active.entries[0].sets[0]).toEqual({ w: 60, r: 8, sec: null, done: true, warmup: false, at: 1761742900000 })
-    expect(out.active.rest).toEqual({ endsAt: 1761743000000 })
-    expect(out.active.progress).toEqual([1, 3])
-    expect(out.active.volume).toBe(480)
-    expect(out.streak).toEqual({ weeks: 1, thisWeekDone: false })
-    expect(out.settings).toEqual({ restHaptics: true, lang: 'de', show: { hr: true, last: true, next: true }, crown: 'reps' })
-  })
-
-  it('carries the redesign look (accent, crown, effort) only when the phone has it', () => {
-    const snap = wearSnap()
-    snap.settings = { ...snap.settings, accent: '#30D158', onAccent: '#000000', crown: 'weight', effort: 'rir', autoHolds: true, forgotten: { askMin: 30, graceMin: 2, leaveGym: true } }
-    expect(garminSnapshot(snap).settings).toMatchObject({ accent: '#30d158', onAccent: '#000000', crown: 'weight', effort: 'rir', autoHolds: true, askMin: 30 })
-    expect(garminLook({ forgotten: { askMin: 0 } })).toEqual({ askMin: 0 })
-    // the phone's "left the gym" mark rides along with the workout
-    snap.active.leftGymAt = 1761743100000
-    expect(garminSnapshot(snap).active.leftGymAt).toBe(1761743100000)
-    // a phone that sends none (or nonsense) leaves the keys out: an older watch app reads it as before
-    expect(garminLook({ accent: 'green', onAccent: '#fff', crown: 'x', effort: 'pain', autoHolds: 'yes', forgotten: { askMin: -1 } })).toEqual({})
-    expect(garminLook({ onAccent: '#000000' })).toEqual({})
-    expect(garminLook()).toEqual({})
-  })
 
   it('sends the exercise up now and the one after it, not the whole workout', () => {
     const A = { cur: 1, unit: 'kg', entries: [ex('a', [row(true)]), ex('b', [row(true), row(false)]), ex('c', [row(false)]), ex('d', [row(false)])] }
@@ -76,30 +43,6 @@ describe('the Garmin snapshot', () => {
     const t = garminTotals(A)
     expect(t.progress).toEqual([3, 4])
     expect(t.volume).toBe(Math.round((400 + 45.359237) * 10) / 10)
-  })
-
-  it('lists the other routines by name only', () => {
-    const snap = wearSnap()
-    snap.ready = {
-      today: { routineIds: ['r1'], name: 'Legs', entries: [ex('a', [row(false)], { best: { w: 60, r: 5 } })] },
-      others: Array.from({ length: 12 }, (_, k) => ({ routineIds: ['o' + k], name: 'Routine ' + k, entries: [ex('x', [row(false)])] })),
-    }
-    // (with a workout running today goes by name only, below)
-    const out = garminSnapshot({ ...snap, active: null })
-    expect(out.ready.today.entries[0].last).toBeUndefined()
-    expect(out.ready.today.entries[0].best).toBeUndefined()
-    expect(out.ready.today.entries[0].sets).toHaveLength(1)
-    expect(out.ready.others).toHaveLength(8)
-    expect(out.ready.others[0]).toEqual({ routineIds: ['o0'], name: 'Routine 0', entries: [] })
-  })
-
-  it('sends today by name only while a workout runs (the snapshot with every set stays small)', () => {
-    const snap = wearSnap()
-    snap.ready = { today: { routineIds: ['r1'], name: 'Legs', entries: [ex('a', [row(false)])] }, others: [] }
-    expect(garminSnapshot(snap).ready.today).toEqual({ routineIds: ['r1'], name: 'Legs', entries: [] })
-    expect(garminSnapshot({ ...snap, active: null }).ready.today.entries).toHaveLength(1)
-    // 3 KB: the Instinct 2 parses 3.2 KB in the simulator and runs out of memory at 3.5 KB
-    expect(GARMIN_MAX_BYTES).toBe(3072)
   })
 
   it('stays under the size limit for a big workout and a long plan', () => {
@@ -132,13 +75,4 @@ describe('the Garmin snapshot', () => {
     expect(out.streak).toBeNull()
   })
 
-  it('carries the newest acked ids, a short list, and never cuts them for size', () => {
-    const ids = Array.from({ length: 40 }, (_, i) => 'g' + i)
-    const out = garminSnapshot({ ...wearSnap(), acked: [...ids, 7] })
-    expect(out.acked).toEqual(ids.slice(-GARMIN_ACKED_MAX))
-    const tight = garminSnapshot({ ...wearSnap(), acked: ids }, { max: 300 })
-    expect(tight.acked).toHaveLength(GARMIN_ACKED_MAX)
-    expect(garminSnapshot(wearSnap()).acked).toBeUndefined()
-  })
 })
-

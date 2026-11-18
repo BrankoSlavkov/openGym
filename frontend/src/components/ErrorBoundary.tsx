@@ -1,10 +1,17 @@
 import { Component } from 'react'
+import * as stylex from '@stylexjs/stylex'
 import type { PropsWithChildren } from 'react'
 import { useStore } from '../store/useStore.js'
 import { t } from '../lib/i18n.js'
 import { markDiscarded } from '../lib/watch-sync.js'
 import Icon from './Icon.tsx'
 import { Button } from './ui.tsx'
+
+const styles = stylex.create({
+  message: { marginTop: '18vh' },
+  title: { fontWeight: 600, marginBottom: 6 },
+  actionGap: { height: 8 },
+})
 
 /**
  * Last line of defence: one bad render used to blank the whole app, with no way back —
@@ -31,11 +38,11 @@ export default class ErrorBoundary extends Component<PropsWithChildren, { failed
     const active = useStore.getState().S.active
     return (
       <div className="narrow">
-        <div className="empty" style={{ marginTop: '18vh' }}>
+        <div className={'empty ' + stylex.props(styles.message).className}>
           <div className="ico">
             <Icon name="info" />
           </div>
-          <div style={{ fontWeight: 600, marginBottom: 6 }}>{t('Something went wrong')}</div>
+          <div {...stylex.props(styles.title)}>{t('Something went wrong')}</div>
           {t('This screen could not be drawn. Your data is safe on this device.')}
         </div>
         <Button variant="primary" icon="reset" onClick={() => location.reload()}>
@@ -43,7 +50,7 @@ export default class ErrorBoundary extends Component<PropsWithChildren, { failed
         </Button>
         {active && (
           <>
-            <div style={{ height: 8 }} />
+            <div {...stylex.props(styles.actionGap)} />
             <Button
               variant="danger"
               icon="trash"

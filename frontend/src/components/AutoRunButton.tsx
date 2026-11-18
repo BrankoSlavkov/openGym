@@ -5,8 +5,34 @@ import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { autoHoldsFor } from '../lib/auto-holds.js'
 import { t } from '../lib/i18n.js'
+import * as stylex from '@stylexjs/stylex'
 import Icon from './Icon.tsx'
-import './AutoRunButton.css'
+
+const styles = stylex.create({
+  row: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 4 },
+  // The plan line inside drops its own 4px (Workout.jsx reads --planline-mb).
+  plan: { minWidth: 0, flex: 1, '--planline-mb': '0px' },
+  btn: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 5,
+    flex: 'none',
+    minHeight: 30,
+    padding: '4px 12px',
+    borderRadius: 999,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'transparent',
+    backgroundColor: 'var(--acc-soft)',
+    color: 'var(--acc-ink)',
+    font: 'inherit',
+    fontSize: 'var(--fs-footnote)',
+    fontWeight: 600,
+    cursor: 'pointer',
+    opacity: { default: null, ':active': 0.8 },
+  },
+  on: { backgroundColor: 'var(--acc)', color: 'var(--on-acc)' },
+})
 
 export default function AutoRunRow({
   show,
@@ -35,11 +61,11 @@ export default function AutoRunRow({
     useUI.getState().toast(t('Auto on: start the first hold, the rest run by themselves'))
   }
   return (
-    <div className="autorun-row">
-      <div className="autorun-plan">{children}</div>
+    <div {...stylex.props(styles.row)}>
+      <div {...stylex.props(styles.plan)}>{children}</div>
       <button
         type="button"
-        className={'autorun-btn' + (on ? ' on' : '')}
+        {...stylex.props(styles.btn, on && styles.on)}
         aria-pressed={on}
         title={on ? t('Holds start by themselves. Tap to stop.') : t('Start every hold by itself, 15 s apart')}
         onClick={flip}

@@ -2,7 +2,7 @@
 // reads, and the nutrition hook: the pure parts of the dashboard, without a server.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { cleanOps, applyOps, applyRestores, fingerprintOf, OpError } from '../trainers/ops.ts';
+import { cleanOps, applyOps, applyRestores, fingerprintOf, OpError, type TrainerOp } from '../trainers/ops.ts';
 import { summarize, project, streakWeeks, missedDays, weekOf } from '../trainers/projections.ts';
 import { stampPut } from '../sync-stamps.ts';
 import { nullSource, openNutritionSource, nutritionSourceFrom, cleanDay } from '../sources/nutrition.ts';
@@ -21,6 +21,7 @@ test('cleanOps lets only the whitelist through, cleaned', () => {
   assert.throws(() => cleanOps([{ op: 'measurement.put', d: '2026-11-02', values: { soul: 3 } }]), /unknown measurement/);
   assert.throws(() => cleanOps(Array.from({ length: 21 }, () => ({ op: 'routine.remove', id: 'r1' }))), /at most 20/);
   const [r] = cleanOps([{ op: 'routine.put', routine: { name: ' Legs ', ex: [{ id: 'squat', video: 'x' }], photo: 'y', _by: { kind: 'trainer', id: 'fake' } } }]);
+  assert.ok(r?.op === 'routine.put');
   assert.equal(r.routine.name, 'Legs');
   assert.equal(r.routine.photo, undefined);
   assert.equal(r.routine._by, undefined);                  // nobody signs in someone else's name
@@ -77,7 +78,7 @@ test('routine.remove takes it off the week too; undo brings both back', () => {
 test('assigning the same routine again replaces the copy, with its custom exercises and a weekday', () => {
   const S: any = base();
   const origin = { kind: 'trainer', id: 'u_marco', sourceId: 'm1' };
-  const ops = [
+  const ops: TrainerOp[] = [
     { op: 'custom.put', exercise: { id: 'c_x', name: 'Landmine', photo: 'p' } },
     { op: 'routine.put', routine: { name: 'Full', ex: [{ id: 'c_x' }] }, origin },
     { op: 'week.add', day: 3 },
@@ -106,7 +107,8 @@ test('workout.edit corrects sets in place, labelled, and the undo puts the worko
   assert.throws(() => cleanOps([{ op: 'workout.edit', id: 'w1', sets: [{ e: 0, s: 0, ex: 'bench', w: 9999 }] }]), /weight/);
   const ops = cleanOps([{ op: 'workout.edit', id: 'w1', name: ' Push heavy ', sets: [
     { e: 0, s: 1, ex: 'bench', r: 5 }, { e: 1, s: 0, ex: 'curl', side: 'R', r: 8, sneaky: 1 }] }]);
-  assert.equal(ops[0].sets[1].sneaky, undefined);
+  assert.ok(ops[0]?.op === 'workout.edit');
+  assert.equal(Reflect.get(ops[0].sets[1], 'sneaky'), undefined);
   const before = JSON.parse(JSON.stringify(S.workouts[0]));
   const recs = applyOps(S, ops, { by, t: 100 });
   const w = S.workouts[0];
@@ -150,7 +152,7 @@ test('projections show only the shared categories, without media or notes', () =
   assert.deepEqual(p.shared, ['metrics', 'workouts']);
   assert.equal(p.plans, undefined); assert.equal(p.bodyweight, undefined); assert.equal(p.notes, undefined);
   const w = p.workouts.list[0];
-  assert.equal(w.note, undefined); assert.equal(w.entries[0].note, undefined); assert.equal(w.entries[0].photo, undefined);
+  assert.equal(w.note, undefined); assert.equal(w.entries[0].note, undefined); assert.equal(Reflect.get(w.entries[0], 'photo'), undefined);
   assert.equal(w.volume, 500);
   assert.equal(w.sets, 1);
   assert.equal(w.mins, 60);

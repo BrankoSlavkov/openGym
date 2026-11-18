@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { tempData } from './helpers.ts';
 
 tempData();
-const { runPipeline } = await import('../coach/core/pipeline.js');
+const { runPipeline } = await import('../coach/core/pipeline.ts');
 const { buildPromptParts } = await import('../coach/core/prompt.ts');
 
 const plan = {

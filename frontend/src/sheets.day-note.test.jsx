@@ -10,7 +10,7 @@ import { DEF, useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
 import { dayOverrideSheet, dayNoteSheet, calendarSheet } from './sheets.jsx'
 import Heatmap from './components/Heatmap.jsx'
-import History, { historyRows } from './views/History.jsx'
+import History, { historyRows } from './views/History.tsx'
 import { withDayNote, dayNoteOf } from './lib/day-notes.js'
 
 const clone = v => JSON.parse(JSON.stringify(v))

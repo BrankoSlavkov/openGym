@@ -14,26 +14,12 @@ describe('the separator a number field shows', () => {
     expect(localiseNumber('0.5')).toBe(fmtNum(0.5))
   })
 
-  it.each([
-    ['en', '.'], ['de', ','], ['ru', ','], ['fr', ','], ['uk', ','], ['pt-BR', ','], ['sv', ','],
-    // Swiss German writes 72.5; Arabic, Persian and Bengali run on Latin digits with a point in
-    // the app's text (the nu-latn locales in DATE_LOCALES), so their fields stay as they were.
-    ['de-CH', '.'], ['ar', '.'], ['fa', '.'], ['bn', '.'], ['hi', '.'], ['zh', '.'],
-  ])('%s uses "%s"', (lang, sep) => {
+  it.each([['en', '.'], ['de-CH', '.'], ['ar', '.'], ['fa', '.'], ['bn', '.'], ['hi', '.'], ['zh', '.']])('%s uses "%s"', (lang, sep) => {
     _setLangState(lang, {}, null, null)
     expect(decimalSeparator()).toBe(sep)
     expect(localiseNumber('72.5')).toBe('72' + sep + '5')
     expect(localiseNumber('33.')).toBe('33' + sep)
     expect(localiseNumber('80')).toBe('80')
-  })
-
-  it('never puts a grouping sign into a field, and leaves anything that is not a number alone', () => {
-    _setLangState('de', {}, null, null)
-    expect(localiseNumber('12345.5')).toBe('12345,5')
-    expect(localiseNumber('')).toBe('')
-    expect(localiseNumber(null)).toBe('')
-    expect(localiseNumber('12:30')).toBe('12:30')
-    expect(localiseNumber('1e-7')).toBe('1e-7')
   })
 
   it('knows the grouping sign too', () => {

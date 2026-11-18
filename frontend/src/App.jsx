@@ -1,8 +1,8 @@
 import { Suspense, lazy, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { DEMO } from './lib/demo.js'
 import { useDailyWebdav } from './lib/use-daily-webdav.js'
-import { offlineBuild } from './lib/build-caps.js'
-import { hideBoot } from './lib/boot.js'
+import { offlineBuild } from './lib/build-caps.ts'
+import { hideBoot } from './lib/boot.ts'
 import { AppRouterProvider, PageProvider, Navigate, useNavigate, useLocation, useNavigationType, useAppRouterInstance } from './router/hooks.tsx'
 import { matchPath } from './router/routes.ts'
 import { createHashAppRouter } from './router/app-router.ts'
@@ -10,14 +10,14 @@ import { useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
 import { bindUI } from './components/ui.tsx'
 import { setWeightDecimals } from './lib/format.js'
-import { accentValue, applyAccent } from './lib/accent.js'
+import { accentValue, applyAccent } from './lib/accent.ts'
 import { seasonAccent } from './lib/seasonal.js'
 import { setLang, useLang, baseLang, t } from './lib/i18n.js'
-import { effectiveLang } from './lib/default-lang.js'
+import { effectiveLang } from './lib/default-lang.ts'
 import { setPlayOnSilent, setVibrate, setAlarmBuzzer, setNativeBuzzer } from './lib/sound.js'
 import { setKnownBands } from './lib/bands.js'
 import { buzzAsAlarm } from './lib/rest-alert.js'
-import { setNav, notePath, keyBefore, navToWorkout, nav } from './lib/nav.js'
+import { setNav, notePath, keyBefore, navToWorkout, nav } from './lib/nav.ts'
 import { onGymReminderOpen, readGymConfig, readGymLeft, onGymLeft } from './lib/gym-reminder.js'
 import { startForgotten, keepGoing } from './lib/forgotten-phone.js'
 import { openForgottenPrompt } from './components/ForgottenPrompt.tsx'
@@ -49,7 +49,7 @@ import { installViewportGuard } from './lib/viewport-guard.js'
 import { installChipDrag } from './lib/hchips.js'
 import { syncPushSubscription } from './lib/push.js'
 import { MOBILE, nativePlatform } from './lib/mobile.js'
-import { isOn } from './lib/modules.js'
+import { isOn } from './lib/modules.ts'
 import { useTour } from './lib/tour.js'
 import { useTourOffer } from './lib/tour-offer.js'
 import { exitWorkoutEdit, startFlow, beginWorkout, bwSheet, finishWorkoutNow, confirmSheet } from './sheets.jsx'
@@ -94,11 +94,11 @@ function lazyView(load) {
 }
 const Admin = lazyView(() => import('./views/Admin.jsx'))
 const CoachChat = lazyView(() => import('./views/CoachChat.jsx'))
-const Connect = lazyView(() => import('./views/Connect.jsx'))
+const Connect = lazyView(() => import('./views/Connect.tsx'))
 const Measurements = lazyView(() => import('./views/Measurements.jsx'))
 const CoachIntake = lazyView(() => import('./views/CoachIntake.jsx'))
 const CoachSetup = lazyView(() => import('./views/CoachSetup.jsx'))
-const Assistants = lazyView(() => import('./views/Assistants.jsx'))
+const Assistants = lazyView(() => import('./views/Assistants.tsx'))
 const StructuralBalance = lazyView(() => import('./views/StructuralBalance.jsx'))
 const Tools = lazyView(() => import('./views/Tools.jsx'))
 const Journal = lazyView(() => import('./views/Journal.jsx'))
@@ -111,7 +111,7 @@ const RoutineEdit = lazyView(() => import('./views/RoutineEdit.jsx'))
 const Programmes = lazyView(() => import('./views/Programmes.jsx'))
 const ProgrammeEdit = lazyView(() => import('./views/Programmes.jsx').then(m => ({ default: m.ProgrammeEdit })))
 const Stats = lazyView(() => import('./views/Stats.jsx'))
-const History = lazyView(() => import('./views/History.jsx'))
+const History = lazyView(() => import('./views/History.tsx'))
 const Library = lazyView(() => import('./views/Library.jsx'))
 const Muscles = lazyView(() => import('./views/Muscles.jsx'))
 // The community library of the server (views/Community.jsx): only with LIBRARY=on and the module on.
@@ -216,7 +216,7 @@ function Shell() {
     navigate('/workout', { replace: true })
     exitWorkoutEdit(() => navigate(destination, { replace: true }))
   }, [loc.pathname, loc.search, S.active?.editingWorkoutId, navigate])
-  // A preset key, or the user's own colour as '#rrggbb' (lib/accent.js), already checked. A
+  // A preset key, or the user's own colour as '#rrggbb' (lib/accent.ts), already checked. A
   // seasonal theme's colours stand in for it while that theme shows, and only when chosen
   // (Settings → Look & Home → Seasonal themes); the saved accent itself is never touched.
   const accent = seasonAccent(S) || accentValue(S)
@@ -250,7 +250,7 @@ function Shell() {
     return () => mql.removeEventListener('change', onChange)
   }, [S.theme, accent])
   // A profile that never picked a language follows the instance default or the browser (#303) —
-  // worked out here, on this device, and never written into the synced state (lib/default-lang.js).
+  // worked out here, on this device, and never written into the synced state (lib/default-lang.ts).
   const config = useStore(s => s.config)
   const lang = effectiveLang(S, config)
   useEffect(() => { setLang(lang, S.enParens?.[baseLang(lang)] ?? true, S.enOnly?.[baseLang(lang)] === true) }, [lang, S.enParens, S.enOnly])

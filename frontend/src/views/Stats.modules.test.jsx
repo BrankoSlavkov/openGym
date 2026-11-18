@@ -4,7 +4,7 @@
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { presetModules } from '../lib/modules.js'
+import { presetModules } from '../lib/modules.ts'
 import Stats from './Stats.jsx'
 
 const mocks = vi.hoisted(() => ({ S: null }))

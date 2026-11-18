@@ -33,7 +33,7 @@ vi.mock('../lib/api.ts', () => ({
 vi.mock('../lib/clipboard.ts', () => ({ copyText: vi.fn(async () => true) }))
 vi.mock('../sheets.jsx', () => ({ confirmSheet: o => { mocks.confirm = o } }))
 
-const { default: ApiTokensPage } = await import('./ApiTokens.jsx')
+const { default: ApiTokensPage } = await import('./ApiTokens.tsx')
 const { tokenLine, mcpAddress } = await import('../lib/api-tokens.ts')
 
 let host, root

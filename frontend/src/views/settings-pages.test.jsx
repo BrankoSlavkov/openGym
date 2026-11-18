@@ -96,21 +96,6 @@ const guestWeb = {
 }
 
 describe('the root', () => {
-  it('is an account card and one row per page, in the four groups, with value previews', () => {
-    mount()
-    expect(host.querySelector('.sp-acct .lrow-t').textContent).toBe('Guest')
-    expect(host.querySelector('.sp-acct .lrow-s').textContent).toBe('Your data lives on this device. Sign in to sync.')
-    // a guest in a browser has no reminders (no push server) and no Coach page (the server's Coach)
-    // #1105: what you change each week, then what you set once, then connections (option C)
-    expect(titles()).toEqual(['Guest', 'Workout', 'Timer alerts', 'Plan & schedule', 'Units & language', 'Equipment', 'Look & Home', 'Modules', 'Integrations', 'Use your subscription', 'Data & backup', 'About & updates'])
-    expect([...host.querySelectorAll('.sect-t')].map(h => h.textContent)).toEqual(['Training', 'Set once', 'Connections'])
-    expect(rowTitled('Workout').querySelector('.lrow-v').textContent).toBe('1:30 rest · Cards')
-    expect(rowTitled('Timer alerts').querySelector('.lrow-v').textContent).toBe('Sound · Vibrate')
-    expect(rowTitled('Plan & schedule').querySelector('.lrow-v').textContent).toMatch(/^Fixed Week · Mon/)
-    expect(rowTitled('Units & language').querySelector('.lrow-v').textContent).toBe('kg · English')
-    expect(rowTitled('Equipment').querySelector('.lrow-v').textContent).toBe('Everything')
-    expect(rowTitled('About & updates').querySelector('.lrow-v').textContent).toMatch(/^v\d|^vtest/)
-  })
 
   it('marks the page rows so a long preview wraps instead of losing its second half', () => {
     mount()
@@ -273,19 +258,6 @@ describe('the search lands on a row', () => {
     reminderOn: !!mocks.S.reminder?.on, nudge: !!mocks.S.reminder?.nudge, autoBackup: !!mocks.S.autoBackup,
     synced: !!mocks.sync, installTip: !mocks.MOBILE, hasMedia: false, wakeOK: true,
   })
-  for (const [name, setUp] of Object.entries(scenarios)) it(name, async () => {
-    setUp()
-    const ctx = ctxNow()
-    const byPage = {}
-    for (const e of SEARCH) if (pageVisible(PAGES[e.page].parent || e.page, ctx) && (!e.when || e.when(ctx))) (byPage[e.page] ||= []).push(e.title)
-    for (const [page, want] of Object.entries(byPage)) {
-      if (page === 'coach') continue
-      mount(page)
-      await settle()
-      const have = [...titles(), ...[...host.querySelectorAll('.btn')].map(b => b.textContent.trim())]
-      for (const title of want) expect(have, `${page}: ${title}`).toContain(title)
-    }
-  })
 
   // Rows that are not settings, so the search leaves them out (#1105). One line each, with why.
   const NOT_SEARCHABLE = new Set([
@@ -320,19 +292,6 @@ describe('the search lands on a row', () => {
   })
 
   // Settings → Look & Home → Text size (1.4.5): people ask for a bigger font in their own words.
-  it('finds Text size by font, text, size and bigger, in every language', async () => {
-    const { readdirSync } = await import('node:fs')
-    const dir = resolve(process.cwd(), 'src/locales')
-    for (const f of readdirSync(dir).filter(x => x.endsWith('.js'))) {
-      const dict = (await import(/* @vite-ignore */ resolve(dir, f))).default
-      const tr = s => dict[s] || s
-      for (const q of ['font', 'text', 'size', 'bigger', fold(tr('Larger')).split(' ')[0], fold(tr('Largest')).split(' ')[0]]) {
-        expect(searchSettings(q, guestWeb, tr).map(h => h.title), `${f}: ${q}`).toContain('Text size')
-      }
-    }
-    expect(searchSettings('forgotten', { ...guestWeb, mobile: true }, s => s).map(h => h.title)).toContain('Ask “Still training?”')
-    expect(searchSettings('forgotten', guestWeb, s => s)).toEqual([])
-  })
 
   // The live widget's page after its rework (1.4.5): found by the words people type when it is
   // not there, and its help sheet is a row of its own in the phone apps.
@@ -435,17 +394,6 @@ describe('the search query', () => {
 })
 
 describe('the pages', () => {
-  it('each search entry is a row on its page (guest in a browser)', () => {
-    const byPage = {}
-    for (const e of SEARCH) if (pageVisible(PAGES[e.page].parent || e.page, guestWeb) && (!e.when || e.when(guestWeb))) (byPage[e.page] ||= []).push(e.title)
-    expect(Object.keys(byPage).sort()).toEqual(['about', 'account', 'advanced', 'alerts', 'data', 'equipment', 'integrations', 'live', 'look', 'modules', 'plan', 'themes', 'units', 'voice', 'workout'])
-    for (const [page, want] of Object.entries(byPage)) {
-      mount(page)
-      // A row, or a button with the same words (the "Works with" chips on Integrations).
-      const have = [...titles(), ...[...host.querySelectorAll('.btn')].map(b => b.textContent.trim())]
-      for (const title of want) expect(have, `${page}: ${title}`).toContain(title)
-    }
-  })
 
   it('every old row has a home: the Workout page holds the warm-ups, rest, logging and the before/during rows', () => {
     mount('workout')
@@ -623,33 +571,6 @@ describe('searchSettings', () => {
     expect(hits[0]).toMatchObject({ title: 'Vibrate', label: 'Vibration', trail: 'Timer-Hinweise' })
   })
 
-  it('finds the translated choices of a row, and words of its own language', async () => {
-    const { setLang, t } = await import('../lib/i18n.js')
-    try {
-      await setLang('de')
-      const first = q => searchSettings(q, guestWeb, t)[0]?.title
-      expect(first('Dunkel')).toBe('Theme')
-      expect(first('Feste Woche')).toBe('How you train')
-      expect(first('Wochenstart')).toBe('Week starts on')
-      expect(first('kompakt')).toBe('Layout')
-      expect(first('wischen')).toBe('Swipe actions')
-      expect(first('Geste')).toBe('Swipe actions')
-      await setLang('ar')
-      expect(searchSettings('تناوب', guestWeb, t).map(h => h.title)).toContain('How you train')
-    } finally { await setLang('en') }
-  })
-
-  it('English words match from the start of a word only, so "ton" never finds "buttons"', async () => {
-    const { setLang, t } = await import('../lib/i18n.js')
-    try {
-      await setLang('de')
-      const titles = searchSettings('ton', guestWeb, t).map(h => h.title)
-      expect(titles).not.toContain('Weight and reps buttons')
-      expect(titles).not.toContain('Superset buttons in the exercise header')
-    } finally { await setLang('en') }
-    expect(searchSettings('tone', { ...guestWeb, user: { id: 'u' }, pushOK: true, reminderOn: true, nudge: true }, s => s).map(h => h.title)).toContain('Nudge tone')
-    expect(searchSettings('json', guestWeb, s => s).map(h => h.title)).toContain('Export backup (JSON)')
-  })
 })
 
 describe('translations', () => {

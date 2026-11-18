@@ -18,7 +18,7 @@ import { speak, hush, listVoices, voiceLabel, voiceOpts, pickedVoice, setPickedV
 import { sampleCue } from '../lib/spoken-cues.js'
 import { MOMENTS, MOMENT_COPY, STYLE_COPY, STYLE_IDS, cueStyleOf, linesFor, ownLines, setOwnLines, startOwnFrom, hasOwnLines, sampleLine, LINES_MAX, LINE_MAX } from '../lib/voice-styles.js'
 import { voiceClipsOf, addVoiceClip, removeVoiceClip, CLIPS_PER_MOMENT, CLIP_SEC } from '../lib/voice-clips.js'
-import { offlineBuild } from '../lib/build-caps.js'
+import { offlineBuild } from '../lib/build-caps.ts'
 import { mediaStore } from '../lib/media-store.js'
 import { fmtClip } from '../lib/media-refs.js'
 import { unlock, chime } from '../lib/sound.js'

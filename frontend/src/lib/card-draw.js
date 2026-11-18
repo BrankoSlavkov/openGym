@@ -4,7 +4,7 @@
 // lib/share-image.js gets the picture out of the app. No exercise picture or clip is ever drawn
 // on a card (the licence keeps those inside the app, NOTICE.md).
 
-import { inkIn } from './accent.js'
+import { inkIn } from './accent.ts'
 
 // 9:16 for Stories and Reels, 1:1 for a feed or a chat.
 export const FORMATS = { story: { width: 1080, height: 1920 }, square: { width: 1080, height: 1080 } }
@@ -46,7 +46,7 @@ export function mixColor(a, b, p) {
 
 // The accent as words on a light card: the accent darkened by 38 %, as before, while that reads at
 // 4.5:1 on the card's page and tiles; a lighter accent (the brand's #a3e635, a yellow, a pastel of
-// the user's own) keeps going down its own hue until it does (lib/accent.js inkIn, 1.4.5).
+// the user's own) keeps going down its own hue until it does (lib/accent.ts inkIn, 1.4.5).
 export function accTextOnLight(a) {
   const mixed = mixColor(a, '#000000', 0.62)
   if (contrast(mixed, '#f2f2f7') >= 4.5 && contrast(mixed, '#ffffff') >= 4.5) return mixed

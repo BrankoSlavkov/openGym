@@ -9,6 +9,64 @@ import { EXIDX } from '../lib/exercises.js'
 import { confirmSheet, exerciseDetailSheet, customExSheet, startBuiltSession, startFlow, planImportSheet } from '../sheets.jsx'
 import { parsePlan } from '../lib/plan-share.js'
 import Icon from './Icon.tsx'
+import * as stylex from '@stylexjs/stylex'
+import { sx } from '../lib/sx.ts'
+
+// What the Coach offered to do, under its answer, and where it looked (was in coach.css).
+const styles = stylex.create({
+  acts: { display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8, width: '100%' },
+  act: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    width: '100%',
+    padding: '11px 12px',
+    borderRadius: 14,
+    border: '1px solid var(--sep)',
+    backgroundColor: { default: 'var(--surface)', ':active': 'var(--surface-2)' },
+    color: 'var(--label)',
+    font: 'inherit',
+    textAlign: 'start',
+    cursor: 'pointer',
+    transition: {
+      default: 'transform 140ms cubic-bezier(.23,1,.32,1),background-color 160ms ease',
+      '@media (prefers-reduced-motion:reduce)': 'background-color 160ms ease',
+    },
+    transform: { default: null, ':active': { default: 'scale(.98)', '@media (prefers-reduced-motion:reduce)': 'none' } },
+  },
+  actIcon: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 32,
+    height: 32,
+    borderRadius: 9,
+    backgroundColor: 'var(--acc-soft)',
+    color: 'var(--acc)',
+    flex: 'none',
+  },
+  actText: { display: 'flex', flexDirection: 'column', minWidth: 0, flex: 1 },
+  actTitle: { fontWeight: 600, fontSize: 'var(--fs-subhead)' },
+  actSub: {
+    fontSize: 'var(--fs-footnote)',
+    color: 'var(--label-2)',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+  },
+  src: { display: 'flex', flexWrap: 'wrap', gap: '6px 10px', marginTop: 6, fontSize: 'var(--fs-footnote)', color: 'var(--label-2)' },
+  srcLink: {
+    color: 'var(--acc-ink)',
+    textDecoration: { default: 'none', ':hover': 'underline' },
+    maxWidth: '16rem',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+})
+
 
 const exName = id => (EXIDX[id]?.n) || t('Unknown exercise')
 const itemLine = it => `${exName(it.id)} · ${it.sec ? t('{0} × {1} s', it.sets, it.sec) : t('{0} × {1}', it.sets, it.reps)}`
@@ -79,10 +137,10 @@ export function ActionCards({ actions }) {
   const S = useStore(s => s.S)
   const list = (actions || []).map(a => ({ a, l: look(a, S) })).filter(x => x.l)
   if (!list.length) return null
-  return <div className="coach-acts">
-    {list.map(({ a, l }, i) => <button key={i} type="button" className="coach-act" onClick={() => runAction(a)}>
-      <span className="coach-act-i"><Icon name={l.icon} /></span>
-      <span className="coach-act-t"><b>{l.title}</b>{l.sub && <span>{l.sub}</span>}</span>
+  return <div {...stylex.props(styles.acts)}>
+    {list.map(({ a, l }, i) => <button key={i} type="button" {...sx('coach-act', styles.act)} onClick={() => runAction(a)}>
+      <span {...stylex.props(styles.actIcon)}><Icon name={l.icon} /></span>
+      <span {...stylex.props(styles.actText)}><b {...stylex.props(styles.actTitle)}>{l.title}</b>{l.sub && <span {...stylex.props(styles.actSub)}>{l.sub}</span>}</span>
       <Icon name="chevronRight" className="chev" />
     </button>)}
   </div>
@@ -92,8 +150,8 @@ const hostOf = u => { try { return new URL(u).host.replace(/^www\./, '') } catch
 export function Sources({ list }) {
   const ok = (list || []).filter(s => /^https?:\/\//i.test(s?.url || ''))
   if (!ok.length) return null
-  return <div className="coach-src">
+  return <div {...sx('coach-src', styles.src)}>
     <span>{t('Sources')}</span>
-    {ok.map(s => <a key={s.url} href={s.url} target="_blank" rel="noopener noreferrer">{s.title || hostOf(s.url)}</a>)}
+    {ok.map(s => <a key={s.url} {...stylex.props(styles.srcLink)} href={s.url} target="_blank" rel="noopener noreferrer">{s.title || hostOf(s.url)}</a>)}
   </div>
 }

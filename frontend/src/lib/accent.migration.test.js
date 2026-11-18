@@ -12,7 +12,7 @@ vi.mock('../store/useUI.js', () => ({ useUI: { getState: () => ({ toast: vi.fn()
 
 import { DEF, freshState, restartedState, restoredStateFor, useStore } from '../store/useStore.js'
 import { ACCENTS, ACCENT_INK, ACCENT_NAMES } from './format.js'
-import { NEW_ACCENT, DEFAULT_ACCENT, accentKey, accentValue, accentPair, sanitizeAccent, contrast } from './accent.js'
+import { NEW_ACCENT, DEFAULT_ACCENT, accentKey, accentValue, accentPair, sanitizeAccent, contrast } from './accent.ts'
 import { mergeStates } from './sync-merge.js'
 import { watchAccent } from './watch-sync.js'
 import { garminLook } from './garmin-snapshot.js'

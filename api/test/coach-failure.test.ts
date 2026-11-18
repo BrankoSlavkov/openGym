@@ -12,7 +12,7 @@ import { tempData } from './helpers.ts';
 
 tempData();
 const { classifyFailure, statusOf, redact, userMessageFor, USER_MESSAGE } = await import('../coach/core/failure.ts');
-const { attemptOnce } = await import('../coach/core/pipeline.js');
+const { attemptOnce } = await import('../coach/core/pipeline.ts');
 const openai = (await import('../coach/core/adapters/openai.ts')).default;
 
 const payload = { plan: { routines: [], week: {} } };

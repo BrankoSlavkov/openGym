@@ -1,4 +1,4 @@
-import { favRoutinesFirst, isFavRoutine } from '../lib/routine-favs.js'
+import { favRoutinesFirst, isFavRoutine } from '../lib/routine-favs.ts'
 import Icon from './Icon.tsx'
 import { useMemo } from 'react'
 import { useStore } from '../store/useStore.js'
@@ -62,7 +62,7 @@ function StartPicker({ close }) {
   const today = todayISO()
   const sessions = daySessionsStatus(st, today).filter(x => x.routines.length)
   const planned = new Set(sessions.flatMap(x => x.ids))
-  // Starred routines first (lib/routine-favs.js, #327), each half in Plan's order.
+  // Starred routines first (lib/routine-favs.ts, #327), each half in Plan's order.
   const others = favRoutinesFirst((st.routines || []).filter(r => !planned.has(r.id)))
   const go = ids => { close(); startOrPreview(ids) }
   const nameOf = s => deriveSessionName(s.routines.map(r => r.name))

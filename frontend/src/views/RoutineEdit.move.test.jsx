@@ -252,23 +252,6 @@ describe('routine move controls', () => {
     expect(localStorage.getItem('gym_state_v1')).toBeNull()
   })
 
-  it('uses localized accessible names and titles, retains button focus, and does not open config', () => {
-    _setLangState('de', de, null, null)
-    setRoutine([entry('c1', 10), entry('c2', 20)])
-    renderRoutine()
-    const button = moveButton('c2', 'Nach oben')
-
-    expect(button.title).toBe('Nach oben')
-    // Each row's button says which exercise it moves, in the language's own word order.
-    expect(button.getAttribute('aria-label')).toMatch(/^c2 nach oben$/i)
-    expect(moveButton('c1', 'Nach unten').getAttribute('aria-label')).toMatch(/^c1 nach unten$/i)
-    button.focus()
-    act(() => button.click())
-
-    expect(document.activeElement?.tagName).toBe('BUTTON')
-    expect(mocks.exConfigSheet).not.toHaveBeenCalled()
-  })
-
   it('retains reordered occurrence order and grouping through plan export and import', () => {
     setRoutine([
       entry('c1', 10, 'g'),

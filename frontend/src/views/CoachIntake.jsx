@@ -26,7 +26,10 @@ import { activeProfile } from '../lib/equipment.js'
 import Icon from '../components/Icon.tsx'
 import { Button, TextArea } from '../components/ui.tsx'
 import { HourMinuteWheel } from '../components/DurationWheel.jsx'
-import '../coach.css'
+import * as stylex from '@stylexjs/stylex'
+import { sx } from '../lib/sx.ts'
+import { ob } from '../coach.styles.ts'
+import { styles as x } from './CoachIntake.styles.ts'
 
 // Each choice's text returns [title, detail] in the current language, through literal t() calls
 // so check-source-strings sees every key, as CATEGORY_TEXT in lib/coach.js does. When the screen
@@ -151,116 +154,116 @@ export default function CoachIntake() {
   const dots = STEPS.filter(s => s !== 'consent')
   const dotIndex = dots.indexOf(key)
 
-  return <div className="narrow ob">
-    <div className="ob-top">
+  return <div {...sx('narrow', x.page)}>
+    <div {...stylex.props(x.top)}>
       <button className="iconbtn" data-back={step ? '' : editing ? '/coach' : '/plan'} onClick={back} aria-label={t('Back')}><Icon name="chevronLeft" /></button>
-      {key !== 'consent' && <div className="ob-dots">
-        {dots.map((s, i) => <span key={s} className={'ob-dot' + (i === dotIndex ? ' on' : i < dotIndex ? ' done' : '')} />)}
+      {key !== 'consent' && <div {...stylex.props(x.dots)}>
+        {dots.map((s, i) => <span key={s} {...sx(['ob-dot', i === dotIndex ? 'on' : i < dotIndex && 'done'], x.dot, i === dotIndex ? x.dotOn : i < dotIndex && x.dotDone)} />)}
       </div>}
-      {optional && !last ? <button className="ob-skip" onClick={next}>{t('Skip')}</button> : <span style={{ width: 36 }} />}
+      {optional && !last ? <button {...sx('ob-skip', x.skip)} onClick={next}>{t('Skip')}</button> : <span {...stylex.props(x.skipSpacer)} />}
     </div>
 
-    <div className="ob-body">
+    <div {...stylex.props(x.body)}>
       {key === 'consent' && <Consent onAgree={agree} onDecline={() => nav('/plan')} />}
 
       {key === 'goal' && <>
-        <div className="ob-eyebrow">{t('Your goal')}</div>
-        <h1 className="ob-h">{t('What are you training for?')}</h1>
-        <p className="ob-p">{t('The Coach builds the whole plan around this.')}</p>
-        <div className="ob-choices">
+        <div {...sx('ob-eyebrow', ob.eyebrow)}>{t('Your goal')}</div>
+        <h1 {...stylex.props(x.h)}>{t('What are you training for?')}</h1>
+        <p {...stylex.props(x.p)}>{t('The Coach builds the whole plan around this.')}</p>
+        <div {...stylex.props(x.choices)}>
           {GOALS.map(([v, text, icon]) => { const [title, sub] = text(); return <Choice key={v} on={p.goal === v} icon={icon} title={title} sub={sub} onClick={() => set({ goal: v })} /> })}
         </div>
       </>}
 
       {key === 'experience' && <>
-        <div className="ob-eyebrow">{t('Experience')}</div>
-        <h1 className="ob-h">{t('Where are you starting from?')}</h1>
-        <p className="ob-p">{t('Sets the pace of progression, and how much the Coach assumes you know.')}</p>
-        <div className="ob-choices">
+        <div {...sx('ob-eyebrow', ob.eyebrow)}>{t('Experience')}</div>
+        <h1 {...stylex.props(x.h)}>{t('Where are you starting from?')}</h1>
+        <p {...stylex.props(x.p)}>{t('Sets the pace of progression, and how much the Coach assumes you know.')}</p>
+        <div {...stylex.props(x.choices)}>
           {EXPERIENCE.map(([v, text, icon]) => { const [title, sub] = text(); return <Choice key={v} on={p.experience === v} icon={icon} title={title} sub={sub} onClick={() => set({ experience: v })} /> })}
         </div>
       </>}
 
       {key === 'days' && <>
-        <div className="ob-eyebrow">{t('Schedule')}</div>
-        <h1 className="ob-h">{t('How many days a week?')}</h1>
-        <p className="ob-p">{t('Pick what you will actually keep, not the best week you can imagine.')}</p>
+        <div {...sx('ob-eyebrow', ob.eyebrow)}>{t('Schedule')}</div>
+        <h1 {...stylex.props(x.h)}>{t('How many days a week?')}</h1>
+        <p {...stylex.props(x.p)}>{t('Pick what you will actually keep, not the best week you can imagine.')}</p>
         {/* Two questions, two groups: how many (a count), then which (weekdays, optional). Each
             has its own label, so the row of numbers never reads as dates. */}
-        <div className="ob-group" role="group" aria-labelledby="ob-days-l">
-          <div className="ob-sub ob-sub-first" id="ob-days-l">{t('Days per week')}</div>
-          <div className="ob-days">
-            {[1, 2, 3, 4, 5, 6, 7].map(n => <button key={n} className={'ob-day' + (p.daysPerWeek === n ? ' on' : '')} aria-pressed={p.daysPerWeek === n} onClick={() => setDays(n)}>{n}</button>)}
+        <div {...sx('ob-group', x.group)} role="group" aria-labelledby="ob-days-l">
+          <div {...sx('ob-sub', x.sub, x.subFirst)} id="ob-days-l">{t('Days per week')}</div>
+          <div {...stylex.props(x.days)}>
+            {[1, 2, 3, 4, 5, 6, 7].map(n => <button key={n} {...sx(['ob-day', p.daysPerWeek === n && 'on'], x.day, p.daysPerWeek === n && x.dayOn)} aria-pressed={p.daysPerWeek === n} onClick={() => setDays(n)}>{n}</button>)}
           </div>
         </div>
-        <div className="ob-group" role="group" aria-labelledby="ob-week-l">
-          <div className="ob-sub ob-sub-first" id="ob-week-l">{t('Which days suit you? (optional)')}</div>
-          <div className="ob-week">
-            {[1, 2, 3, 4, 5, 6, 0].map(d => <button key={d} className={'ob-wd' + (p.preferredDays.includes(d) ? ' on' : '')} aria-pressed={p.preferredDays.includes(d)} onClick={() => toggleDay(d)}>{t(DAYN[d]).slice(0, 2)}</button>)}
+        <div {...sx('ob-group', x.group)} role="group" aria-labelledby="ob-week-l">
+          <div {...sx('ob-sub', x.sub, x.subFirst)} id="ob-week-l">{t('Which days suit you? (optional)')}</div>
+          <div {...stylex.props(x.week)}>
+            {[1, 2, 3, 4, 5, 6, 0].map(d => <button key={d} {...sx(['ob-wd', p.preferredDays.includes(d) && 'on'], x.wd, p.preferredDays.includes(d) && x.wdOn)} aria-pressed={p.preferredDays.includes(d)} onClick={() => toggleDay(d)}>{t(DAYN[d]).slice(0, 2)}</button>)}
           </div>
         </div>
       </>}
 
       {key === 'length' && <>
-        <div className="ob-eyebrow">{t('Session length')}</div>
-        <h1 className="ob-h">{t('How long is a session?')}</h1>
-        <p className="ob-p">{t('The Coach fits the volume to the time you actually have, including rest between sets.')}</p>
+        <div {...sx('ob-eyebrow', ob.eyebrow)}>{t('Session length')}</div>
+        <h1 {...stylex.props(x.h)}>{t('How long is a session?')}</h1>
+        <p {...stylex.props(x.p)}>{t('The Coach fits the volume to the time you actually have, including rest between sets.')}</p>
         {/* A duration, not a clock time: the app's own wheels (hours, minutes in fives), like every
             other time picker, never the native time input, which insists on AM/PM. */}
         <div className="dw-read" aria-hidden="true">{toHHMM(p.sessionMin || 60)}</div>
         <HourMinuteWheel value={p.sessionMin || 60} onChange={m => set({ sessionMin: m })} min={10} />
-        <div className="ob-quick">
+        <div {...sx('ob-quick', x.quick)}>
           {QUICK_MIN.map(m => <button key={m} className={'chip nocap' + (p.sessionMin === m ? ' on' : '')} onClick={() => set({ sessionMin: m })}>{m} {t('min')}</button>)}
         </div>
       </>}
 
       {key === 'equipment' && <>
-        <div className="ob-eyebrow">{t('Equipment')}</div>
-        <h1 className="ob-h">{t('What can you train with?')}</h1>
-        <p className="ob-p">{t('Pick everything you have access to. Leave it empty and the Coach will use the whole library.')}</p>
-        <div className="ob-chips">
-          {EQUIPMENT.map(e => <button key={e} className={'chip' + (p.equipment.includes(e) ? ' on' : '')} onClick={() => toggleEq(e)}>{t(e)}</button>)}
+        <div {...sx('ob-eyebrow', ob.eyebrow)}>{t('Equipment')}</div>
+        <h1 {...stylex.props(x.h)}>{t('What can you train with?')}</h1>
+        <p {...stylex.props(x.p)}>{t('Pick everything you have access to. Leave it empty and the Coach will use the whole library.')}</p>
+        <div {...sx('ob-chips', x.chips)}>
+          {EQUIPMENT.map(e => <button key={e} {...sx(['chip', p.equipment.includes(e) && 'on'], x.chip, p.equipment.includes(e) && x.chipOn)} onClick={() => toggleEq(e)}>{t(e)}</button>)}
         </div>
       </>}
 
       {key === 'limits' && <>
-        <div className="ob-eyebrow">{t('Limits')}</div>
-        <h1 className="ob-h">{t('Anything to work around?')}</h1>
-        <p className="ob-p">{t('Injuries, joints that complain, movements you cannot do, or practical limits like training at 6am in a flat.')}</p>
-        <div className="ob-field">
-          <TextArea rows={4} maxLength={600} value={p.limitations} onChange={e => set({ limitations: e.target.value })}
+        <div {...sx('ob-eyebrow', ob.eyebrow)}>{t('Limits')}</div>
+        <h1 {...stylex.props(x.h)}>{t('Anything to work around?')}</h1>
+        <p {...stylex.props(x.p)}>{t('Injuries, joints that complain, movements you cannot do, or practical limits like training at 6am in a flat.')}</p>
+        <div {...sx('ob-field', x.field)}>
+          <TextArea {...stylex.props(x.input)} rows={4} maxLength={600} value={p.limitations} onChange={e => set({ limitations: e.target.value })}
             placeholder={t('e.g. “dodgy left shoulder, no barbell overhead press”')} />
         </div>
-        <div className="ob-note warn">{t('If something actually hurts, see a professional. The Coach will program conservatively, but it can’t diagnose anything.')}</div>
+        <div {...stylex.props(x.note)}>{t('If something actually hurts, see a professional. The Coach will program conservatively, but it can’t diagnose anything.')}</div>
       </>}
 
       {key === 'extras' && <>
-        <div className="ob-eyebrow">{t('Almost there')}</div>
-        <h1 className="ob-h">{t('Anything else?')}</h1>
-        <p className="ob-p">{t('All optional. The more the Coach knows, the less it guesses.')}</p>
-        <div className="ob-sub" style={{ marginTop: 0 }}>{t('Exercises you love')}</div>
-        <div className="ob-field"><TextArea rows={2} maxLength={300} value={p.likes} onChange={e => set({ likes: e.target.value })} placeholder={t('e.g. “deadlifts, anything with a kettlebell”')} /></div>
-        <div className="ob-sub" style={{ marginTop: 4 }}>{t('Exercises you would rather not')}</div>
-        <div className="ob-field"><TextArea rows={2} maxLength={300} value={p.dislikes} onChange={e => set({ dislikes: e.target.value })} placeholder={t('e.g. “I hate lunges”')} /></div>
-        <div className="ob-sub" style={{ marginTop: 4 }}>{t('Anything you want the Coach to know')}</div>
-        <div className="ob-field"><TextArea rows={3} maxLength={600} value={p.notes} onChange={e => set({ notes: e.target.value })} placeholder={t('e.g. “I want visible arms progress by spring”')} /></div>
+        <div {...sx('ob-eyebrow', ob.eyebrow)}>{t('Almost there')}</div>
+        <h1 {...stylex.props(x.h)}>{t('Anything else?')}</h1>
+        <p {...stylex.props(x.p)}>{t('All optional. The more the Coach knows, the less it guesses.')}</p>
+        <div {...sx('ob-sub', x.sub)} style={{ marginTop: 0 }}>{t('Exercises you love')}</div>
+        <div {...sx('ob-field', x.field)}><TextArea {...stylex.props(x.input)} rows={2} maxLength={300} value={p.likes} onChange={e => set({ likes: e.target.value })} placeholder={t('e.g. “deadlifts, anything with a kettlebell”')} /></div>
+        <div {...sx('ob-sub', x.sub)} style={{ marginTop: 4 }}>{t('Exercises you would rather not')}</div>
+        <div {...sx('ob-field', x.field)}><TextArea {...stylex.props(x.input)} rows={2} maxLength={300} value={p.dislikes} onChange={e => set({ dislikes: e.target.value })} placeholder={t('e.g. “I hate lunges”')} /></div>
+        <div {...sx('ob-sub', x.sub)} style={{ marginTop: 4 }}>{t('Anything you want the Coach to know')}</div>
+        <div {...sx('ob-field', x.field)}><TextArea {...stylex.props(x.input)} rows={3} maxLength={600} value={p.notes} onChange={e => set({ notes: e.target.value })} placeholder={t('e.g. “I want visible arms progress by spring”')} /></div>
       </>}
     </div>
 
-    {key !== 'consent' && <div className="ob-foot">
-      <Button variant="primary" style={{ flex: 1 }} disabled={!canNext || busy} icon={last ? 'sparkles' : undefined} onClick={next}>
+    {key !== 'consent' && <div {...sx('ob-foot', x.foot)}>
+      <Button {...sx(null, x.footBtn)} variant="primary" style={{ flex: 1 }} disabled={!canNext || busy} icon={last ? 'sparkles' : undefined} onClick={next}>
         {last ? (editing ? t('Save') : t('Build my plan')) : t('Continue')}
       </Button>
     </div>}
-    {(key === 'goal' || key === 'experience') && !canNext && <div className="ob-hint">{t('Pick one to continue.')}</div>}
+    {(key === 'goal' || key === 'experience') && !canNext && <div {...sx('ob-hint', x.hint)}>{t('Pick one to continue.')}</div>}
   </div>
 }
 
 function Choice({ on, icon, title, sub, onClick }) {
-  return <button className={'ob-choice' + (on ? ' on' : '')} onClick={onClick}>
-    <Icon name={icon} />
-    <span className="ob-choice-t">{title}{sub && <span className="ob-choice-s">{sub}</span>}</span>
-    <Icon name="check" className="ob-k" />
+  return <button {...sx(['ob-choice', on && 'on'], x.choice, on && x.choiceOn)} onClick={onClick}>
+    <Icon name={icon} {...stylex.props(x.choiceIcon)} />
+    <span {...stylex.props(x.choiceText)}>{title}{sub && <span {...stylex.props(x.choiceSub)}>{sub}</span>}</span>
+    <Icon name="check" {...stylex.props(x.check, on && x.checkOn)} />
   </button>
 }
 
@@ -274,26 +277,26 @@ function Consent({ onAgree, onDecline }) {
     ? t('Sent straight to {0} with your own API key. You pay for every request.', info.host || info.providerLabel)
     : t('Sent to {0}, running on this server under the instance owner’s account.', (info?.provider === 'compatible' && info.host) || info?.providerLabel || config?.coach?.providerLabel || t('the configured AI provider'))
   return <>
-    <div className="ob-eyebrow">{t('Before we start')}</div>
-    <h1 className="ob-h">{t('Meet the Coach')}</h1>
-    <p className="ob-p">{t('It designs your plan from a few answers and adjusts it from what you actually log. It never changes anything without your say-so, and you can undo every change.')}</p>
-    <div className="ob-sub" style={{ marginTop: 0 }}>{t('What it reads')}</div>
-    <div className="ob-consent">
+    <div {...sx('ob-eyebrow', ob.eyebrow)}>{t('Before we start')}</div>
+    <h1 {...stylex.props(x.h)}>{t('Meet the Coach')}</h1>
+    <p {...stylex.props(x.p)}>{t('It designs your plan from a few answers and adjusts it from what you actually log. It never changes anything without your say-so, and you can undo every change.')}</p>
+    <div {...sx('ob-sub', x.sub)} style={{ marginTop: 0 }}>{t('What it reads')}</div>
+    <div {...stylex.props(ob.consent)}>
       {(info?.categories || Object.keys(CATEGORY_TEXT)).map(k => {
         const [title, sub] = CATEGORY_TEXT[k]?.() || [k, '']
-        return <div key={k} className="ob-consent-row"><Icon name="check" /><div><b>{title}</b><span>{sub}</span></div></div>
+        return <div key={k} {...sx('ob-consent-row', ob.consentRow)}><Icon name="check" {...stylex.props(ob.consentIcon)} /><div><b {...stylex.props(ob.consentTitle)}>{title}</b><span {...stylex.props(ob.consentText)}>{sub}</span></div></div>
       })}
     </div>
-    <div className="ob-sub">{t('You decide')}</div>
-    <div className="ob-consent"><OptionalRows /></div>
-    <div className="ob-fine">
+    <div {...sx('ob-sub', x.sub)}>{t('You decide')}</div>
+    <div {...stylex.props(ob.consent)}><OptionalRows /></div>
+    <div {...stylex.props(ob.fine)}>
       <div>{who}</div>
       <div>{t('Your name, your sign-in details and everything else about your account stay here. Other people’s data is never included.')}</div>
       <div style={{ color: 'var(--yellow)' }}>{t('The Coach is not a doctor or a physiotherapist. If something hurts, ask a professional.')}</div>
     </div>
-    <div className="ob-foot" style={{ flexDirection: 'column' }}>
-      <Button variant="primary" onClick={() => onAgree(info)}>{t('I understand, let’s go')}</Button>
-      <Button onClick={onDecline}>{t('Not now')}</Button>
+    <div {...sx('ob-foot', x.foot)} style={{ flexDirection: 'column' }}>
+      <Button {...sx(null, x.footBtn)} variant="primary" onClick={() => onAgree(info)}>{t('I understand, let’s go')}</Button>
+      <Button {...sx(null, x.footBtn)} onClick={onDecline}>{t('Not now')}</Button>
     </div>
   </>
 }

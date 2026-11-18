@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 // The long exercise lists — the Library, the add-exercise picker and the muscle explorer — load
 // their next page by themselves once the "Show more" button at their foot comes near the screen
-// (lib/use-auto-more.js). The button stays, and without IntersectionObserver it is the way on.
+// (lib/use-auto-more.ts). The button stays, and without IntersectionObserver it is the way on.
 // happy-dom has no IntersectionObserver, so a fake one stands in and is fired by hand.
 import React, { act } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'

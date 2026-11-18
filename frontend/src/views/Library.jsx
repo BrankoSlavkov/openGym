@@ -18,11 +18,11 @@ import ExerciseViewToggle from '../components/ExerciseViewToggle.tsx'
 import GymHiddenLine from '../components/GymHiddenLine.tsx'
 import { Button } from '../components/ui.tsx'
 import { tappable, useRevealActiveChip } from '../lib/use-sheet-keyboard.js'
-import { useAutoMore } from '../lib/use-auto-more.js'
+import { useAutoMore } from '../lib/use-auto-more.ts'
 import { isFav, sortFavouritesFirst, sortYoursFirst, usageOf } from '../lib/favourites.js'
 import { SeasonDeco } from '../components/Seasonal.jsx'
 import { libraryOn } from '../lib/shared-api.ts'
-import { isOn } from '../lib/modules.js'
+import { isOn } from '../lib/modules.ts'
 
 export default function Library() {
   const nav = useNavigate()

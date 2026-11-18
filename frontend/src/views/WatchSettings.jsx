@@ -12,7 +12,7 @@ import { watchStatus } from '../lib/watch-sync.js'
 import { loadHealth, onHealthChange } from '../lib/health-sync.js'
 import { fmtAgo } from '../lib/format.js'
 import { useStore } from '../store/useStore.js'
-import { isOn } from '../lib/modules.js'
+import { isOn } from '../lib/modules.ts'
 import Icon from '../components/Icon.tsx'
 
 // The two rest screens as the watch draws them (simulator screenshots of the effort screen from #1100, in public/watch/).

@@ -8,6 +8,8 @@ import { DATA_CATEGORIES, OPTIONAL_CATEGORIES, shareOf } from '../../../api/coac
 import { HTTP_PROVIDERS } from '../../../api/coach/core/providers.ts'
 import { MOBILE } from '../lib/mobile.js'
 import { Section, Row, Switch } from './ui.tsx'
+import * as stylex from '@stylexjs/stylex'
+import { ob } from '../coach.styles.ts'
 
 /** Whether web research can be offered here, and if not, why not (null when it can). */
 export function webBlocker(config, coachLocal) {
@@ -57,9 +59,9 @@ export function OptionalRows() {
   const set = (id, on) => update(s => { s.coach = s.coach || emptyCoach(); s.coach.share = { ...(s.coach.share || {}), [id]: on } })
   return OPTIONAL_CATEGORIES.map(c => {
     const [title, sub] = OPTIONAL_TEXT[c.id]?.() || [c.id, '']
-    return <div key={c.id} className="ob-consent-opt">
+    return <div key={c.id} {...stylex.props(ob.consentRow)}>
       <Switch checked={share[c.id]} onChange={v => set(c.id, v)} aria-label={title} />
-      <div><b>{title}</b><span>{sub}</span></div>
+      <div {...stylex.props(ob.consentBody)}><b {...stylex.props(ob.consentTitle)}>{title}</b><span {...stylex.props(ob.consentText)}>{sub}</span></div>
     </div>
   })
 }

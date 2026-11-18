@@ -5,7 +5,7 @@
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { isOn } from '../lib/modules.js'
+import { isOn } from '../lib/modules.ts'
 import { writeGarminLink } from '../lib/watch-settings.js'
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
@@ -28,7 +28,7 @@ vi.mock('../lib/api.ts', () => ({ api: vi.fn(() => Promise.resolve({ connections
 vi.mock('../lib/mobile.js', () => ({ MOBILE: true }))
 vi.mock('../lib/health-sync.js', () => ({ loadHealth: async () => null }))
 
-import ModulesPage from './Modules.jsx'
+import ModulesPage from './Modules.tsx'
 
 let host, root
 beforeEach(() => {

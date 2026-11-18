@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { LANGS, DATE_LOCALES, DERIVED_LOCALES } from './i18n-core.js'
-import { matchLocale } from './default-lang.js'
+import { matchLocale } from './default-lang.ts'
 import sv from '../locales/sv.js'
 
 // Swedish (#721) came in as a pack plus two registry lines. A pack the registry forgets never
@@ -13,13 +13,6 @@ describe('every locale pack is wired up', () => {
     expect(LANGS[code], `${code} missing from LANGS`).toEqual(expect.any(String))
     expect(DATE_LOCALES[code], `${code} missing from DATE_LOCALES`).toEqual(expect.any(String))
     expect(DERIVED_LOCALES[code]).toBeUndefined()
-  })
-
-  it('a Swedish phone gets Swedish, with Swedish dates', () => {
-    expect(LANGS.sv).toBe('Svenska')
-    expect(matchLocale('sv-SE')).toBe('sv')
-    expect(matchLocale('sv_FI')).toBe('sv')
-    expect(new Intl.DateTimeFormat(DATE_LOCALES.sv, { month: 'long' }).format(new Date(2026, 9, 23))).toBe('oktober')
   })
 
   it('the Swedish pack has no em dashes in what it shows', () => {

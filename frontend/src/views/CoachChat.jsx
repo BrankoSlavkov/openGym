@@ -14,7 +14,7 @@
 // on this screen.
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from '../router/hooks.tsx'
-import { closeThenNav } from '../lib/nav.js'
+import { closeThenNav } from '../lib/nav.ts'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { t, tn } from '../lib/i18n.js'
@@ -47,8 +47,10 @@ import Icon from '../components/Icon.tsx'
 import { glyphOf } from '../lib/glyphs.js'
 import LineChart from '../components/LineChart.jsx'
 import { Button, Check, Switch, Section, Row, SelectRow } from '../components/ui.tsx'
-import '../coach.css'
 import { isoRun } from '../lib/bidi.js'
+import { sx } from '../lib/sx.ts'
+import { bubble, pcard, recapState } from '../coach.styles.ts'
+import { styles as cc } from './CoachChat.styles.ts'
 
 export default function CoachChat() {
   const nav = useNavigate()
@@ -185,11 +187,11 @@ export default function CoachChat() {
     () => requestReview(t('Focus only on my routine “{0}”. Improve it: exercise choice, order, sets and reps, rep ranges, progression. Leave the other routines alone.', r.name)),
     t('Improve my routine “{0}”.', r.name))
 
-  const pickRoutine = () => openSheet(close => <div className="chat-menu">
+  const pickRoutine = () => openSheet(close => <div {...sx(null, cc.menu)}>
     <h3>{t('Improve which routine?')}</h3>
     <div className="sect-b">
       {(S.routines || []).map(r => <Row key={r.id} icon={glyphOf(r.emoji)} iconTint="var(--acc)" title={r.name} subtitle={tn('{0} exercise', '{0} exercises', (r.ex || []).length)} accessory="chevron" onClick={() => { close(); askImprove(r) }} />)}
-      {!(S.routines || []).length && <div className="chat-empty">{t('You don’t have any routines yet. Ask the Coach for a plan first.')}</div>}
+      {!(S.routines || []).length && <div {...sx(null, cc.empty)}>{t('You don’t have any routines yet. Ask the Coach for a plan first.')}</div>}
     </div>
     <div style={{ height: 10 }} />
   </div>)
@@ -198,7 +200,7 @@ export default function CoachChat() {
   const showCohort = () => openSheet(() => <CohortSheet S={S} update={update} toast={toast} />)
 
   const idle = !job && !pending
-  const menu = () => openSheet(close => <div className="chat-menu">
+  const menu = () => openSheet(close => <div {...sx(null, cc.menu)}>
     <h3>{t('Coach')}</h3>
     <div className="sect-b">
       {idle && <Row icon="sparkles" iconTint="var(--acc)" title={t('Ask for a review')} subtitle={t('What would the Coach change after your last sessions?')} accessory="chevron" onClick={() => { close(); askReview() }} />}
@@ -209,8 +211,8 @@ export default function CoachChat() {
       {idle && <Row icon="clipboard" iconTint="var(--indigo)" title={t('Start a new plan')} subtitle={t('A fresh plan from your answers; your workouts stay')} accessory="chevron" onClick={() => { close(); askNewPlan() }} />}
       <Row icon="pencil" iconTint="var(--indigo)" title={t('Edit my answers')} subtitle={t('Goal, days, equipment, limits')} accessory="chevron" onClick={() => closeThenNav(close, '/coach/intake?edit=1')} />
       <Row icon="clock" iconTint="var(--purple)" title={t('Automatic reviews')} subtitle={cadenceLabel(coach)} accessory="chevron" onClick={() => { close(); cadenceSheet(openSheet, update) }} />
-      <Row icon="list" iconTint="var(--teal)" title={t('What the Coach sees')} subtitle={t('Choose what it may read, and whether it may search the web')} accessory="chevron" onClick={() => { close(); openSheet(() => <div className="chat-menu"><CoachSeesSection /></div>) }} />
-      {!DEMO && <Row icon="shield" iconTint="var(--green)" title={t('AI data sharing')} subtitle={t('Who may see your training')} accessory="chevron" onClick={() => { close(); openSheet(() => <div className="chat-menu"><AiConsentSection /></div>) }} />}
+      <Row icon="list" iconTint="var(--teal)" title={t('What the Coach sees')} subtitle={t('Choose what it may read, and whether it may search the web')} accessory="chevron" onClick={() => { close(); openSheet(() => <div {...sx(null, cc.menu)}><CoachSeesSection /></div>) }} />
+      {!DEMO && <Row icon="shield" iconTint="var(--green)" title={t('AI data sharing')} subtitle={t('Who may see your training')} accessory="chevron" onClick={() => { close(); openSheet(() => <div {...sx(null, cc.menu)}><AiConsentSection /></div>) }} />}
       {canRevert(S) && <Row icon="reset" iconTint="var(--blue)" title={t('Undo the last Coach changes')} accessory="chevron" onClick={() => { close(); doRevert() }} />}
     </div>
     <div style={{ height: 10 }} />
@@ -232,25 +234,25 @@ export default function CoachChat() {
     ? t('What should change?')
     : job ? t('Coach is thinking…') : t('Message the Coach…')
 
-  return <div className="narrow chat">
-    <div className="chat-hdr">
+  return <div {...sx('narrow chat', cc.chat)}>
+    <div {...sx(null, cc.hdr)}>
       <button className="iconbtn" data-back="/plan" onClick={() => nav('/plan')} aria-label={t('Back')}><Icon name="chevronLeft" /></button>
-      <div className="chat-av"><Icon name="sparkles" /></div>
-      <div className="grow">
-        <h1>{t('Coach')}</h1>
-        <div className={'chat-st' + (job ? ' live' : '')}>{status}</div>
+      <div {...sx(null, cc.avatar)}><Icon name="sparkles" /></div>
+      <div {...sx(null, cc.hdrText)}>
+        <h1 {...sx(null, cc.title)}>{t('Coach')}</h1>
+        <div {...sx(null, cc.status, job && cc.statusLive)}>{status}</div>
       </div>
       <button className="iconbtn" onClick={menu} aria-label={t('More')}><Icon name="more" /></button>
     </div>
 
-    <div className="msgs">
+    <div {...sx(null, cc.msgs)}>
       <Bubble role="coach">{t('Hi, I’m your Coach. I build your plan from your answers and adjust it from what you actually log. Nothing changes until you say so.')}</Bubble>
 
       {(coach.chat || []).map(m => <Message key={m.id} m={m} S={S} profile={coach.profile} openSheet={openSheet} />)}
 
       {job && <Typing S={S} kind={job.kind} coachLocal={coachLocal} config={config} />}
 
-      {pending && !job && pending.kind === 'adapt' && <div className="msg coach" style={{ maxWidth: '100%', width: '100%' }}>
+      {pending && !job && pending.kind === 'adapt' && <div {...sx(null, cc.msg, cc.msgCoach)} style={{ maxWidth: '100%', width: '100%' }}>
         <AdaptProposal p={pending} onDone={refresh} />
       </div>}
       {pending && !job && pending.kind !== 'ask' && pending.kind !== 'adapt' && (pending.kind === 'create'
@@ -262,19 +264,19 @@ export default function CoachChat() {
       <div ref={endRef} />
     </div>
 
-    <div className="composer">
-      {idle && !busy && <div className="chips-row">
-        <button className="qchip" onClick={askReview}><Icon name="sparkles" />{t('Review my training')}</button>
-        {!!lastWorkout && <button className="qchip" onClick={askDebrief}><Icon name="checkCircle" />{t('Last workout')}</button>}
-        {!!(S.routines || []).length && <button className="qchip" onClick={pickRoutine}><Icon name="wrench" />{t('Improve a routine')}</button>}
-        {community && <button className="qchip" onClick={showCohort}><Icon name="person" />{t('Compare')}</button>}
+    <div {...sx('composer', cc.composer)}>
+      {idle && !busy && <div {...sx(null, cc.chipsRow)}>
+        <button {...sx('qchip', cc.qchip)} onClick={askReview}><Icon name="sparkles" {...sx(null, cc.qchipIcon)} />{t('Review my training')}</button>
+        {!!lastWorkout && <button {...sx('qchip', cc.qchip)} onClick={askDebrief}><Icon name="checkCircle" {...sx(null, cc.qchipIcon)} />{t('Last workout')}</button>}
+        {!!(S.routines || []).length && <button {...sx('qchip', cc.qchip)} onClick={pickRoutine}><Icon name="wrench" {...sx(null, cc.qchipIcon)} />{t('Improve a routine')}</button>}
+        {community && <button {...sx('qchip', cc.qchip)} onClick={showCohort}><Icon name="person" {...sx(null, cc.qchipIcon)} />{t('Compare')}</button>}
       </div>}
-      <div className={'composer-in' + (expanded ? ' tall' : '')}>
+      <div {...sx(null, cc.composerIn)}>
         <ChatInput value={text} onChange={setText} onSend={send} placeholder={placeholder} disabled={!!job}
           maxLength={maxMessageLen || 1000} expanded={expanded} setExpanded={setExpanded} />
-        <button className="send" onClick={send} disabled={!text.trim() || busy || !!job} aria-label={t('Send')}><Icon name="arrowUp" /></button>
+        <button {...sx('send', cc.send)} onClick={send} disabled={!text.trim() || busy || !!job} aria-label={t('Send')}><Icon name="arrowUp" /></button>
       </div>
-      {cap?.limit > 0 && <div className="composer-cap">{t('{0} of {1} Coach runs used today', cap.used, cap.limit)}</div>}
+      {cap?.limit > 0 && <div {...sx('composer-cap', cc.composerCap)}>{t('{0} of {1} Coach runs used today', cap.used, cap.limit)}</div>}
     </div>
   </div>
 }
@@ -282,10 +284,9 @@ export default function CoachChat() {
 /* ---------------------------------- bubbles ---------------------------------- */
 
 function Bubble({ role, kind, at, children }) {
-  const cls = kind === 'error' ? ' err' : ''
-  return <div className={'msg ' + role}>
-    <div className={'bub' + cls}>{children}</div>
-    {at && <div className="msg-t">{fmtChatTimestamp(at)}</div>}
+  return <div {...sx(null, cc.msg, role === 'user' ? cc.msgUser : cc.msgCoach)}>
+    <div {...sx(null, bubble.bub, role === 'user' ? bubble.user : bubble.coach, kind === 'error' && bubble.err)}>{children}</div>
+    {at && <div {...sx(null, cc.msgTime)}>{fmtChatTimestamp(at)}</div>}
   </div>
 }
 
@@ -294,23 +295,23 @@ function Message({ m, S, profile, openSheet }) {
     const lines = profileLines(profile)
     return <Bubble role="user" at={m.at}>
       {t('Here is what I am working with:')}
-      <ul>{lines.map((l, i) => <li key={i}>{l}</li>)}</ul>
+      <ul {...sx(null, bubble.list)}>{lines.map((l, i) => <li key={i} {...sx(null, bubble.item)}>{l}</li>)}</ul>
     </Bubble>
   }
   if (m.kind === 'applied' || m.kind === 'dismissed' || m.kind === 'debrief') {
     const entry = m.ref ? logEntry(S, m.ref) : null
-    return <div className="msg coach" style={entry ? { maxWidth: '100%', width: '100%' } : undefined}>
-      {!!m.text && <div className="bub">{m.text}</div>}
+    return <div {...sx(null, cc.msg, cc.msgCoach)} style={entry ? { maxWidth: '100%', width: '100%' } : undefined}>
+      {!!m.text && <div {...sx(null, bubble.bub, bubble.coach)}>{m.text}</div>}
       {entry && <Recap entry={entry} S={S} openSheet={openSheet} />}
-      {m.at && <div className="msg-t">{fmtChatTimestamp(m.at)}</div>}
+      {m.at && <div {...sx(null, cc.msgTime)}>{fmtChatTimestamp(m.at)}</div>}
     </div>
   }
   if (m.kind === 'text' && m.role === 'coach' && (m.actions?.length || m.sources?.length)) {
-    return <div className="msg coach" style={m.actions?.length ? { maxWidth: '100%', width: '100%' } : undefined}>
-      <div className="bub">{m.text}</div>
+    return <div {...sx(null, cc.msg, cc.msgCoach)} style={m.actions?.length ? { maxWidth: '100%', width: '100%' } : undefined}>
+      <div {...sx(null, bubble.bub, bubble.coach)}>{m.text}</div>
       <ActionCards actions={m.actions} />
       <Sources list={m.sources} />
-      {m.at && <div className="msg-t">{fmtChatTimestamp(m.at)}</div>}
+      {m.at && <div {...sx(null, cc.msgTime)}>{fmtChatTimestamp(m.at)}</div>}
     </div>
   }
   if (m.kind === 'reverted' || m.kind === 'nochange' || m.kind === 'error' || m.kind === 'text') {
@@ -334,9 +335,9 @@ function Typing({ S, kind, coachLocal, config }) {
     eta = local ? '' : t('This usually takes a minute or two.')
   }
   const doing = kind === 'create' ? t('Building your plan…') : kind === 'debrief' ? t('Looking at that session…') : kind === 'ask' ? t('Thinking about your question…') : kind === 'adapt' ? t('Looking at your workout…') : t('Reading your training…')
-  return <div className="msg coach">
-    <div className="bub typing"><i /><i /><i /></div>
-    <div className="typing-eta">
+  return <div {...sx(null, cc.msg, cc.msgCoach)}>
+    <div {...sx('typing', bubble.bub, bubble.coach, bubble.typing)}><i {...sx(null, bubble.typingDot)} /><i {...sx(null, bubble.typingDot, bubble.typingDot2)} /><i {...sx(null, bubble.typingDot, bubble.typingDot3)} /></div>
+    <div {...sx(null, cc.typingEta)}>
       {doing} {eta}
       {local ? ' ' + t('A local model can take longer.') : ''}
       {' ' + t('Feel free to leave, it keeps going.')}
@@ -384,55 +385,55 @@ function PlanCard({ p, S, update, toast, nav, refresh }) {
     }
   })
 
-  return <div className="msg coach" style={{ maxWidth: '100%', width: '100%' }}>
-    <div className="pcard">
-      <div className="pcard-hd">
-        <div className="pcard-eyebrow">{p.iteration > 1 ? t('Revision {0}', p.iteration) : t('Your plan')}</div>
-        <h2 className="pcard-h">{b.name || t('Coach plan')}</h2>
-        {!!b.summary && <p className="pcard-sum">{b.summary}</p>}
-        {!!b.basedOn && <p className="pcard-sum" style={{ fontSize: 'var(--fs-footnote)' }}>{b.basedOn}</p>}
+  return <div {...sx(null, cc.msg, cc.msgCoach)} style={{ maxWidth: '100%', width: '100%' }}>
+    <div {...sx(null, pcard.card)}>
+      <div {...sx(null, pcard.hd)}>
+        <div {...sx(null, pcard.eyebrow)}>{p.iteration > 1 ? t('Revision {0}', p.iteration) : t('Your plan')}</div>
+        <h2 {...sx(null, pcard.h)}>{b.name || t('Coach plan')}</h2>
+        {!!b.summary && <p {...sx(null, pcard.sum)}>{b.summary}</p>}
+        {!!b.basedOn && <p {...sx(null, pcard.sum)} style={{ fontSize: 'var(--fs-footnote)' }}>{b.basedOn}</p>}
       </div>
 
       <WeekStrip days={weekDays} ws={weekStartOf(S)} />
 
-      {b.routines.length > 1 && <div className="pcard-tabs">
-        {b.routines.map((x, i) => <button key={x.id || i} className={'pcard-tab' + (i === tab ? ' on' : '')} onClick={() => setTab(i)}><Icon name={glyphOf(x.emoji)} />{x.name}</button>)}
+      {b.routines.length > 1 && <div {...sx(null, pcard.tabs)}>
+        {b.routines.map((x, i) => <button key={x.id || i} {...sx(['pcard-tab', i === tab && 'on'], pcard.tab, i === tab && pcard.tabOn)} onClick={() => setTab(i)}><Icon name={glyphOf(x.emoji)} />{x.name}</button>)}
       </div>}
 
       {r && <RoutineBlock r={r} unit={S.unit} speedUnit={speedUnitOf(S)} />}
 
-      {canSchedule && <div className="pcard-row">
+      {canSchedule && <div {...sx(null, pcard.row)}>
         {/* In rotation mode the plan goes into the loop, which is what Home reads (#778). */}
         {inRotation
           ? <span className="lrow-m"><span className="lrow-t">{t('Use this plan in your rotation')}</span><span className="lrow-s">{t('Replaces the sessions in your rotation and starts it over with the first one.')}</span></span>
           : <span className="lrow-m"><span className="lrow-t">{t('Use this weekly schedule')}</span><span className="lrow-s">{t('Replaces your current week. Days this plan leaves empty become rest days.')}</span></span>}
         <Switch checked={schedule} onChange={setSchedule} />
       </div>}
-      <div className="pcard-note">{t('The Coach is not a doctor or a physiotherapist. If something hurts, ask a professional.')}</div>
-      <div className="pcard-ft">
-        <Button variant="primary" icon="download" onClick={accept}>{t('Import this plan')}</Button>
-        <Button onClick={discard}>{t('Discard')}</Button>
+      <div {...sx(null, pcard.note)}>{t('The Coach is not a doctor or a physiotherapist. If something hurts, ask a professional.')}</div>
+      <div {...sx(null, pcard.ft)}>
+        <Button {...sx(null, pcard.ftBtn)} variant="primary" icon="download" onClick={accept}>{t('Import this plan')}</Button>
+        <Button {...sx(null, pcard.ftBtn)} onClick={discard}>{t('Discard')}</Button>
       </div>
     </div>
-    <div className="msg-t">{t('Not quite right? Say what to change below and I will revise the whole plan.')}</div>
+    <div {...sx(null, cc.msgTime)}>{t('Not quite right? Say what to change below and I will revise the whole plan.')}</div>
   </div>
 }
 
 // In the order the week is set to start on (Settings), like the Plan's own week.
-const WeekStrip = ({ days, ws }) => <div className="pcard-week">
-  {weekOrder(ws).map(d => <div key={d} className={'pcard-wd' + (days.has(d) ? ' on' : '')}>{t(DAYS[d])}</div>)}
+const WeekStrip = ({ days, ws }) => <div {...sx(null, pcard.week)}>
+  {weekOrder(ws).map(d => <div key={d} {...sx(['pcard-wd', days.has(d) && 'on'], pcard.wd, days.has(d) && pcard.wdOn)}>{t(DAYS[d])}</div>)}
 </div>
 
-const RoutineBlock = ({ r, unit, speedUnit }) => <div className="pcard-rt">
-  <div className="pcard-rt-h"><b><Icon name={glyphOf(r.emoji)} />{r.name}</b><span>{tn('{0} exercise', '{0} exercises', r.ex.length)}</span></div>
-  {!!r.why && <div className="pcard-why">{r.why}</div>}
-  {r.ex.map((e, i) => <div key={i} className="pcard-ex">
-    <div className="pcard-ex-r"><span className={'pcard-ex-n' + typed(e.id)}>{exName(e.id)}</span><span className="pcard-ex-l">{exLine(e, unit, speedUnit)}</span></div>
-    {!!e.why && <div className="pcard-ex-w">{e.why}</div>}
+const RoutineBlock = ({ r, unit, speedUnit }) => <div {...sx(null, pcard.rt)}>
+  <div {...sx('pcard-rt-h', pcard.rtHead)}><b {...sx(null, pcard.rtName)}><Icon name={glyphOf(r.emoji)} />{r.name}</b><span {...sx(null, pcard.rtCount)}>{tn('{0} exercise', '{0} exercises', r.ex.length)}</span></div>
+  {!!r.why && <div {...sx(null, pcard.why)}>{r.why}</div>}
+  {r.ex.map((e, i) => <div key={i} {...sx(null, pcard.ex)}>
+    <div {...sx(null, pcard.exRow)}><span {...sx(null, pcard.exName, typed(e.id) && pcard.ownName)}>{exName(e.id)}</span><span {...sx(null, pcard.exLoad)}>{exLine(e, unit, speedUnit)}</span></div>
+    {!!e.why && <div {...sx(null, pcard.exWhy)}>{e.why}</div>}
     {/* What the routine keeps (#1003): the cue shown under the exercise in every workout, and
         the backups a swap offers first. */}
-    {!!e.note && <div className="pcard-ex-x"><Icon name="info" />{e.note}</div>}
-    {Array.isArray(e.subs) && e.subs.length > 0 && <div className="pcard-ex-x"><Icon name="swap" />{t('Backups: {0}', e.subs.map(exName).join(', '))}</div>}
+    {!!e.note && <div {...sx(null, pcard.exExtra)}><Icon name="info" {...sx(null, pcard.exExtraIcon)} />{e.note}</div>}
+    {Array.isArray(e.subs) && e.subs.length > 0 && <div {...sx(null, pcard.exExtra)}><Icon name="swap" {...sx(null, pcard.exExtraIcon)} />{t('Backups: {0}', e.subs.map(exName).join(', '))}</div>}
   </div>)}
 </div>
 
@@ -467,16 +468,16 @@ function ReviewCard({ p, S, update, toast, refresh }) {
     }
   })
 
-  return <div className="msg coach" style={{ maxWidth: '100%', width: '100%' }}>
-    <div className="pcard">
-      <div className="pcard-hd">
-        <div className="pcard-eyebrow">{t('Suggestions')}</div>
-        <h2 className="pcard-h">{tn('{0} suggestion', '{0} suggestions', marked.changes.length)}</h2>
-        {!!marked.summary && <p className="pcard-sum">{marked.summary}</p>}
-        {!!marked.evidence?.sessions && <p className="pcard-sum" style={{ fontSize: 'var(--fs-footnote)' }}>
+  return <div {...sx(null, cc.msg, cc.msgCoach)} style={{ maxWidth: '100%', width: '100%' }}>
+    <div {...sx(null, pcard.card)}>
+      <div {...sx(null, pcard.hd)}>
+        <div {...sx(null, pcard.eyebrow)}>{t('Suggestions')}</div>
+        <h2 {...sx(null, pcard.h)}>{tn('{0} suggestion', '{0} suggestions', marked.changes.length)}</h2>
+        {!!marked.summary && <p {...sx(null, pcard.sum)}>{marked.summary}</p>}
+        {!!marked.evidence?.sessions && <p {...sx(null, pcard.sum)} style={{ fontSize: 'var(--fs-footnote)' }}>
           {t('Based on your last {0} sessions', marked.evidence.sessions)}{marked.evidence.from ? ` · ${fmtDate(marked.evidence.from)} – ${fmtDate(marked.evidence.to)}` : ''}
         </p>}
-        {marked.planMoved && <p className="pcard-sum" style={{ fontSize: 'var(--fs-footnote)', color: 'var(--yellow)' }}>
+        {marked.planMoved && <p {...sx(null, pcard.sum)} style={{ fontSize: 'var(--fs-footnote)', color: 'var(--yellow)' }}>
           {t('Your plan changed since the Coach looked at it. Suggestions that no longer match are greyed out. Ask for a fresh review to see them again.')}
         </p>}
       </div>
@@ -495,12 +496,12 @@ function ReviewCard({ p, S, update, toast, refresh }) {
 
       <Notes notes={marked.notes} />
 
-      <div className="pcard-note">{t('The Coach is not a doctor or a physiotherapist. If something hurts, ask a professional.')}</div>
-      <div className="pcard-ft">
-        <Button variant="primary" icon="check" onClick={apply}>
+      <div {...sx(null, pcard.note)}>{t('The Coach is not a doctor or a physiotherapist. If something hurts, ask a professional.')}</div>
+      <div {...sx(null, pcard.ft)}>
+        <Button {...sx(null, pcard.ftBtn)} variant="primary" icon="check" onClick={apply}>
           {accepted.size ? tn('Apply {0} change', 'Apply {0} changes', accepted.size) : t('Apply nothing')}
         </Button>
-        <Button onClick={discard}>{t('Dismiss all')}</Button>
+        <Button {...sx(null, pcard.ftBtn)} onClick={discard}>{t('Dismiss all')}</Button>
       </div>
     </div>
   </div>
@@ -508,22 +509,22 @@ function ReviewCard({ p, S, update, toast, refresh }) {
 
 function ChangeRow({ c, S, stale, badge, children }) {
   const vals = changeValues(c, S)
-  return <div className={'pcard-chg' + (stale ? ' stale' : '') + (c.status === 'rejected' ? ' declined' : '')}>
-    <div className="grow">
-      <div className="pcard-chg-t">{changeTitle(c, S)}{c.routineName ? <span className="dim" style={{ fontWeight: 400 }}> · {c.routineName}</span> : null}</div>
-      {vals && <div className="pcard-chg-v"><span className="tag">{vals.before}</span><Icon name="chevronRight" style={{ fontSize: 'var(--fs-caption)', color: 'var(--label-3)' }} /><span className="tag acc">{vals.after}</span></div>}
-      <div className="pcard-chg-w">{c.why}</div>
+  return <div {...sx('pcard-chg', pcard.chg, stale && pcard.chgStale)}>
+    <div {...sx(null, pcard.chgBody)}>
+      <div {...sx(null, pcard.chgTitle, c.status === 'rejected' && pcard.chgTitleDeclined)}>{changeTitle(c, S)}{c.routineName ? <span className="dim" style={{ fontWeight: 400 }}> · {c.routineName}</span> : null}</div>
+      {vals && <div {...sx(null, pcard.chgValues)}><span className="tag">{vals.before}</span><Icon name="chevronRight" style={{ fontSize: 'var(--fs-caption)', color: 'var(--label-3)' }} /><span className="tag acc">{vals.after}</span></div>}
+      <div {...sx(null, pcard.chgWhy)}>{c.why}</div>
       {/* What the change means at the gym, in the app's own words (lib/coach.js changeMeaning). */}
-      {changeMeaning(c) && <div className="pcard-chg-m small dim">{changeMeaning(c)}</div>}
-      {stale && <div className="pcard-chg-stale">{t('Doesn’t match your plan any more, so it can’t be applied.')}</div>}
+      {changeMeaning(c) && <div {...sx('small dim', pcard.chgMeaning)}>{changeMeaning(c)}</div>}
+      {stale && <div {...sx(null, pcard.chgStaleNote)}>{t('Doesn’t match your plan any more, so it can’t be applied.')}</div>}
     </div>
     {badge}
     {children}
   </div>
 }
 
-const Notes = ({ notes }) => !!notes?.length && <div className="pcard-notes">
-  {notes.map((n, i) => <div key={i}><Icon name="lightbulb" />{n}</div>)}
+const Notes = ({ notes }) => !!notes?.length && <div {...sx(null, pcard.notes)}>
+  {notes.map((n, i) => <div key={i} {...sx(null, pcard.notesRow)}><Icon name="lightbulb" {...sx(null, pcard.notesIcon)} />{n}</div>)}
 </div>
 
 /* ---------------------------------- insights ---------------------------------- */
@@ -541,44 +542,44 @@ function Insights({ S, window: win, compact }) {
   if (!ins.sessions && !ins.bodyweight.points.length) return null
   const maxBp = ins.bodyParts[0]?.sets || 1
   const bw = ins.bodyweight
-  return <div className="ins">
-    <div className="ins-tiles">
+  return <div {...sx(null, cc.ins)}>
+    <div {...sx(null, cc.tiles)}>
       <Tile v={ins.sessions} l={t('Sessions')} />
       <Tile v={ins.minutes != null ? ins.minutes : '–'} l={t('Min / session')} />
       <Tile v={ins.volume ? kfmt(ins.volume) : '–'} l={t('Volume ({0})', S.unit)} />
       <Tile v={ins.sets} l={t('Sets')} />
     </div>
 
-    {bw.points.length > 1 && <div className="ins-block">
-      <div className="ins-h">
-        <span>{t('Body weight')}</span>
-        <span className={'ins-delta' + (bw.delta > 0 ? ' up' : bw.delta < 0 ? ' down' : '')}>
+    {bw.points.length > 1 && <div {...sx(null, cc.block)}>
+      <div {...sx(null, cc.blockHead)}>
+        <span {...sx(null, cc.blockHeadFirst)}>{t('Body weight')}</span>
+        <span {...sx(null, cc.delta, bw.delta > 0 && cc.deltaUp, bw.delta < 0 && cc.deltaDown)}>
           {bw.delta > 0 ? '+' : ''}{fmtNum(bw.delta)} {S.unit}{bw.goal != null ? ` · ${t('goal')} ${fmtNum(bw.goal)}` : ''}
         </span>
       </div>
-      <div className="chart"><LineChart points={bw.points} h={compact ? 96 : 120} unit={S.unit} goal={bw.goal} axes={!compact} /></div>
+      <div {...sx('chart', cc.chart)}><LineChart points={bw.points} h={compact ? 96 : 120} unit={S.unit} goal={bw.goal} axes={!compact} /></div>
     </div>}
 
-    {!!ins.strength.length && <div className="ins-block">
-      <div className="ins-h"><span>{t('Estimated 1RM')}</span><span className="dim">{t('first → last session')}</span></div>
-      {ins.strength.map(x => <div key={x.id} className="ins-row">
-        <span className={'ins-row-n' + typed(x.id)}>{x.name}</span>
-        <span className="ins-row-v"><span className="tag">{fmtNum(x.first)}</span><Icon name="chevronRight" /><span className="tag acc">{fmtNum(x.last)}</span></span>
-        <span className={'ins-delta' + (x.delta > 0 ? ' up' : x.delta < 0 ? ' down' : '')}>{x.delta > 0 ? '▲' : x.delta < 0 ? '▼' : '•'} {Math.abs(x.pct)}%</span>
+    {!!ins.strength.length && <div {...sx(null, cc.block)}>
+      <div {...sx(null, cc.blockHead)}><span {...sx(null, cc.blockHeadFirst)}>{t('Estimated 1RM')}</span><span {...sx('dim', cc.blockHeadLast, cc.headDim)}>{t('first → last session')}</span></div>
+      {ins.strength.map(x => <div key={x.id} {...sx(null, cc.row)}>
+        <span {...sx(null, cc.rowName, typed(x.id) && pcard.ownName)}>{x.name}</span>
+        <span {...sx(null, cc.rowValue)}><span {...sx('tag', cc.rowValueTag)}>{fmtNum(x.first)}</span><Icon name="chevronRight" {...sx(null, cc.rowValueIcon)} /><span {...sx('tag acc', cc.rowValueTag)}>{fmtNum(x.last)}</span></span>
+        <span {...sx(null, cc.delta, x.delta > 0 && cc.deltaUp, x.delta < 0 && cc.deltaDown)}>{x.delta > 0 ? '▲' : x.delta < 0 ? '▼' : '•'} {Math.abs(x.pct)}%</span>
       </div>)}
     </div>}
 
-    {!!ins.bodyParts.length && !compact && <div className="ins-block">
-      <div className="ins-h"><span>{t('Work sets by body part')}</span></div>
-      {ins.bodyParts.slice(0, 6).map(b => <div key={b.bp} className="ins-bar">
-        <span className="ins-bar-l">{bpLabel(b.bp)}</span>
-        <span className="ins-bar-t"><i style={{ width: Math.max(4, Math.round(b.sets / maxBp * 100)) + '%' }} /></span>
-        <span className="ins-bar-v">{b.sets}</span>
+    {!!ins.bodyParts.length && !compact && <div {...sx(null, cc.block)}>
+      <div {...sx(null, cc.blockHead)}><span {...sx(null, cc.blockHeadFirst)}>{t('Work sets by body part')}</span></div>
+      {ins.bodyParts.slice(0, 6).map(b => <div key={b.bp} {...sx(null, cc.bar)}>
+        <span {...sx(null, cc.barLabel)}>{bpLabel(b.bp)}</span>
+        <span {...sx(null, cc.barTrack)}><i {...sx(null, cc.barFill)} style={{ width: Math.max(4, Math.round(b.sets / maxBp * 100)) + '%' }} /></span>
+        <span {...sx(null, cc.barValue)}>{b.sets}</span>
       </div>)}
     </div>}
   </div>
 }
-const Tile = ({ v, l }) => <div className="ins-tile"><div className="ins-tile-v">{v}</div><div className="ins-tile-l">{l}</div></div>
+const Tile = ({ v, l }) => <div {...sx(null, cc.tile)}><div {...sx(null, cc.tileValue)}>{v}</div><div {...sx(null, cc.tileLabel)}>{l}</div></div>
 const kfmt = n => (n >= 10000 ? Math.round(n / 1000) + 'k' : fmtNum(n))
 
 /* ---------------------------------- a debrief ---------------------------------- */
@@ -588,28 +589,28 @@ function DebriefBody({ p, S }) {
   const live = useMemo(() => sessionInsights(S, (S.workouts || []).find(x => x.id === w.id) || null), [S, w.id])
   const score = Number.isFinite(p.score) ? Math.max(1, Math.min(10, p.score)) : null
   return <>
-    {score != null && <div className="deb-score">
-      <div className="deb-ring" style={{ '--pct': score / 10 }}><span>{score}</span><small>/10</small></div>
-      <div className="deb-score-t"><b>{scoreWord(score)}</b><span>{w.name || t('Workout')}{w.d ? ' · ' + fmtDate(w.d) : ''}</span></div>
+    {score != null && <div {...sx(null, cc.score)}>
+      <div {...sx('deb-ring', cc.ring)} style={{ '--pct': score / 10 }}><span {...sx(null, cc.ringValue)}>{score}</span><small {...sx(null, cc.ringOf)}>/10</small></div>
+      <div {...sx(null, cc.scoreText)}><b {...sx(null, cc.scoreTitle)}>{scoreWord(score)}</b><span {...sx(null, cc.scoreSub)}>{w.name || t('Workout')}{w.d ? ' · ' + fmtDate(w.d) : ''}</span></div>
     </div>}
-    {live && <div className="ins">
-      <div className="ins-tiles">
+    {live && <div {...sx(null, cc.ins)}>
+      <div {...sx(null, cc.tiles)}>
         <Tile v={live.now.sets} l={t('Sets')} />
         <Tile v={live.now.minutes != null ? live.now.minutes : '–'} l={t('Minutes')} />
         <Tile v={live.now.volume ? kfmt(live.now.volume) : '–'} l={t('Volume ({0})', S.unit)} />
         <Tile v={live.now.prs || '–'} l={t('PRs')} />
       </div>
-      {live.then && <div className="ins-cmp">
+      {live.then && <div {...sx(null, cc.cmpLine)}>
         {t('vs. last {0} on {1}:', w.name || t('session'), fmtDate(live.prevDate))}{' '}
         <Delta v={live.now.volume - live.then.volume} unit={S.unit} label={t('volume')} />
         {live.now.minutes != null && live.then.minutes != null && <Delta v={live.now.minutes - live.then.minutes} unit="min" label={t('time')} />}
       </div>}
-      {!!live.lifts.length && <div className="ins-block">
-        <div className="ins-h"><span>{t('Best set, estimated 1RM')}</span></div>
-        {live.lifts.slice(0, 6).map(x => <div key={x.id} className="ins-row">
-          <span className={'ins-row-n' + typed(x.id)}>{x.name} <span className="dim">{isoRun(`${fmtNum(x.w)}×${x.r}`)}</span></span>
-          <span className="ins-row-v"><span className="tag acc">{fmtNum(x.est)}</span></span>
-          {x.prev != null && <span className={'ins-delta' + (x.est > x.prev ? ' up' : x.est < x.prev ? ' down' : '')}>{x.est > x.prev ? '▲' : x.est < x.prev ? '▼' : '•'} {fmtNum(Math.abs(x.est - x.prev))}</span>}
+      {!!live.lifts.length && <div {...sx(null, cc.block)}>
+        <div {...sx(null, cc.blockHead)}><span {...sx(null, cc.blockHeadFirst)}>{t('Best set, estimated 1RM')}</span></div>
+        {live.lifts.slice(0, 6).map(x => <div key={x.id} {...sx(null, cc.row)}>
+          <span {...sx(null, cc.rowName, typed(x.id) && pcard.ownName)}>{x.name} <span {...sx('dim', cc.rowNameDim)}>{isoRun(`${fmtNum(x.w)}×${x.r}`)}</span></span>
+          <span {...sx(null, cc.rowValue)}><span {...sx('tag acc', cc.rowValueTag)}>{fmtNum(x.est)}</span></span>
+          {x.prev != null && <span {...sx(null, cc.delta, x.est > x.prev && cc.deltaUp, x.est < x.prev && cc.deltaDown)}>{x.est > x.prev ? '▲' : x.est < x.prev ? '▼' : '•'} {fmtNum(Math.abs(x.est - x.prev))}</span>}
         </div>)}
       </div>}
     </div>}
@@ -618,10 +619,10 @@ function DebriefBody({ p, S }) {
     <DebriefList icon="arrowUp" tint="var(--acc)" title={t('Next time')} items={p.nextTime} />
   </>
 }
-const Delta = ({ v, unit, label }) => <span className={'ins-delta' + (v > 0 ? ' up' : v < 0 ? ' down' : '')}>{v > 0 ? '+' : ''}{fmtNum(v)} {unit} {label}</span>
-const DebriefList = ({ icon, tint, title, items }) => !!items?.length && <div className="deb-list">
-  <div className="deb-list-h" style={{ color: tint }}><Icon name={icon} />{title}</div>
-  {items.map((x, i) => <div key={i} className="deb-item">{x}</div>)}
+const Delta = ({ v, unit, label }) => <span {...sx(null, cc.delta, v > 0 && cc.deltaUp, v < 0 && cc.deltaDown)}>{v > 0 ? '+' : ''}{fmtNum(v)} {unit} {label}</span>
+const DebriefList = ({ icon, tint, title, items }) => !!items?.length && <div {...sx(null, cc.list)}>
+  <div {...sx(null, cc.listHead)} style={{ color: tint }}><Icon name={icon} {...sx(null, cc.listHeadIcon)} />{title}</div>
+  {items.map((x, i) => <div key={i} {...sx(null, cc.item)}>{x}</div>)}
 </div>
 const scoreWord = s => s >= 9 ? t('Excellent session') : s >= 7 ? t('Good session') : s >= 5 ? t('Solid session') : t('Tough session')
 
@@ -632,19 +633,19 @@ function DebriefCard({ p, S, update, toast, refresh }) {
     toast(t('Kept in your Coach history'))
     refresh()
   }
-  return <div className="msg coach" style={{ maxWidth: '100%', width: '100%' }}>
-    <div className="pcard">
-      <div className="pcard-hd">
-        <div className="pcard-eyebrow">{t('Workout debrief')}</div>
-        <h2 className="pcard-h">{p.workout?.name || t('Your last workout')}</h2>
-        {!!p.summary && <p className="pcard-sum">{p.summary}</p>}
+  return <div {...sx(null, cc.msg, cc.msgCoach)} style={{ maxWidth: '100%', width: '100%' }}>
+    <div {...sx(null, pcard.card)}>
+      <div {...sx(null, pcard.hd)}>
+        <div {...sx(null, pcard.eyebrow)}>{t('Workout debrief')}</div>
+        <h2 {...sx(null, pcard.h)}>{p.workout?.name || t('Your last workout')}</h2>
+        {!!p.summary && <p {...sx(null, pcard.sum)}>{p.summary}</p>}
       </div>
       <DebriefBody p={p} S={S} />
-      <div className="pcard-ft">
-        <Button variant="primary" icon="check" onClick={done}>{t('Got it')}</Button>
+      <div {...sx(null, pcard.ft)}>
+        <Button {...sx(null, pcard.ftBtn)} variant="primary" icon="check" onClick={done}>{t('Got it')}</Button>
       </div>
     </div>
-    <div className="msg-t">{t('Want changes to the plan from this? Ask for a review below.')}</div>
+    <div {...sx(null, cc.msgTime)}>{t('Want changes to the plan from this? Ask for a review below.')}</div>
   </div>
 }
 
@@ -665,18 +666,18 @@ function Recap({ entry, S, openSheet }) {
   const title = kind === 'create' ? (entry.bundle?.name || t('Coach plan'))
     : kind === 'debrief' ? (entry.workout?.name || t('Workout')) + (entry.score != null ? ` · ${entry.score}/10` : '')
       : tn('{0} suggestion', '{0} suggestions', decisions.length)
-  return <button className="recap" onClick={open}>
-    <div className="recap-top">
-      <span className="pcard-eyebrow">{eyebrow}</span>
-      {state && <span className={'recap-state ' + state.cls}>{state.text}</span>}
+  return <button {...sx('recap', cc.recap)} onClick={open}>
+    <div {...sx(null, cc.recapTop)}>
+      <span {...sx(null, pcard.eyebrow, cc.recapEyebrow)}>{eyebrow}</span>
+      {state && <span {...sx(null, recapState.base, recapState[state.cls])}>{state.text}</span>}
     </div>
-    <div className="recap-t">{title}</div>
-    {!!entry.summary && <div className="recap-s">{entry.summary}</div>}
-    {kind === 'review' && !!decisions.length && <div className="recap-chips">
-      {decisions.slice(0, 4).map(d => <span key={d.id} className={'recap-chip ' + (d.status === 'accepted' ? 'yes' : 'no')}><Icon name={d.status === 'accepted' ? 'check' : 'xmark'} />{changeTitle(d, S)}</span>)}
-      {decisions.length > 4 && <span className="recap-chip">+{decisions.length - 4}</span>}
+    <div {...sx(null, cc.recapTitle)}>{title}</div>
+    {!!entry.summary && <div {...sx(null, cc.recapSum)}>{entry.summary}</div>}
+    {kind === 'review' && !!decisions.length && <div {...sx(null, cc.recapChips)}>
+      {decisions.slice(0, 4).map(d => <span key={d.id} {...sx(['recap-chip', d.status === 'accepted' ? 'yes' : 'no'], cc.recapChip, d.status !== 'accepted' && cc.recapChipNo)}><Icon name={d.status === 'accepted' ? 'check' : 'xmark'} {...sx(null, cc.recapChipIcon, d.status === 'accepted' ? cc.recapChipIconYes : cc.recapChipIconNo)} />{changeTitle(d, S)}</span>)}
+      {decisions.length > 4 && <span {...sx('recap-chip', cc.recapChip)}>+{decisions.length - 4}</span>}
     </div>}
-    <div className="recap-more">{t('Show everything')}<Icon name="chevronRight" /></div>
+    <div {...sx(null, cc.recapMore)}>{t('Show everything')}<Icon name="chevronRight" {...sx(null, cc.recapMoreIcon)} /></div>
   </button>
 }
 
@@ -687,13 +688,13 @@ function ProposalDetail({ entry, S }) {
   const b = entry.bundle
   const r = b?.routines?.[Math.min(tab, (b?.routines?.length || 1) - 1)]
   const weekDays = useMemo(() => new Set(Object.keys(b?.week || {}).map(Number)), [b])
-  return <div className="pdetail">
-    <div className="pcard-hd" style={{ paddingInline: 0 }}>
-      <div className="pcard-eyebrow">{kind === 'create' ? t('Plan') : kind === 'debrief' ? t('Workout debrief') : kind === 'adapt' ? t('For this workout') : t('Suggestions')} · {fmtDate(isoOf(new Date(entry.at)))}</div>
-      <h2 className="pcard-h">{kind === 'create' ? (b?.name || t('Coach plan')) : kind === 'debrief' ? (entry.workout?.name || t('Workout')) : tn('{0} suggestion', '{0} suggestions', entry.decisions?.length || 0)}</h2>
-      {!!entry.summary && <p className="pcard-sum">{entry.summary}</p>}
-      {entry.dismissed && <p className="pcard-sum" style={{ color: 'var(--red)' }}>{t('You declined this.')}</p>}
-      {!!entry.evidence?.sessions && <p className="pcard-sum" style={{ fontSize: 'var(--fs-footnote)' }}>
+  return <div {...sx(null, pcard.detail)}>
+    <div {...sx(null, pcard.hd)} style={{ paddingInline: 0 }}>
+      <div {...sx(null, pcard.eyebrow)}>{kind === 'create' ? t('Plan') : kind === 'debrief' ? t('Workout debrief') : kind === 'adapt' ? t('For this workout') : t('Suggestions')} · {fmtDate(isoOf(new Date(entry.at)))}</div>
+      <h2 {...sx(null, pcard.h)}>{kind === 'create' ? (b?.name || t('Coach plan')) : kind === 'debrief' ? (entry.workout?.name || t('Workout')) : tn('{0} suggestion', '{0} suggestions', entry.decisions?.length || 0)}</h2>
+      {!!entry.summary && <p {...sx(null, pcard.sum)}>{entry.summary}</p>}
+      {entry.dismissed && <p {...sx(null, pcard.sum)} style={{ color: 'var(--red)' }}>{t('You declined this.')}</p>}
+      {!!entry.evidence?.sessions && <p {...sx(null, pcard.sum)} style={{ fontSize: 'var(--fs-footnote)' }}>
         {t('Based on your last {0} sessions', entry.evidence.sessions)}{entry.evidence.from ? ` · ${fmtDate(entry.evidence.from)} – ${fmtDate(entry.evidence.to)}` : ''}
       </p>}
     </div>
@@ -701,29 +702,29 @@ function ProposalDetail({ entry, S }) {
     {kind === 'review' && <>
       <Insights S={S} window={entry.evidence} />
       {(entry.decisions || []).map(d => <ChangeRow key={d.id} c={d} S={S} stale={d.status === 'stale'}
-        badge={<span className={'recap-state ' + (d.status === 'accepted' ? 'yes' : 'no')}>{d.status === 'accepted' ? t('Accepted') : d.status === 'stale' ? t('Expired') : t('Declined')}</span>} />)}
+        badge={<span {...sx(null, recapState.base, d.status === 'accepted' ? recapState.yes : recapState.no, recapState.inRow)}>{d.status === 'accepted' ? t('Accepted') : d.status === 'stale' ? t('Expired') : t('Declined')}</span>} />)}
       <Notes notes={entry.notes} />
     </>}
 
     {kind === 'create' && b && <>
       <WeekStrip days={weekDays} ws={weekStartOf(S)} />
-      {b.routines.length > 1 && <div className="pcard-tabs" style={{ paddingInline: 0 }}>
-        {b.routines.map((x, i) => <button key={x.id || i} className={'pcard-tab' + (i === tab ? ' on' : '')} onClick={() => setTab(i)}><Icon name={glyphOf(x.emoji)} />{x.name}</button>)}
+      {b.routines.length > 1 && <div {...sx(null, pcard.tabs)} style={{ paddingInline: 0 }}>
+        {b.routines.map((x, i) => <button key={x.id || i} {...sx(['pcard-tab', i === tab && 'on'], pcard.tab, i === tab && pcard.tabOn)} onClick={() => setTab(i)}><Icon name={glyphOf(x.emoji)} />{x.name}</button>)}
       </div>}
       {r && <RoutineBlock r={r} unit={S.unit} speedUnit={speedUnitOf(S)} />}
-      <p className="pcard-sum" style={{ fontSize: 'var(--fs-footnote)' }}>{entry.rotation ? t('Your rotation was set to this plan.') : entry.scheduled ? t('Your week was set to this schedule.') : t('Imported without changing your week.')}</p>
+      <p {...sx(null, pcard.sum)} style={{ fontSize: 'var(--fs-footnote)' }}>{entry.rotation ? t('Your rotation was set to this plan.') : entry.scheduled ? t('Your week was set to this schedule.') : t('Imported without changing your week.')}</p>
     </>}
-    {kind === 'create' && !b && <p className="pcard-sum">{t('This plan was imported before the app kept proposals; only its summary is left.')}</p>}
+    {kind === 'create' && !b && <p {...sx(null, pcard.sum)}>{t('This plan was imported before the app kept proposals; only its summary is left.')}</p>}
 
-    {kind === 'adapt' && (entry.decisions || []).map(d => <div key={d.id} className="pcard-chg">
-      <div className="grow">
-        <div className="pcard-chg-t">{adaptTitle(d)}</div>
-        <div className="pcard-chg-w">{d.why}</div>
+    {kind === 'adapt' && (entry.decisions || []).map(d => <div key={d.id} {...sx('pcard-chg', pcard.chg)}>
+      <div {...sx(null, pcard.chgBody)}>
+        <div {...sx(null, pcard.chgTitle)}>{adaptTitle(d)}</div>
+        <div {...sx(null, pcard.chgWhy)}>{d.why}</div>
       </div>
-      <span className={'recap-state ' + (d.status === 'accepted' ? 'yes' : 'no')}>{d.status === 'accepted' ? t('Accepted') : t('Declined')}</span>
+      <span {...sx(null, recapState.base, d.status === 'accepted' ? recapState.yes : recapState.no, recapState.inRow)}>{d.status === 'accepted' ? t('Accepted') : t('Declined')}</span>
     </div>)}
     {kind === 'debrief' && <DebriefBody p={entry} S={S} />}
-    {kind === 'revert' && <p className="pcard-sum">{t('Reverted the last Coach changes.')}</p>}
+    {kind === 'revert' && <p {...sx(null, pcard.sum)}>{t('Reverted the last Coach changes.')}</p>}
     <div style={{ height: 10 }} />
   </div>
 }
@@ -732,9 +733,9 @@ function ProposalDetail({ entry, S }) {
 function HistorySheet({ S, close, openSheet }) {
   const log = [...(S.coach?.log || [])].reverse()
   const icon = { create: ['clipboard', 'var(--indigo)'], review: ['sparkles', 'var(--acc)'], debrief: ['checkCircle', 'var(--green)'], revert: ['reset', 'var(--blue)'], adapt: ['dumbbell', 'var(--orange)'] }
-  return <div className="chat-menu">
+  return <div {...sx(null, cc.menu)}>
     <h3>{t('Everything the Coach proposed')}</h3>
-    {!log.length && <div className="chat-empty">{t('Nothing yet. Every plan, suggestion and debrief will be kept here, whether you said yes or no.')}</div>}
+    {!log.length && <div {...sx(null, cc.empty)}>{t('Nothing yet. Every plan, suggestion and debrief will be kept here, whether you said yes or no.')}</div>}
     <div className="sect-b">
       {log.map(e => {
         const [ic, tint] = icon[e.kind] || ['sparkles', 'var(--acc)']
@@ -773,36 +774,36 @@ function CohortSheet({ S, update, toast }) {
     setBusy(false)
   }
   const sharing = !!d?.sharing
-  return <div className="chat-menu">
+  return <div {...sx(null, cc.menu)}>
     <h3>{t('Compare with others here')}</h3>
     <Section footer={t('Only medians across everyone who shares, never a name, a body weight or a single session. Turning this off removes you from the numbers immediately.')}>
       <Row icon="person" iconTint="var(--teal)" title={t('Include me')} subtitle={sharing ? t('Your lifts count towards the medians') : t('Off. You see nothing and share nothing')}>
         <Switch checked={sharing} disabled={busy || !d} onChange={share} />
       </Row>
     </Section>
-    {!d && <div className="chat-empty">{t('Loading…')}</div>}
-    {d && sharing && !d.ok && <div className="chat-empty">{d.people != null
+    {!d && <div {...sx(null, cc.empty)}>{t('Loading…')}</div>}
+    {d && sharing && !d.ok && <div {...sx(null, cc.empty)}>{d.people != null
       ? t('Not enough people are sharing yet ({0} of {1} needed). Rope in your gym mates!', d.people, d.minPeople)
       : t('Not available right now.')}</div>}
-    {d && sharing && d.ok && <div className="ins" style={{ padding: 0 }}>
-      <div className="ins-tiles">
+    {d && sharing && d.ok && <div {...sx(null, cc.ins, cc.insFlush)}>
+      <div {...sx(null, cc.tiles)}>
         <Tile v={d.people} l={t('People')} />
         <Tile v={fmtNum(d.sessionsPerWeek.you)} l={t('Your sessions / wk')} />
         <Tile v={fmtNum(d.sessionsPerWeek.median)} l={t('Median / wk')} />
         <Tile v={d.rankPct != null ? d.rankPct + '%' : '–'} l={t('Your strength rank')} />
       </div>
-      {!!d.exercises.length && <div className="ins-block">
-        <div className="ins-h"><span>{t('Estimated 1RM, you vs. median')}</span><span className="dim">{S.unit}</span></div>
+      {!!d.exercises.length && <div {...sx(null, cc.block)}>
+        <div {...sx(null, cc.blockHead)}><span {...sx(null, cc.blockHeadFirst)}>{t('Estimated 1RM, you vs. median')}</span><span {...sx('dim', cc.blockHeadLast, cc.headDim)}>{S.unit}</span></div>
         {d.exercises.map(x => {
           const max = Math.max(x.median, x.you || 0) || 1
-          return <div key={x.id} className="cmp">
-            <div className="cmp-h"><span>{x.name}</span><span className="dim">{x.people} {t('people')}</span></div>
-            <div className="cmp-bar you"><i style={{ width: Math.round((x.you || 0) / max * 100) + '%' }} /><span>{t('You')} · {x.you != null ? fmtNum(x.you) : '–'}</span></div>
-            <div className="cmp-bar"><i style={{ width: Math.round(x.median / max * 100) + '%' }} /><span>{t('Median')} · {fmtNum(x.median)}</span></div>
+          return <div key={x.id} {...sx(null, cc.cmp)}>
+            <div {...sx(null, cc.cmpHead)}><span>{x.name}</span><span {...sx('dim', cc.cmpHeadDim)}>{x.people} {t('people')}</span></div>
+            <div {...sx(null, cc.cmpBar)}><i {...sx(null, cc.cmpFill, cc.cmpFillYou)} style={{ width: Math.round((x.you || 0) / max * 100) + '%' }} /><span {...sx(null, cc.cmpLabel)}>{t('You')} · {x.you != null ? fmtNum(x.you) : '–'}</span></div>
+            <div {...sx(null, cc.cmpBar)}><i {...sx(null, cc.cmpFill)} style={{ width: Math.round(x.median / max * 100) + '%' }} /><span {...sx(null, cc.cmpLabel)}>{t('Median')} · {fmtNum(x.median)}</span></div>
           </div>
         })}
       </div>}
-      {!d.exercises.length && <div className="chat-empty">{t('No exercise is trained by three or more people yet.')}</div>}
+      {!d.exercises.length && <div {...sx(null, cc.empty)}>{t('No exercise is trained by three or more people yet.')}</div>}
     </div>}
     <div style={{ height: 10 }} />
   </div>

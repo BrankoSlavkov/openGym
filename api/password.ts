@@ -21,29 +21,31 @@ export const MIN_LENGTH = 10;
 // input through PBKDF2 first, and a 5 MiB "password" would be hashed in full.
 export const MAX_LENGTH = 256;
 
-const PARAMS = { ln: 15, r: 8, p: 1 };
+interface ScryptParams { ln: number; r: number; p: number }
+
+const PARAMS: ScryptParams = { ln: 15, r: 8, p: 1 };
 const KEYLEN = 32;
 const SALT_BYTES = 16;
 // 128 * N * r is 32 MiB at these parameters; node refuses anything at or past `maxmem`.
-const maxmem = ({ ln, r, p }: { ln?: any; r?: any; p?: any; [key: string]: any }) => 128 * 2 ** ln * r * p + 16 * 1024 * 1024;
+const maxmem = ({ ln, r, p }: ScryptParams) => 128 * 2 ** ln * r * p + 16 * 1024 * 1024;
 
 const SLOTS = 2;
 const QUEUE = 32;
 let running = 0;
-const waiting = [];
+const waiting: Array<() => void> = [];
 
 export class BusyError extends Error {}
 
-const rawScrypt = (secret, salt, params, keylen = KEYLEN) => new Promise((resolve, reject) => crypto.scrypt(secret, salt, keylen,
+const rawScrypt = (secret: string, salt: Buffer, params: ScryptParams, keylen = KEYLEN) => new Promise<Buffer>((resolve, reject) => crypto.scrypt(secret, salt, keylen,
   { N: 2 ** params.ln, r: params.r, p: params.p, maxmem: maxmem(params) },
   (err, key) => (err ? reject(err) : resolve(key))));
 
 // Node's scrypt runs on the libuv pool (four threads by default), which also serves fs and dns
 // work for everything else; two slots leave the rest of the server room to breathe.
-async function scrypt(secret, salt, params, keylen?) {
+async function scrypt(secret: string, salt: Buffer, params: ScryptParams, keylen?: number) {
   if (running >= SLOTS) {
     if (waiting.length >= QUEUE) throw new BusyError('password check queue full');
-    await new Promise(resolve => waiting.push(resolve));
+    await new Promise<void>(resolve => waiting.push(resolve));
   } else running++;
   try {
     return await rawScrypt(secret, salt, params, keylen);
@@ -56,17 +58,17 @@ async function scrypt(secret, salt, params, keylen?) {
 // NFKC, so the same passphrase typed on two keyboards (a composed "é" on one, "e" plus a
 // combining accent on the other) is the same passphrase. Nothing else is changed: no trimming,
 // no case folding — every character someone chose is part of the secret.
-const normalize = pw => String(pw).normalize('NFKC');
-export const passwordLength = pw => [...normalize(pw)].length;
+const normalize = (pw: unknown) => String(pw).normalize('NFKC');
+export const passwordLength = (pw: unknown) => [...normalize(pw)].length;
 
-const format = (salt, key) => `$scrypt$v=1$ln=${PARAMS.ln},r=${PARAMS.r},p=${PARAMS.p}$${salt.toString('base64')}$${key.toString('base64')}`;
+const format = (salt: Buffer, key: Buffer) => `$scrypt$v=1$ln=${PARAMS.ln},r=${PARAMS.r},p=${PARAMS.p}$${salt.toString('base64')}$${key.toString('base64')}`;
 
-export async function hashPassword(pw) {
+export async function hashPassword(pw: unknown) {
   const salt = crypto.randomBytes(SALT_BYTES);
   return format(salt, await scrypt(normalize(pw), salt, PARAMS));
 }
 
-function parse(stored) {
+function parse(stored: unknown) {
   const m = /^\$scrypt\$v=1\$ln=(\d{1,2}),r=(\d{1,2}),p=(\d{1,2})\$([A-Za-z0-9+/]+=*)\$([A-Za-z0-9+/]+=*)$/.exec(String(stored || ''));
   if (!m) return null;
   const params = { ln: +m[1], r: +m[2], p: +m[3] };
@@ -84,7 +86,7 @@ function parse(stored) {
 // password runs the same scrypt against this, so the answer takes as long either way and the
 // response time does not say which names exist. Made once, outside the slots, so that a full
 // queue cannot leave it a rejected promise for good.
-let dummy = null;
+let dummy: Promise<string> | null = null;
 function dummyHash() {
   if (!dummy) {
     const salt = crypto.randomBytes(SALT_BYTES);
@@ -96,25 +98,26 @@ function dummyHash() {
 
 /** true only when `pw` matches `stored`. A missing or malformed `stored` does the same work
  *  against the dummy hash and answers false. */
-export async function verifyPassword(pw, stored) {
+export async function verifyPassword(pw: unknown, stored: unknown) {
   const real = parse(stored);
   const h = real || parse(await dummyHash());
+  if (!h) throw new Error('Invalid internal dummy password hash');
   // Derived at the length the stored key has, so a hash made with another key length still verifies.
   const key = await scrypt(normalize(pw), h.salt, h.params, h.key.length);
-  return !!real && crypto.timingSafeEqual(key as Buffer, h.key);
+  return !!real && crypto.timingSafeEqual(key, h.key);
 }
 /** Makes the dummy hash now, so the first sign-in with an unknown name is not the one that pays
  *  for it — and takes measurably longer than every later one. */
 export const warmUp = () => dummyHash().then(() => {}, () => {});
 
-export const needsRehash = stored => {
+export const needsRehash = (stored: unknown) => {
   const h = parse(stored);
   return !h || h.params.ln !== PARAMS.ln || h.params.r !== PARAMS.r || h.params.p !== PARAMS.p;
 };
 
 // How names compare for password sign-in: the same NFKC as above, then trimmed and case-folded,
 // so "Ana", "ana " and "ＡＮＡ" are one name. The stored display name is never changed.
-export const nameKey = name => String(name || '').normalize('NFKC').trim().toLowerCase();
+export const nameKey = (name: unknown) => String(name || '').normalize('NFKC').trim().toLowerCase();
 
 /* ------------------------------------------------------------------ e-mail ----------------
    An optional second name to sign in with. Nothing is ever sent to it — no verification, no
@@ -128,7 +131,7 @@ export const nameKey = name => String(name || '').normalize('NFKC').trim().toLow
 export const EMAIL_MAX = 254;
 const EMAIL_RE = /^[^\s@<>()[\]\\,;:"]{1,64}@(?=.{1,253}$)[^\s@<>()[\]\\,;:"._-][^\s@<>()[\]\\,;:"]*\.[^\s@<>()[\]\\,;:".]{2,}$/u;
 /** The stored form of an address, or null when it is not one. */
-export function normalizeEmail(raw) {
+export function normalizeEmail(raw: unknown) {
   if (typeof raw !== 'string') return null;
   const e = nameKey(raw);
   if (!e || [...e].length > EMAIL_MAX || !EMAIL_RE.test(e) || e.includes('..')) return null;
@@ -136,7 +139,7 @@ export function normalizeEmail(raw) {
 }
 /** What the audit log and the console may say about an address: its first character and its
  *  domain's, nothing that would let someone reading the log write to it. */
-export const maskEmail = e => {
+export const maskEmail = (e: unknown) => {
   const [local = '', domain = ''] = String(e || '').split('@');
   return (local[0] || '?') + '…@' + (domain[0] || '?') + '…';
 };
@@ -174,7 +177,7 @@ const STEMS = new Set([
 
 /** Why a password may not be used, as a short code the client translates — or null. `name` is
  *  the profile name it will sign in with: that name plus a few digits is not a password. */
-export function passwordProblem(pw, name) {
+export function passwordProblem(pw: unknown, name: unknown) {
   if (typeof pw !== 'string') return 'too-short';
   const len = passwordLength(pw);
   if (len < MIN_LENGTH) return 'too-short';
@@ -205,10 +208,12 @@ export function makeResetCode() {
   const raw = Array.from(bytes, b => ALPHABET[b % ALPHABET.length]).join('');
   return raw.slice(0, 4) + '-' + raw.slice(4, 8) + '-' + raw.slice(8);
 }
-const cleanCode = code => String(code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
-export const hashResetCode = code => crypto.createHash('sha256').update('opengym-reset:' + cleanCode(code)).digest('hex');
-export function resetCodeMatches(code, stored) {
-  if (!stored || typeof stored.h !== 'string' || !(stored.exp > Date.now())) return false;
+const cleanCode = (code: unknown) => String(code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+export const hashResetCode = (code: unknown) => crypto.createHash('sha256').update('opengym-reset:' + cleanCode(code)).digest('hex');
+interface ResetCodeRecord { h?: string; exp?: number }
+
+export function resetCodeMatches(code: unknown, stored: ResetCodeRecord | null | undefined) {
+  if (!stored || typeof stored.h !== 'string' || !((stored.exp ?? 0) > Date.now())) return false;
   const a = Buffer.from(hashResetCode(code), 'hex');
   const b = Buffer.from(stored.h, 'hex');
   return a.length === b.length && crypto.timingSafeEqual(a, b);

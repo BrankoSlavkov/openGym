@@ -1,15 +1,15 @@
-// Settings → Look & Home: Motion and Text size (lib/display-prefs.js), this device only.
+// Settings → Look & Home: Motion and Text size (lib/display-prefs.ts), this device only.
 import { useState } from 'react'
 import { t } from '../lib/i18n.js'
-import { readDisplay, applyDisplay, followsSystemText, systemTextScale } from '../lib/display-prefs.js'
+import { readDisplay, applyDisplay, followsSystemText, systemTextScale } from '../lib/display-prefs.ts'
+import type { TextScaleBridge, TextSize } from '../lib/display-prefs.ts'
 import { useUI } from '../store/useUI.js'
 import Icon from './Icon.tsx'
 import { Button, Row, Segmented } from './ui.tsx'
 
 export const TEXT_ORDER = ['smallest', 'small', 'default', 'large', 'larger', 'largest'] as const
-type TextSize = (typeof TEXT_ORDER)[number]
 
-export function textSizeOptions(win = globalThis) {
+export function textSizeOptions(win?: TextScaleBridge) {
   const phone = followsSystemText(win)
   const labels: Record<TextSize, string> = {
     smallest: t('Smallest'),
@@ -39,13 +39,13 @@ export function TextSizeSheet({
   onChange,
   close,
 }: {
-  value: string
-  onChange: (value: string) => void
+  value: TextSize
+  onChange: (value: TextSize) => void
   close: () => void
 }) {
   const [cur, setCur] = useState(value)
   const opts = textSizeOptions()
-  const pick = (v: string) => {
+  const pick = (v: TextSize) => {
     setCur(v)
     onChange(v)
   }

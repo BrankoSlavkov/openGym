@@ -11,10 +11,10 @@
  * and appearance settings, and every other profile's everything.
  */
 import { glyphStr } from './glyphs.ts';
-import { LIBRARY, LIB_BY_ID, libraryHas, libraryName, librarySlice, swapSlice, isStretch, MAX_LIBRARY, ownsNoDumbbells, gymMachines } from './library.js';
-import { muscleLoad, gymOf, challengesOf, recordsOf, measurementsOf, healthOf, rotationOf } from './context.js';
+import { LIBRARY, LIB_BY_ID, libraryHas, libraryName, librarySlice, swapSlice, isStretch, MAX_LIBRARY, ownsNoDumbbells, gymMachines } from './library.ts';
+import { muscleLoad, gymOf, challengesOf, recordsOf, measurementsOf, healthOf, rotationOf } from './context.ts';
 import { shareOf } from './categories.ts';
-import { asksForBodyweight, cleanHits } from './routine-library.js';
+import { asksForBodyweight, cleanHits } from './routine-library.ts';
 
 export const CONTRACT = 1;
 // Bounds from FR-22. A review reads a training block, not a training career: more history

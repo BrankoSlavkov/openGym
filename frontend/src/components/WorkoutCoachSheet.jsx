@@ -15,7 +15,21 @@ import { useCoachStatus, requestAdapt, resolvePending, jobErrorText, isDeclined 
 import { adaptFor, markAdaptStale, applyAdapt, adaptLogEntry } from '../lib/coach-adapt.js'
 import Icon from './Icon.tsx'
 import { Button, Check, TextField } from './ui.tsx'
-import '../coach.css'
+import * as stylex from '@stylexjs/stylex'
+import { sx } from '../lib/sx.ts'
+import { bubble, pcard } from '../coach.styles.ts'
+
+// "Ask the Coach" mid-workout (was in coach.css); the card and bubble are ../coach.styles.ts.
+const w = stylex.create({
+  sheet: { padding: '4px 16px 16px' },
+  eyebrow: { display: 'flex', alignItems: 'center', gap: 6 },
+  reasons: { display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 },
+  reason: { display: 'inline-flex', alignItems: 'center', gap: 6, textTransform: 'none' },
+  text: { width: '100%', marginBottom: 8 },
+  wait: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, padding: '8px 0' },
+  ended: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 10 },
+})
+
 
 export const ADAPT_REASONS = ['pain', 'busy', 'short', 'great', 'tired', 'other']
 const REASON = {
@@ -81,27 +95,27 @@ export function AdaptProposal({ p, onDone }) {
     finish()
   }
 
-  return <div className="pcard adapt-card">
-    <div className="pcard-hd">
-      <div className="pcard-eyebrow">{t('For this workout')}</div>
-      <h2 className="pcard-h">{tn('{0} suggestion', '{0} suggestions', marked.length)}</h2>
-      {!!p.summary && <p className="pcard-sum">{p.summary}</p>}
-      {!live && <p className="pcard-sum" style={{ fontSize: 'var(--fs-footnote)', color: 'var(--gold-ink)' }}>{t('That workout is over, so these can’t be applied any more.')}</p>}
+  return <div {...sx(null, pcard.card)}>
+    <div {...sx(null, pcard.hd)}>
+      <div {...sx(null, pcard.eyebrow)}>{t('For this workout')}</div>
+      <h2 {...sx(null, pcard.h)}>{tn('{0} suggestion', '{0} suggestions', marked.length)}</h2>
+      {!!p.summary && <p {...sx(null, pcard.sum)}>{p.summary}</p>}
+      {!live && <p {...sx(null, pcard.sum)} style={{ fontSize: 'var(--fs-footnote)', color: 'var(--gold-ink)' }}>{t('That workout is over, so these can’t be applied any more.')}</p>}
     </div>
-    {marked.map(c => <div key={c.id} className={'pcard-chg' + (c.stale ? ' stale' : '')}>
-      <div className="grow">
-        <div className="pcard-chg-t">{adaptTitle(c)}</div>
-        <div className="pcard-chg-w">{c.why}</div>
-        {c.stale && live && <div className="pcard-chg-stale">{t('Your workout moved on, so this one no longer fits.')}</div>}
+    {marked.map(c => <div key={c.id} {...sx('pcard-chg', pcard.chg, c.stale && pcard.chgStale)}>
+      <div {...sx(null, pcard.chgBody)}>
+        <div {...sx(null, pcard.chgTitle)}>{adaptTitle(c)}</div>
+        <div {...sx(null, pcard.chgWhy)}>{c.why}</div>
+        {c.stale && live && <div {...sx(null, pcard.chgStaleNote)}>{t('Your workout moved on, so this one no longer fits.')}</div>}
       </div>
       {!c.stale && <Check checked={accepted.has(c.id)} onChange={() => toggle(c.id)} label={adaptTitle(c)} />}
     </div>)}
-    <div className="pcard-note">{t('Logged sets and your routine stay as they are. The Coach is not a doctor or a physiotherapist. If something hurts, ask a professional.')}</div>
-    <div className="pcard-ft">
-      {live && <Button variant="primary" icon="check" onClick={apply} disabled={!ids.length}>
+    <div {...sx(null, pcard.note)}>{t('Logged sets and your routine stay as they are. The Coach is not a doctor or a physiotherapist. If something hurts, ask a professional.')}</div>
+    <div {...sx(null, pcard.ft)}>
+      {live && <Button {...sx(null, pcard.ftBtn)} variant="primary" icon="check" onClick={apply} disabled={!ids.length}>
         {ids.length ? tn('Apply {0} change', 'Apply {0} changes', ids.length) : t('Apply nothing')}
       </Button>}
-      <Button onClick={dismiss}>{live ? t('Not now') : t('Dismiss')}</Button>
+      <Button {...sx(null, pcard.ftBtn)} onClick={dismiss}>{live ? t('Not now') : t('Dismiss')}</Button>
     </div>
   </div>
 }
@@ -134,39 +148,39 @@ export default function WorkoutCoachSheet({ entryIdx, reason: startReason = null
     } finally { setBusy(false) }
   }
 
-  if (mine) return <div className="workout-coach"><AdaptProposal p={mine} onDone={close} /></div>
+  if (mine) return <div {...sx(null, w.sheet)}><AdaptProposal p={mine} onDone={close} /></div>
   const name = entry ? exTitle(entry.id) : ''
-  return <div className="workout-coach">
-    <div className="pcard-eyebrow"><Icon name="sparkles" /> {t('Ask the Coach')}</div>
-    <h2 className="pcard-h" style={{ margin: '4px 0 12px' }}>{name}</h2>
+  return <div {...sx(null, w.sheet)}>
+    <div {...sx(null, pcard.eyebrow, w.eyebrow)}><Icon name="sparkles" /> {t('Ask the Coach')}</div>
+    <h2 {...sx(null, pcard.h)} style={{ margin: '4px 0 12px' }}>{name}</h2>
     {job || (sent && !ended)
-      ? <div className="adapt-wait" role="status">
-        <div className="bub typing"><i /><i /><i /></div>
+      ? <div {...sx(null, w.wait)} role="status">
+        <div {...sx('typing', bubble.bub, bubble.coach, bubble.typing)}><i {...sx(null, bubble.typingDot)} /><i {...sx(null, bubble.typingDot, bubble.typingDot2)} /><i {...sx(null, bubble.typingDot, bubble.typingDot3)} /></div>
         <p className="small dim">{t('Looking at your workout…')} {t('You can keep training, the answer waits here and in the Coach.')}</p>
       </div>
       : ended
-        ? <div className="adapt-ended">
-          <p className="pcard-sum">{last.outcome === 'nochange'
+        ? <div {...sx(null, w.ended)}>
+          <p {...sx(null, pcard.sum)}>{last.outcome === 'nochange'
             ? (last.reading || t('Nothing to change. Carry on as planned.'))
             : jobErrorText(last.errorClass, lastError?.detail)}</p>
           <Button onClick={close}>{t('Done')}</Button>
         </div>
         : <>
           <p className="small dim" style={{ marginBottom: 10 }}>{t('What’s up? The Coach suggests a few changes to what is left of this workout. Logged sets stay as they are.')}</p>
-          <div className="adapt-reasons">
+          <div {...sx('adapt-reasons', w.reasons)}>
             {ADAPT_REASONS.map(k => {
               const [icon, label] = REASON[k]()
-              return <button key={k} type="button" className={'chip' + (reason === k ? ' on' : '')} aria-pressed={reason === k} onClick={() => setReason(k)}>
+              return <button key={k} type="button" {...sx(['chip', reason === k && 'on'], w.reason)} aria-pressed={reason === k} onClick={() => setReason(k)}>
                 <Icon name={icon} /> {label}
               </button>
             })}
           </div>
-          <TextField className="adapt-text" value={text} maxLength={400} placeholder={reason === 'pain' ? t('Where, and what movement hurts? (optional)') : t('Anything else? (optional)')}
+          <TextField {...sx(null, w.text)} value={text} maxLength={400} placeholder={reason === 'pain' ? t('Where, and what movement hurts? (optional)') : t('Anything else? (optional)')}
             onChange={e => setText(e.target.value)} />
           {error && <p className="small" style={{ color: 'var(--red)' }}>{error}</p>}
-          <div className="pcard-ft" style={{ paddingInline: 0 }}>
-            <Button variant="primary" icon="sparkles" onClick={send} disabled={!reason || busy}>{t('Ask the Coach')}</Button>
-            <Button onClick={close}>{t('Cancel')}</Button>
+          <div {...sx(null, pcard.ft)} style={{ paddingInline: 0 }}>
+            <Button {...sx(null, pcard.ftBtn)} variant="primary" icon="sparkles" onClick={send} disabled={!reason || busy}>{t('Ask the Coach')}</Button>
+            <Button {...sx(null, pcard.ftBtn)} onClick={close}>{t('Cancel')}</Button>
           </div>
         </>}
   </div>

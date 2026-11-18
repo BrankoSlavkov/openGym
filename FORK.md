@@ -53,7 +53,7 @@ Conventions that keep ports small:
   returns English. `LANGS` in `frontend/src/lib/i18n-core.js` lists English only.
 - Exercise names and instructions in other languages (`catalogue/i18n`, generated files under
   `frontend/src/lib/exercise-names` etc.) are left in place. They are never loaded in English.
-- Upstream tests for removed parts are listed in `frontend/web-only/test-skips.js`.
+- Upstream tests for removed native features and locale packs are pruned from this fork.
 - Put new fork-only code in new files where you can, rather than inside upstream files.
 
 ## Migration

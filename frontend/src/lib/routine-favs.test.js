@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { isFavRoutine, toggleFavRoutine, favRoutinesFirst } from './routine-favs.js'
+import { isFavRoutine, toggleFavRoutine, favRoutinesFirst } from './routine-favs.ts'
 
 describe('favourite routines', () => {
   it('stars and unstars, writing the key only when on', () => {

@@ -9,6 +9,7 @@ import { referencedHashes } from '../media.ts';
 
 const H = n => String(n).repeat(64).slice(0, 64);
 const photo = h => ({ kind: 'image', hash: h, mime: 'image/webp', size: 1000, width: 800, height: 600, at: 1 });
+type DayPhotos = Record<string, { d: string; m: ReturnType<typeof photo>; _ts: number }>;
 const old = () => ({
   _ts: 100, unit: 'kg',
   routines: [{ id: 'r1', name: 'Upper', _ts: 7, ex: [{ id: '0025', sets: 3, reps: 8, weight: 60, warmupRestSec: 45 }, { id: '0098', sets: 3, reps: 10, side: true }] }],
@@ -38,7 +39,7 @@ test('a document from before the new fields is stored as it was sent', () => {
 
 test('an app from before them, writing over a document that has them, does not take them away', () => {
   const cur: any = withNew();
-  const next = old();                // an older app's copy: it never knew dayPhotos
+  const next: ReturnType<typeof old> & { dayPhotos?: DayPhotos } = old(); // an older app's copy
   next.routines = structuredClone(cur.routines);   // its routines as it read them, fields and all
   next._ts = 200;
   const out = stampPut(cur, next, { stamped: false, overRead: true, now: 300 });

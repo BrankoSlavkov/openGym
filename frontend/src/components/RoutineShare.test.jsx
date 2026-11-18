@@ -28,7 +28,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = () => ui
   return { useUI }
 })
-vi.mock('../lib/nav.js', () => ({ nav: to => m.navs.push(to) }))
+vi.mock('../lib/nav.ts', () => ({ nav: to => m.navs.push(to) }))
 
 import { shareRoutineSheet, openRoutinePayload, incomingLink, _resetRoutineLinksForTests } from './RoutineShare.jsx'
 import { routinePayloadFromUrl, decodePayload, encodePayload, routineLinkBundle } from '../lib/routine-link.js'

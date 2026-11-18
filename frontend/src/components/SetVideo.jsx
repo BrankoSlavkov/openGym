@@ -30,7 +30,7 @@ import { useMediaPicker } from './CustomMediaField.jsx'
 import { useMediaUrl, CustomThumb } from './CustomMedia.jsx'
 import { Button, Row, Switch } from './ui.tsx'
 import Icon from './Icon.tsx'
-import { isOn } from '../lib/modules.js'
+import { isOn } from '../lib/modules.ts'
 
 const toast = m => useUI.getState().toast(m)
 const openSheet = (render, opts) => useUI.getState().openSheet(render, opts)

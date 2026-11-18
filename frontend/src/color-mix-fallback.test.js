@@ -83,7 +83,7 @@ const TARGETS = { safari: v(15), chrome: v(100), firefox: v(100), edge: v(100) }
 describe('color-mix() has a fallback for Safari before 16.2', () => {
   const files = cssFiles(SRC)
   it('finds the CSS', () => {
-    expect(files.map(f => relative(SRC, f))).toEqual(expect.arrayContaining(['index.css', 'coach.css', 'admin.css', 'views/FocusView.css']))
+    expect(files.map(f => relative(SRC, f))).toEqual(expect.arrayContaining(['index.css']))
   })
   for (const file of files) {
     const css = readFileSync(file, 'utf8')
@@ -102,5 +102,22 @@ describe('color-mix() has a fallback for Safari before 16.2', () => {
     expect(missingFallbacks(':root{--x:color-mix(in srgb,red 10%,blue)}')).toEqual([':root { --x }'])
     expect(missingFallbacks(':root{--x:color-mix(in srgb,red 10%,blue)}@supports not (color: color-mix(in srgb, red 50%, blue)){:root{--x:red}}')).toEqual([])
     expect(missingFallbacks('.a{fill:color-mix(in srgb,red 1%,blue)}.b{fill:color-mix(in srgb,red 1%,blue)}@supports not (color: color-mix(in srgb, red 50%, blue)){.a,.b{fill:red}}')).toEqual([])
+  })
+})
+
+// Fork: in StyleX the fallback is stylex.firstThatWorks(mix, plain): the compiler writes the plain
+// value first and the mix after it, the same pair the CSS above keeps by hand.
+describe('color-mix() in StyleX has a fallback too', () => {
+  it('every mix sits inside firstThatWorks with a plain value after it', async () => {
+    const { stylexSources } = await import('./stylex-sources.test-util.js')
+    const bare = []
+    for (const { file, src } of stylexSources()) {
+      for (const m of src.matchAll(/color-mix\(/g)) {
+        const before = src.slice(Math.max(0, m.index - 60), m.index)
+        // a mix that is itself a custom property's value is fine only with a fallback as well
+        if (!/firstThatWorks\(\s*['"`]?[^'"`]*$/.test(before)) bare.push(`${file}: ${src.slice(m.index, m.index + 50)}`)
+      }
+    }
+    expect(bare).toEqual([])
   })
 })

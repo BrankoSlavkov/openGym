@@ -159,7 +159,7 @@ describe('the Christmas window', () => {
   })
 
   it('names an app icon the picker really has', async () => {
-    const { APP_ICON_IDS } = await import('./app-icon-variants.js')
+    const { APP_ICON_IDS } = await import('./app-icon-variants.ts')
     for (const th of THEMES.filter(x => x.appIcon)) {
       expect(APP_ICON_IDS, th.id).toContain(th.appIcon)
       expect(th.appIconTitle, th.id).toBeTruthy()

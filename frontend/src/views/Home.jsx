@@ -1,4 +1,4 @@
-import TrainerNotice from '../components/TrainerNotice.jsx'
+import TrainerNotice from '../components/TrainerNotice.tsx'
 import { useMemo, useState } from 'react'
 import { useNavigate } from '../router/hooks.tsx'
 import { useStore } from '../store/useStore.js'
@@ -33,10 +33,10 @@ import { programmeChip } from '../lib/programmes.js'
 import { SeasonDeco } from '../components/Seasonal.jsx'
 import { WrappedHomeCard } from '../components/WrappedEntry.jsx'
 import { DeloadCard } from '../components/DeloadCard.jsx'
-import RecoveryHint from '../components/RecoveryHint.jsx'
+import RecoveryHint from '../components/RecoveryHint.tsx'
 import { FastingLine } from '../components/SisterApps.jsx'
 import { ChallengesCard } from '../components/Challenges.jsx'
-import { isOn } from '../lib/modules.js'
+import { isOn } from '../lib/modules.ts'
 
 // Home = what to do now + a quick glance. Deep charts & history live in Stats.
 export default function Home() {

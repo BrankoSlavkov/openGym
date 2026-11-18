@@ -1,5 +1,5 @@
-// openGym Offline (lib/build-caps.js) has no network: no player, no search, no links to embed.
-import { offlineBuild } from './build-caps.js'
+// openGym Offline (lib/build-caps.ts) has no network: no player, no search, no links to embed.
+import { offlineBuild } from './build-caps.ts'
 
 // Only a video ID crosses into the iframe URL; never embed an arbitrary exercise link.
 export function youtubeId(value: string): string | null {

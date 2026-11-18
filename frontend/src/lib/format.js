@@ -197,7 +197,7 @@ export const localTZ = () => { try { return Intl.DateTimeFormat().resolvedOption
 
 export const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7)
 // What each accent is called, for a screen reader (Settings' swatches carry no text). The first
-// is the brand's own green, the logo's #a3e635, and what a new profile starts on (lib/accent.js
+// is the brand's own green, the logo's #a3e635, and what a new profile starts on (lib/accent.ts
 // NEW_ACCENT); 'lime' is the iOS green every profile wore before 1.4.5, kept as "Classic green"
 // and still what a profile that never picked one draws (DEFAULT_ACCENT).
 export const ACCENT_NAMES = { brand: 'openGym green', lime: 'Classic green', sky: 'Blue', orange: 'Orange', violet: 'Purple', pink: 'Pink', red: 'Red', teal: 'Teal', gold: 'Yellow' }

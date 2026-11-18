@@ -13,7 +13,7 @@ import Icon from './Icon.tsx'
 import CardHead from './CardHead.tsx'
 import { Button } from './ui.tsx'
 import { openMonthStory } from '../lib/wrapped-ui.js'
-import { isOn } from '../lib/modules.js'
+import { isOn } from '../lib/modules.ts'
 
 const titleOf = r => (r.kind === 'month' ? t('Your month') : t('Your week'))
 const datesOf = r => fmtDateRange(r.from, r.to, true)

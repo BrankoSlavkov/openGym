@@ -31,17 +31,67 @@
 // is fulfilled (`pinState === 'done'`) and reads as no override at all. Pins change which session
 // is NEXT, never what counts as DONE, so the tally a planner reads is untouched.
 //
+interface QueueWorkout {
+  routineIds?: readonly string[] | null;
+  routineId?: string | null;
+  name?: string | null;
+  start?: number | null;
+  d?: string | null;
+}
+
+interface QueueRoutine {
+  id?: string;
+  name?: string | null;
+}
+
+interface QueuePlan {
+  ids?: unknown;
+  startsOn?: string | null;
+  since?: number | string | null;
+  strict?: boolean;
+}
+
+type RoutineAssignment = string | readonly string[] | null | undefined;
+
+export interface QueueState {
+  queue?: QueuePlan | null;
+  routines?: readonly (QueueRoutine | null | undefined)[] | null;
+  workouts?: readonly (QueueWorkout | null | undefined)[] | null;
+  reminder?: { tz?: string | null } | null;
+  dayPlan?: Readonly<Record<string, RoutineAssignment>> | null;
+  week?: Readonly<Partial<Record<number, RoutineAssignment>>> | readonly RoutineAssignment[] | null;
+}
+
+interface ActiveQueue {
+  ids: readonly string[];
+  startsOn: string;
+  want: ReadonlySet<string>;
+  names: ReadonlyMap<string, string | null | undefined>;
+}
+
+interface QueueDerivation {
+  routines: QueueState['routines'];
+  routineCount: number;
+  ids: readonly string[];
+  idCount: number;
+  rawStartsOn: QueuePlan['startsOn'];
+  since: QueuePlan['since'];
+  tz: string | null | undefined;
+  known: ReadonlySet<string | undefined>;
+  queue: ActiveQueue | null;
+}
+
 // The `?.` on each workout is this copy's own, like the one on each routine below: a state file
 // written before PUT /api/data dropped null entries can still hold one, and a throw here is
 // caught by the tick and logged, so that profile's day reminders stop with nothing to say why.
-function routineIdsOf(w) {
-  return Array.isArray(w?.routineIds) ? w.routineIds : (w?.routineId ? [w.routineId] : []);
+function routineIdsOf(w: QueueWorkout | null | undefined): readonly string[] {
+  return w?.routineIds && Array.isArray(w.routineIds) ? w.routineIds : (w?.routineId ? [w.routineId] : []);
 }
 // Does this workout's name name this routine? The frontend's namesRoutine: a routine can itself
 // be named 'Push + Pull', so the name is looked for at a ' + ' boundary, never split out.
-function namesRoutine(w, name) {
+function namesRoutine(w: QueueWorkout | null | undefined, name: string | null | undefined) {
   if (!name) return false;
-  const n = String(w.name || '');
+  const n = String(w?.name || '');
   return n === name || n.startsWith(name + ' + ') || n.endsWith(' + ' + name) || n.includes(' + ' + name + ' + ');
 }
 // The reminder tick runs everything below every ten seconds for each profile with a reminder on,
@@ -59,21 +109,22 @@ function namesRoutine(w, name) {
 // those are the same objects. A state read from disk is never edited in place; the list lengths,
 // the week's dates and the zone are compared too, so a caller that adds to a list or moves the
 // week between questions gets fresh answers.
-const derived = new WeakMap();
-function stateQueue(S) {
+const derived = new WeakMap<QueuePlan, QueueDerivation>();
+function stateQueue(S: QueueState): QueueDerivation | null {
   const q = S.queue;
   if (!q || typeof q !== 'object' || !Array.isArray(q.ids)) return null;
-  if (q.strict === true && !(q.since > 0)) return null; // a strict pass with no clock, as in the frontend
+  const since = Number(q.since ?? 0);
+  if (q.strict === true && !(since > 0)) return null; // a strict pass with no clock, as in the frontend
   const routines = S.routines, tz = S.reminder?.tz;
   const hit = derived.get(q);
   if (hit && hit.routines === routines && hit.routineCount === (routines?.length ?? 0) && hit.ids === q.ids
     && hit.idCount === q.ids.length && hit.rawStartsOn === q.startsOn && hit.since === q.since && hit.tz === tz) return hit;
   const known = new Set((routines || []).map(r => r?.id));
-  const startsOn = typeof q.startsOn === 'string' ? q.startsOn : (q.since > 0 ? dayIn(q.since, tz) : null);
+  const startsOn = typeof q.startsOn === 'string' ? q.startsOn : (since > 0 ? dayIn(typeof q.since === 'string' ? q.since : since, tz) : null);
   // First valid occurrence of each id — the same normalization as the frontend's queueOf.
-  const ids = [...new Set(q.ids)].filter(id => known.has(id));
-  const want = new Set(ids), names = new Map();
-  for (const r of routines || []) if (want.has(r?.id) && !names.has(r.id)) names.set(r.id, r.name);
+  const ids = [...new Set<string>(q.ids)].filter(id => known.has(id));
+  const want = new Set(ids), names = new Map<string, string | null | undefined>();
+  for (const r of routines || []) if (r?.id !== undefined && want.has(r.id) && !names.has(r.id)) names.set(r.id, r.name);
   const entry = {
     routines, routineCount: routines?.length ?? 0, ids: q.ids, idCount: q.ids.length,
     rawStartsOn: q.startsOn, since: q.since, tz, known,
@@ -85,13 +136,14 @@ function stateQueue(S) {
 // The sessions of `q` that count as done under the DONE RULE as of `today`, in one pass over the
 // workouts. A session's name is that of the first routine with its id, as the rule reads it. The
 // pass stops once every session is done.
-function doneIds(S, q, today) {
-  const { want, names } = q, done = new Set();
+function doneIds(S: QueueState, q: ActiveQueue, today: string) {
+  const { want, names } = q, done = new Set<string>();
+  const since = Number(S.queue?.since ?? 0);
   for (const w of S.workouts || []) {
     if (done.size === want.size) break;
     const ids = routineIdsOf(w);
-    const byClock = S.queue.since > 0 && (w?.start ?? 0) >= S.queue.since;
-    const byName = S.queue.strict !== true && String(w?.d || '') >= q.startsOn && String(w?.d || '') <= today;
+    const byClock = since > 0 && (w?.start ?? 0) >= since;
+    const byName = S.queue?.strict !== true && String(w?.d || '') >= q.startsOn && String(w?.d || '') <= today;
     if (!byClock && !byName) continue;
     for (const id of ids) {
       if (!want.has(id) || done.has(id)) continue;
@@ -104,10 +156,10 @@ function doneIds(S, q, today) {
 // startsOn is the device's local date of the apply; the closest thing here is the zone the
 // reminder already fires by (S.reminder.tz), so the two copies name the same day. UTC when the
 // zone is unset or invalid (Intl throws on an unknown zone).
-function dayIn(ms, tz) {
+function dayIn(ms: number | string, tz?: string | null) {
   try {
     const parts = new Intl.DateTimeFormat('en-CA', { timeZone: tz || 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date(ms));
-    const g = t => parts.find(x => x.type === t)?.value;
+    const g = (t: Intl.DateTimeFormatPartTypes) => parts.find(x => x.type === t)?.value;
     return `${g('year')}-${g('month')}-${g('day')}`;
   } catch { return new Date(ms).toISOString().slice(0, 10); }
 }
@@ -116,7 +168,7 @@ function dayIn(ms, tz) {
 // either is none, as in the frontend: dated from 0 the week began in 1970 and read as finished.
 // A session whose routine was deleted is dropped from the week (the frontend's queue.js does the
 // same — it could never be started or logged).
-function queueOf(S) {
+function queueOf(S: QueueState) {
   return stateQueue(S)?.queue ?? null;
 }
 // The reminder tick only ever asks "what's next right now" — there is no separate "today" to
@@ -124,16 +176,19 @@ function queueOf(S) {
 // That collapses `iso === max(today, startsOn)` to the equivalent, simpler `iso >= startsOn`, and
 // "pins dated today or later" to "pins dated `iso` or later", and the DONE RULE's "up to today"
 // to "up to `iso`".
-function queueNext(S, iso) {
+function queueNext(S: QueueState, iso: string) {
   const q = queueOf(S);
   if (!q || iso < q.startsOn) return null;
   const done = doneIds(S, q, iso);
   const remaining = q.ids.filter(id => !done.has(id));
   const open = new Set(remaining);
-  const pins = Object.entries(S.dayPlan || {}).filter(([d, id]) => d >= iso && open.has(id));
-  const here = pins.find(([d]) => d === iso);
-  if (here) return here[1];
-  const pinned = new Set(pins.map(([, id]) => id));
+  const pins = new Map<string, string>();
+  for (const [day, id] of Object.entries(S.dayPlan || {})) {
+    if (day >= iso && typeof id === 'string' && open.has(id)) pins.set(day, id);
+  }
+  const here = pins.get(iso);
+  if (here !== undefined) return here;
+  const pinned = new Set(pins.values());
   return remaining.find(id => !pinned.has(id)) ?? null;
 }
 
@@ -142,9 +197,9 @@ function queueNext(S, iso) {
 // override; null — not a queue session (no queue, a malformed one, a routine override, 'rest', a
 // deleted routine), so the plain override rules apply. As of `today`: by default the user's
 // date in the zone the reminder fires by, as the frontend's copy defaults to the device's.
-export function pinState(S, id, today = dayIn(Date.now(), S.reminder?.tz)) {
+export function pinState(S: QueueState, id: RoutineAssignment, today = dayIn(Date.now(), S.reminder?.tz)) {
   const q = queueOf(S);
-  if (!q || !id || !q.ids.includes(id)) return null;
+  if (!q || typeof id !== 'string' || !id || !q.ids.includes(id)) return null;
   return doneIds(S, q, today).has(id) ? 'done' : 'open';
 }
 
@@ -155,7 +210,7 @@ export function pinState(S, id, today = dayIn(Date.now(), S.reminder?.tz)) {
 // done one is fulfilled and ignored; an explicit routine id -> that id. Otherwise a live queue's
 // next session wins over the plain weekday assignment, falling back to the weekday only once the
 // queue is finished, not yet started, or absent.
-export function effectiveRoutineId(S, iso) {
+export function effectiveRoutineId(S: QueueState, iso: string) {
   const ov = S.dayPlan?.[iso];
   if (ov === 'rest') return null;
   // Several separate sessions planned on one date (an importer's list, frontend lib/history.js):
@@ -164,27 +219,30 @@ export function effectiveRoutineId(S, iso) {
     const first = ov.find(id => S.routines?.some(r => r?.id === id));
     if (first) return first;
   }
-  const pin = pinState(S, ov, iso);
-  if (pin === 'open') return ov;
-  if (!pin && ov && S.routines?.some(r => r?.id === ov)) return ov;
+  if (typeof ov === 'string') {
+    const pin = pinState(S, ov, iso);
+    if (pin === 'open') return ov;
+    if (!pin && ov && S.routines?.some(r => r?.id === ov)) return ov;
+  }
   const q = queueNext(S, iso);
   if (q) return q;
   const wd = new Date(iso + 'T12:00:00').getDay();
   // The planner's weekday pointers stay hidden on a live queue day even when it has no session for
   // it (every remaining one pinned to another day): those sessions have their days.
   const live = queueLiveOn(S, iso);
-  const list = [].concat(S.week?.[wd] || []);
-  if (!list.length) return null;
+  const list: string[] = [];
+  const assignments = list.concat(S.week?.[wd] || []);
+  if (!assignments.length) return null;
   const sq = stateQueue(S);
   const known = sq ? sq.known : new Set((S.routines || []).map(r => r?.id));
   // A live queue has its known ids in `want`, and only known ids are looked up in it.
-  const queued = live ? sq.queue.want : null;
-  return list.find(id => known.has(id) && !(live && queued.has(id))) || null;
+  const queued = live ? sq?.queue?.want : null;
+  return assignments.find(id => known.has(id) && !queued?.has(id)) || null;
 }
 
 // Is `iso` a day the queue speaks for, with sessions still to do? (`today === iso` here, so
 // "the queue's day" is any day from startsOn on.)
-export function queueLiveOn(S, iso) {
+export function queueLiveOn(S: QueueState, iso: string) {
   const q = queueOf(S);
   if (!q || iso < q.startsOn) return false;
   const done = doneIds(S, q, iso);

@@ -14,7 +14,7 @@ import { EXIDX } from '../lib/exercises.js'
 import { strengthLevel, strengthLevels, liftOf, LEVELS, LEVEL_NAME, sexOf } from '../lib/strength-level.js'
 import Icon from './Icon.tsx'
 import { Button, Segmented, Stepper } from './ui.tsx'
-import { isOn } from '../lib/modules.js'
+import { isOn } from '../lib/modules.ts'
 
 const weightOf = (lv, w, unit) => (lv.perBell ? t('{0} each', fmtNum(w)) : fmtNum(w)) + ' ' + unit
 

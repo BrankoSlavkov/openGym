@@ -33,7 +33,7 @@ import { EXIDX, isCardio, canonicalExId } from './exercises.js'
 import { musclesOf } from './muscles.js'
 import { isoOf, weekKey, weekStartOf } from './format.js'
 import { LB_KG } from './units.js'
-import { isOn } from './modules.js'
+import { isOn } from './modules.ts'
 
 export const PICKS = 3
 export const LOOKBACK = 3

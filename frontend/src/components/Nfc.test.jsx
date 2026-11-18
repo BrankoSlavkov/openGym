@@ -27,7 +27,7 @@ vi.mock('../store/useUI.js', () => {
   useUI.getState = () => ui
   return { useUI }
 })
-vi.mock('../lib/nav.js', () => ({ nav: (...a) => m.navs.push(a[0]), navToWorkout: () => m.navs.push('/workout') }))
+vi.mock('../lib/nav.ts', () => ({ nav: (...a) => m.navs.push(a[0]), navToWorkout: () => m.navs.push('/workout') }))
 vi.mock('../lib/nfc.js', () => ({
   nfcSupport: vi.fn(() => Promise.resolve({ supported: true, enabled: true })),
   writeTag: vi.fn((url, opts) => m.write(url, opts)),

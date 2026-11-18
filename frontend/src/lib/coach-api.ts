@@ -63,7 +63,7 @@ let demoMod: typeof import('./coach-demo.js') | null = null
 const demo = async () => (demoMod = demoMod || (await import('./coach-demo.js')))
 const S = () => useStore.getState().S
 // Each request says which language the app is in: a profile that never picked one has no stored
-// `lang` worth trusting — it is worked out per device (#303, lib/default-lang.js) — and the
+// `lang` worth trusting — it is worked out per device (#303, lib/default-lang.ts) — and the
 // Coach should answer in what the person is reading.
 
 // The mobile build's third answer: a phone that brought its own API key runs the Coach itself

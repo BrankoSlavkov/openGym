@@ -6,14 +6,15 @@ import { api } from '../lib/api.ts'
 import { fmtDate, fmtNum, fmtVol, fmtDur } from '../lib/format.js'
 import { auditCat, auditLine, fmtWhen } from '../lib/audit.js'
 import { workoutVolume, setsDone } from '../lib/history.js'
-import { pathBefore, historyIndex } from '../lib/nav.js'
+import { pathBefore, historyIndex } from '../lib/nav.ts'
 import { confirmSheet } from '../sheets.jsx'
 import Icon from '../components/Icon.tsx'
 import { Button } from '../components/ui.tsx'
 import AdminCoach from './AdminCoach.jsx'
-import AdminCommunity from './AdminCommunity.jsx'
+import AdminCommunity from './AdminCommunity.tsx'
 import AdminOidc from '../components/AdminOidc.jsx'
-import '../admin.css'
+import { sx } from '../lib/sx.ts'
+import { styles as adm, pill } from './Admin.styles.ts'
 
 // Admin-only operator dashboard (owner passkey + admin flag; guarded again server-side).
 // Deliberately English-only — it isn't part of the translated end-user surface, so it stays
@@ -41,8 +42,8 @@ function ResetCodeSheet({ name, email, code, expires, close }) {
   const copy = () => { navigator.clipboard?.writeText(code).catch(() => {}); toast('Copied') }
   return <>
     <h3>Reset code for {name}</h3>
-    <div className="adm-lead">Give them this code. They choose “Sign in with password” → “Have a reset code from your admin?”, enter their name <b>{name}</b>{email && <> (or their sign-in e-mail <b>{email}</b>)</>}, the code and a new password. It works once, until {new Date(expires).toLocaleString()}, and will not be shown again.</div>
-    <button className="adm-code" style={{ fontSize: 'var(--fs-title2)', width: '100%', padding: '14px 0' }} onClick={copy} aria-label="copy code">{code}</button>
+    <div {...sx(null, adm.lead)}>Give them this code. They choose “Sign in with password” → “Have a reset code from your admin?”, enter their name <b>{name}</b>{email && <> (or their sign-in e-mail <b>{email}</b>)</>}, the code and a new password. It works once, until {new Date(expires).toLocaleString()}, and will not be shown again.</div>
+    <button {...sx(null, adm.codeChip, adm.codeBig)} onClick={copy} aria-label="copy code">{code}</button>
     <div style={{ height: 12 }} />
     <Button variant="primary" onClick={close}>Done</Button>
   </>
@@ -54,8 +55,8 @@ function RecoveryCodeSheet({ name, code, expires, close }) {
   const copy = () => { navigator.clipboard?.writeText(code).catch(() => {}); toast('Copied') }
   return <>
     <h3>Recovery code for {name}</h3>
-    <div className="adm-lead">Give them this code. On the sign-in screen they tap “Lost access?” → “I have a code” (or “Use a code from your other device”) and enter it; the device they use gets a new passkey for <b>{name}</b> and is signed in. In the phone app they do this in a browser first, then pair the app again. It works once, until {new Date(expires).toLocaleString()}, and will not be shown again.</div>
-    <button className="adm-code" style={{ fontSize: 'var(--fs-title2)', width: '100%', padding: '14px 0' }} onClick={copy} aria-label="copy code">{code}</button>
+    <div {...sx(null, adm.lead)}>Give them this code. On the sign-in screen they tap “Lost access?” → “I have a code” (or “Use a code from your other device”) and enter it; the device they use gets a new passkey for <b>{name}</b> and is signed in. In the phone app they do this in a browser first, then pair the app again. It works once, until {new Date(expires).toLocaleString()}, and will not be shown again.</div>
+    <button {...sx(null, adm.codeChip, adm.codeBig)} onClick={copy} aria-label="copy code">{code}</button>
     <div style={{ height: 12 }} />
     <Button variant="primary" onClick={close}>Done</Button>
   </>
@@ -136,15 +137,15 @@ function UserDetail({ id, viewerOwner, onChanged, close }) {
   return <>
     <h3 className="capitalize">{u.name}</h3>
     <div className="row" style={{ gap: 6, flexWrap: 'wrap', margin: '8px 0 12px' }}>
-      {u.owner ? <span className="adm-pill acc">owner</span> : u.admin && <span className="adm-pill acc">admin</span>}
-      {u.disabled && <span className="adm-pill bad">disabled</span>}
-      {u.invitedBy && <span className="adm-pill">invite {u.invitedBy}</span>}
-      {u.password && <span className="adm-pill">password</span>}
+      {u.owner ? <span {...sx('adm-pill', ...pill('acc'))}>owner</span> : u.admin && <span {...sx('adm-pill', ...pill('acc'))}>admin</span>}
+      {u.disabled && <span {...sx('adm-pill', ...pill('bad'))}>disabled</span>}
+      {u.invitedBy && <span {...sx('adm-pill', ...pill())}>invite {u.invitedBy}</span>}
+      {u.password && <span {...sx('adm-pill', ...pill())}>password</span>}
       {/* The sign-in e-mail (password instances only): shown to admins and nobody else. */}
-      {u.email && <span className="adm-pill" title="sign-in e-mail">{u.email}</span>}
-      {u.resetUntil && <span className="adm-pill acc">reset code until {new Date(u.resetUntil).toLocaleString()}</span>}
-      {u.recoveryUntil && <span className="adm-pill acc">recovery code until {new Date(u.recoveryUntil).toLocaleString()}</span>}
-      <span className="adm-pill">joined {u.created ? fmtDate(u.created.slice(0, 10)) : '–'}</span>
+      {u.email && <span {...sx('adm-pill', ...pill())} title="sign-in e-mail">{u.email}</span>}
+      {u.resetUntil && <span {...sx('adm-pill', ...pill('acc'))}>reset code until {new Date(u.resetUntil).toLocaleString()}</span>}
+      {u.recoveryUntil && <span {...sx('adm-pill', ...pill('acc'))}>recovery code until {new Date(u.recoveryUntil).toLocaleString()}</span>}
+      <span {...sx('adm-pill', ...pill())}>joined {u.created ? fmtDate(u.created.slice(0, 10)) : '–'}</span>
     </div>
     <div className="tiles" style={{ textAlign: 'start' }}>
       <div className="tile"><div className="l">Workouts</div><div className="v v-sm">{view ? workouts.length : n.workouts}</div></div>
@@ -161,10 +162,10 @@ function UserDetail({ id, viewerOwner, onChanged, close }) {
           ? confirmSheet({ title: 'Remove ' + u.name + ' as admin?', message: 'They keep their account and data, but lose this page.', confirmText: 'Remove admin', danger: true, onConfirm: () => setRole(false) })
           : confirmSheet({ title: 'Make ' + u.name + ' an admin?', message: 'They can see everyone on this instance, disable accounts, hand out invites and set up the Coach. Only you can add or remove admins.', confirmText: 'Make admin', onConfirm: () => setRole(true) })}>
         {u.admin ? 'Remove admin' : 'Make admin'}</button>
-      <div className="adm-hint">{u.admin ? 'Admins run the instance with you. Remove the role to delete or disable their account.' : 'Admins help run the instance. You stay the owner.'}</div>
+      <div {...sx(null, adm.hint)}>{u.admin ? 'Admins run the instance with you. Remove the role to delete or disable their account.' : 'Admins help run the instance. You stay the owner.'}</div>
       {u.admin && <>
         <button className="btn" style={{ margin: '14px 0 4px' }} onClick={makeOwner}>Make owner</button>
-        <div className="adm-hint">There is one owner. Handing it over makes you a regular admin.</div>
+        <div {...sx(null, adm.hint)}>There is one owner. Handing it over makes you a regular admin.</div>
       </>}
     </>}
     {!u.admin && <>
@@ -172,7 +173,7 @@ function UserDetail({ id, viewerOwner, onChanged, close }) {
         onClick={() => u.disabled ? setDisabled(false)
           : confirmSheet({ title: 'Disable ' + u.name + '?', message: 'They are signed out everywhere and can no longer sync or log in until re-enabled. Their data stays.', confirmText: 'Disable', danger: true, onConfirm: () => setDisabled(true) })}>
         {u.disabled ? 'Enable account' : 'Disable account'}</button>
-      <div className="adm-hint">{u.disabled ? 'Enabling lets them sign in and sync again.' : 'Disabling signs them out everywhere and blocks sign-in. Nothing is deleted.'}</div>
+      <div {...sx(null, adm.hint)}>{u.disabled ? 'Enabling lets them sign in and sync again.' : 'Disabling signs them out everywhere and blocks sign-in. Nothing is deleted.'}</div>
       {/* The one destructive action in the app (issue #107), so it asks twice and offers the
           export first — that history is theirs. The second step names the account again, because
           the first sheet can be dismissed by anyone who was not reading. */}
@@ -191,20 +192,20 @@ function UserDetail({ id, viewerOwner, onChanged, close }) {
           }),
         })}>Delete account</button>
       {view && <button className="btn" style={{ marginBottom: 4 }} onClick={exportUser}>Download their data</button>}
-      <div className="adm-hint">Deleting removes the account and every trace of its training history from this server.</div>
+      <div {...sx(null, adm.hint)}>Deleting removes the account and every trace of its training history from this server.</div>
       {pwInstance && <>
         <button className="btn" style={{ margin: '14px 0 4px' }} onClick={resetPassword}>Reset password</button>
-        <div className="adm-hint">{u.password
+        <div {...sx(null, adm.hint)}>{u.password
           ? 'For a forgotten password: a one-time code lets them choose a new one. Their current password stops working at once.'
           : 'No password yet. A one-time code lets them set one. That’s the way back in after losing their only passkey.'}</div>
       </>}
     </>}
     {canRecover && <>
       <button className="btn" style={{ margin: '14px 0 4px' }} onClick={makeRecovery}>Recovery code</button>
-      <div className="adm-hint">Lost every device and passkey? A one-time code gives a new device a passkey for this profile. Works with or without password sign-in.</div>
+      <div {...sx(null, adm.hint)}>Lost every device and passkey? A one-time code gives a new device a passkey for this profile. Works with or without password sign-in.</div>
     </>}
-    {u.owner && u.id !== me?.id && <div className="adm-hint" style={{ marginTop: 14 }}>A locked-out owner gets a recovery code from the server itself: <code>docker compose exec api node recover.js "{u.name}"</code></div>}
-    {!view && <div className="adm-hint" style={{ marginTop: 14 }}>Their training data is theirs: it is readable on disk, not in the app. For support, the numbers above are usually enough. People export their own backup in Settings, Data &amp; backup.</div>}
+    {u.owner && u.id !== me?.id && <div {...sx(null, adm.hint)} style={{ marginTop: 14 }}>A locked-out owner gets a recovery code from the server itself: <code {...sx(null, adm.code)}>docker compose exec api node recover.js "{u.name}"</code></div>}
+    {!view && <div {...sx(null, adm.hint)} style={{ marginTop: 14 }}>Their training data is theirs: it is readable on disk, not in the app. For support, the numbers above are usually enough. People export their own backup in Settings, Data &amp; backup.</div>}
     {view && <h4 className="sec">Workout history</h4>}
     {!view ? null : workouts.length ? <div className="list" style={{ gap: 0 }}>
       {workouts.slice(0, 60).map(w => <div key={w.id} className="row between" style={{ padding: '9px 2px', borderBottom: '1px solid var(--sep)' }}>
@@ -212,7 +213,7 @@ function UserDetail({ id, viewerOwner, onChanged, close }) {
           <div className="dim" style={{ fontSize: 'var(--fs-caption2)' }}>{fmtDate(w.d, true)} · {fmtDur((w.end || w.start) - w.start)} · {setsDone(w)} sets{w.prs?.length ? ' · ' + w.prs.length + ' PR' : ''}</div></div>
         <span className="small muted">{fmtVol(w.vol ?? workoutVolume(w), d.unit)}</span>
       </div>)}
-    </div> : <div className="adm-empty">No workouts logged.</div>}
+    </div> : <div {...sx(null, adm.empty)}>No workouts logged.</div>}
   </>
 }
 
@@ -224,15 +225,15 @@ function TrainerRoles({ id, name, roles, grants, onChanged, close }) {
     .catch(e => toast(e.message))
   return <>
     <div className="row" style={{ gap: 6, flexWrap: 'wrap', margin: '12px 0 4px' }}>
-      {roles.freeTrainer && <span className="adm-pill acc">free trainer</span>}
-      {roles.staff.map(s => <span key={s.gymId + s.role} className="adm-pill">{s.role === 'lead' ? 'gym lead' : 'trainer'}</span>)}
-      {roles.memberOf.length > 0 && <span className="adm-pill">member of {roles.memberOf.length} gym{roles.memberOf.length > 1 ? 's' : ''}</span>}
-      <span className="adm-pill">shares with {grants || 0}</span>
+      {roles.freeTrainer && <span {...sx('adm-pill', ...pill('acc'))}>free trainer</span>}
+      {roles.staff.map(s => <span key={s.gymId + s.role} {...sx('adm-pill', ...pill())}>{s.role === 'lead' ? 'gym lead' : 'trainer'}</span>)}
+      {roles.memberOf.length > 0 && <span {...sx('adm-pill', ...pill())}>member of {roles.memberOf.length} gym{roles.memberOf.length > 1 ? 's' : ''}</span>}
+      <span {...sx('adm-pill', ...pill())}>shares with {grants || 0}</span>
     </div>
     <button className="btn" style={{ margin: '8px 0 4px' }} onClick={() => roles.freeTrainer
       ? confirmSheet({ title: 'Stop ' + name + ' training freely?', message: 'Their private members are paused at once. Gym trainer roles stay.', confirmText: 'Stop', danger: true, onConfirm: () => setFree(false) })
       : setFree(true)}>{roles.freeTrainer ? 'Remove free trainer' : 'Allow as free trainer'}</button>
-    <div className="adm-hint">A free trainer works without a gym, like a personal trainer. People still decide what they share.</div>
+    <div {...sx(null, adm.hint)}>A free trainer works without a gym, like a personal trainer. People still decide what they share.</div>
   </>
 }
 
@@ -247,7 +248,7 @@ function GymsCard({ users, tick }) {
   const create = () => openSheet(close => <GymNewSheet close={close} done={load} />)
   const assign = (g, role) => openSheet(close => <>
     <h3>{role === 'lead' ? 'Add a gym lead' : 'Add a trainer'} to {g.name}</h3>
-    <div className="adm-lead">{role === 'lead'
+    <div {...sx(null, adm.lead)}>{role === 'lead'
       ? 'A gym lead sees the trainers and the names of members who joined, and only what each member shares with the lead row.'
       : 'A trainer sees only the members who connected to them, and only what each one shares.'}</div>
     <div className="list">{users.filter(u => !u.disabled && !g.staff.some(s => s.userId === u.id && s.role === role)).map(u =>
@@ -272,14 +273,14 @@ function GymsCard({ users, tick }) {
   return <div className="card">
     <div className="row between"><h2 style={{ margin: 0 }}>Gyms</h2>
       <Button variant="primary" size="sm" onClick={create} icon="plus">New gym</Button></div>
-    <div className="adm-lead">Studios on this server, with their leads and trainers. Members connect with a trainer’s code and choose what each side sees; you never see that here.</div>
-    {d && !d.gyms.length && <div className="adm-empty">No gyms yet. A gym gives trainers a home and members a gym lead.</div>}
+    <div {...sx(null, adm.lead)}>Studios on this server, with their leads and trainers. Members connect with a trainer’s code and choose what each side sees; you never see that here.</div>
+    {d && !d.gyms.length && <div {...sx(null, adm.empty)}>No gyms yet. A gym gives trainers a home and members a gym lead.</div>}
     {(d?.gyms || []).map(g => <div key={g.id} style={{ padding: '10px 0', borderBottom: 'var(--hair) solid var(--sep)', opacity: g.disabled ? 0.6 : 1 }}>
-      <div className="row between"><div className="small" style={{ fontWeight: 600 }}>{g.name} {g.disabled && <span className="adm-pill bad">paused</span>}</div>
+      <div className="row between"><div className="small" style={{ fontWeight: 600 }}>{g.name} {g.disabled && <span {...sx('adm-pill', ...pill('bad'))}>paused</span>}</div>
         <span className="small muted">{g.counts.members} members</span></div>
       {g.contact && <div className="dim" style={{ fontSize: 'var(--fs-caption2)' }}>{g.contact}</div>}
       <div className="row" style={{ gap: 6, flexWrap: 'wrap', margin: '6px 0' }}>
-        {g.staff.map(s => <button key={s.userId + s.role} className="adm-pill" onClick={() => remove(g, s)} aria-label={'remove ' + s.name}>{s.name} · {s.role === 'lead' ? 'lead' : 'trainer'} ✕</button>)}
+        {g.staff.map(s => <button key={s.userId + s.role} {...sx('adm-pill', ...pill())} onClick={() => remove(g, s)} aria-label={'remove ' + s.name}>{s.name} · {s.role === 'lead' ? 'lead' : 'trainer'} ✕</button>)}
       </div>
       <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
         <button className="btn xs" onClick={() => assign(g, 'lead')}>Add lead</button>
@@ -287,7 +288,7 @@ function GymsCard({ users, tick }) {
         <button className="btn xs" onClick={() => toggle(g)}>{g.disabled ? 'Switch on' : 'Pause'}</button>
       </div>
     </div>)}
-    {d?.freeTrainers?.length > 0 && <div className="adm-hint" style={{ marginTop: 10 }}>Free trainers: {d.freeTrainers.map(f => f.name).join(', ')}</div>}
+    {d?.freeTrainers?.length > 0 && <div {...sx(null, adm.hint)} style={{ marginTop: 10 }}>Free trainers: {d.freeTrainers.map(f => f.name).join(', ')}</div>}
   </div>
 }
 
@@ -299,7 +300,7 @@ function GymNewSheet({ close, done }) {
     .then(() => { toast(name.trim() + ' created'); close(); done() }).catch(e => toast(e.message))
   return <>
     <h3>New gym</h3>
-    <div className="adm-lead">Members see the name and the contact on the screen where they agree to share, so put who is responsible for their data and how to reach them.</div>
+    <div {...sx(null, adm.lead)}>Members see the name and the contact on the screen where they agree to share, so put who is responsible for their data and how to reach them.</div>
     <input className="field" placeholder="Name, e.g. FitBox Bülach" value={name} maxLength={60} onChange={e => setName(e.target.value)} aria-label="gym name" />
     <div style={{ height: 8 }} />
     <input className="field" placeholder="Responsible, e.g. FitBox GmbH, privacy@fitbox.ch" value={contact} maxLength={200} onChange={e => setContact(e.target.value)} aria-label="data protection contact" />
@@ -325,28 +326,28 @@ function InvitesCard({ invites, reload, inviteOnly }) {
   return <div className="card">
     <div className="row between"><h2 style={{ margin: 0 }}>Invite codes</h2>
       <Button variant="primary" size="sm" onClick={gen} icon="plus">New code</Button></div>
-    <div className="adm-lead">
+    <div {...sx(null, adm.lead)}>
       {inviteOnly
         ? 'Sign-up is invite-only: someone needs one of these codes to create a profile. Each code works once.'
         : 'Sign-up is open, so codes are optional here. They only record who invited whom.'}
     </div>
     {open.length ? <>
-      <div className="adm-group-t">Unused · tap to copy</div>
+      <div {...sx(null, adm.groupTitle)}>Unused · tap to copy</div>
       {open.map(i => <div key={i.code} className="row between" style={{ padding: '6px 0', borderBottom: 'var(--hair) solid var(--sep)' }}>
-        <button className="adm-code" onClick={() => copy(i.code)} aria-label={'copy ' + i.code}>{i.code}</button>
+        <button {...sx(null, adm.codeChip)} onClick={() => copy(i.code)} aria-label={'copy ' + i.code}>{i.code}</button>
         <div className="row" style={{ gap: 4 }}>
-          <button className="iconbtn adm-iconbtn" onClick={() => copy(i.code)} aria-label="copy"><Icon name="copy" /></button>
-          <button className="iconbtn adm-iconbtn" style={{ color: 'var(--red)' }} onClick={() => revoke(i.code)} aria-label="revoke"><Icon name="trash" /></button>
+          <button {...sx('iconbtn', adm.iconBtn)} onClick={() => copy(i.code)} aria-label="copy"><Icon name="copy" /></button>
+          <button {...sx('iconbtn', adm.iconBtn)} style={{ color: 'var(--red)' }} onClick={() => revoke(i.code)} aria-label="revoke"><Icon name="trash" /></button>
         </div>
       </div>)}
     </> : null}
     {used.length ? <>
-      <div className="adm-group-t" style={{ marginTop: open.length ? 12 : 0 }}>Already used</div>
+      <div {...sx(null, adm.groupTitle)} style={{ marginTop: open.length ? 12 : 0 }}>Already used</div>
       {used.map(i => <div key={i.code} className="row between dim" style={{ padding: '6px 0', fontSize: 'var(--fs-footnote)' }}>
         <span style={{ fontFamily: 'ui-monospace,SFMono-Regular,Menlo,monospace', letterSpacing: '.06em' }}>{i.code}</span><span>→ {i.usedByName || 'used'}</span>
       </div>)}
     </> : null}
-    {!open.length && !used.length && <div className="adm-empty">No codes yet. "New code" makes one and copies it to your clipboard.</div>}
+    {!open.length && !used.length && <div {...sx(null, adm.empty)}>No codes yet. "New code" makes one and copies it to your clipboard.</div>}
   </div>
 }
 
@@ -380,8 +381,8 @@ function AuditCard({ tick, owner }) {
   return <div className="card">
     <div className="row between"><h2 style={{ margin: 0 }}>Activity log</h2>
       {/* Clearing is the owner's alone: an admin could otherwise erase what they did. */}
-      {owner && <button className="iconbtn adm-iconbtn" style={{ color: 'var(--red)' }} onClick={clear} aria-label="clear log"><Icon name="trash" /></button>}</div>
-    <div className="adm-lead">
+      {owner && <button {...sx('iconbtn', adm.iconBtn)} style={{ color: 'var(--red)' }} onClick={clear} aria-label="clear log"><Icon name="trash" /></button>}</div>
+    <div {...sx(null, adm.lead)}>
       Who signed in, what failed, and what an admin changed.
       {meta ? ' ' + fmtNum(meta.total) + ' events'
         + (meta.retention.days ? ', kept for ' + meta.retention.days + ' days' : '')
@@ -397,14 +398,14 @@ function AuditCard({ tick, owner }) {
         <div className="grow">
           <div className="small" style={{ fontWeight: 600 }}>{line.title}
             {/* a red pill, not a red row: twenty fumbled Face IDs in a row shouldn't read as an incident */}
-            {!e.ok && <span className="adm-pill bad" style={{ marginInlineStart: 6 }}>failed</span>}
-            {auditCat(e.ev) === 'admin' && <span className="adm-pill acc" style={{ marginInlineStart: 6 }}>admin</span>}</div>
+            {!e.ok && <span {...sx('adm-pill', ...pill('bad'))} style={{ marginInlineStart: 6 }}>failed</span>}
+            {auditCat(e.ev) === 'admin' && <span {...sx('adm-pill', ...pill('acc'))} style={{ marginInlineStart: 6 }}>admin</span>}</div>
           {line.sub && <div className="dim" style={{ fontSize: 'var(--fs-caption2)' }}>{line.sub}</div>}
         </div>
         <span className="small muted" style={{ flex: 'none', marginInlineStart: 8 }}>{fmtWhen(e.ts, meta?.now)}</span>
       </div>
     })}
-    {meta && !rows.length && <div className="adm-empty">Nothing logged yet.</div>}
+    {meta && !rows.length && <div {...sx(null, adm.empty)}>Nothing logged yet.</div>}
     {meta?.nextBefore && <div style={{ marginTop: 10 }}>
       <Button size="sm" onClick={() => load(cat, meta.nextBefore)}>Show more</Button></div>}
   </div>
@@ -463,7 +464,7 @@ export default function Admin() {
         <div className="sub">{users ? users.length + ' users · ' + activeCount + ' active this week' : usersErr ? 'Could not load' : 'Loading…'}</div></div>
       <button className="iconbtn" onClick={() => { loadUsers(); loadInvites(); setTick(n => n + 1) }} aria-label="refresh"><Icon name="reset" /></button>
     </div>
-    <div className="adm-intro">
+    <div {...sx(null, adm.intro)}>
       Everything about running this instance: who uses it, how they get in, the AI Coach, and what has happened on it. {dataView
         ? 'ADMIN_DATA_VIEW is on, so you can open people’s workouts and weigh-ins. Every look lands in the activity log and in their own sharing log, so be the admin you would want.'
         : 'You run this server. Training data belongs to the people who logged it, so here you see counts, not workouts. It is readable on disk, not in the app.'}
@@ -472,7 +473,7 @@ export default function Admin() {
     {usersErr && <div className="card" role="alert" style={{ borderColor: 'var(--red)' }}>
       <div className="row between"><h2 style={{ margin: 0 }}>{users ? 'The last update failed' : 'Could not load the users'}</h2>
         <Button size="sm" icon="reset" onClick={loadUsers}>Try again</Button></div>
-      <div className="adm-lead" style={{ marginBottom: 0 }}>
+      <div {...sx(null, adm.lead)} style={{ marginBottom: 0 }}>
         {usersErr} {users ? 'The list below is the last one that loaded.' : 'It tries again every 15 seconds.'}
       </div>
     </div>}
@@ -486,11 +487,11 @@ export default function Admin() {
 
     {liveUsers.length > 0 && <div className="card" style={{ borderColor: 'var(--acc)' }}>
       <h2 className="row" style={{ margin: '0 0 2px', gap: 6 }}><Icon name="dot" style={{ fontSize: 10, color: 'var(--green)' }} />Training now</h2>
-      <div className="adm-lead">Sessions running at this moment. Tap a name for details.</div>
+      <div {...sx(null, adm.lead)}>Sessions running at this moment. Tap a name for details.</div>
       {liveUsers.map(u => <div key={u.id} className="row between" style={{ padding: '8px 2px', borderBottom: 'var(--hair) solid var(--sep)' }} onClick={() => openUser(u.id)}>
         <div><div className="small" style={{ fontWeight: 600 }}>{u.name}</div>
           <div className="dim" style={{ fontSize: 'var(--fs-caption2)' }}>{u.live.name ? `${u.live.name} · exercise ${u.live.exIdx} of ${u.live.exTotal} · ${u.live.setsDone}/${u.live.setsTotal} sets` : 'a session is running'}</div></div>
-        <span className="adm-pill acc">{dur(Date.now() - u.live.startedAt)}</span>
+        <span {...sx('adm-pill', ...pill('acc'))}>{dur(Date.now() - u.live.startedAt)}</span>
       </div>)}
     </div>}
 
@@ -510,15 +511,15 @@ export default function Admin() {
 
     <div className="card">
       <h2 style={{ margin: 0 }}>Users</h2>
-      <div className="adm-lead">Everyone with a profile on this instance. Tap one to see their activity, to disable the account (nothing is deleted) or to delete it with all their data for good.</div>
+      <div {...sx(null, adm.lead)}>Everyone with a profile on this instance. Tap one to see their activity, to disable the account (nothing is deleted) or to delete it with all their data for good.</div>
       <div className="list">
         {(users || []).map(u => <div key={u.id} className="item" onClick={() => openUser(u.id)} style={u.disabled ? { opacity: .55 } : null}>
-          <div className="grow"><div className="tt">{u.live && <Icon name="dot" style={{ fontSize: 9, color: 'var(--green)', display: 'inline-block', marginInlineEnd: 5 }} />}{u.name} {u.admin && <span className="adm-pill acc" style={{ marginInlineStart: 4 }}>{u.owner ? 'owner' : 'admin'}</span>}{u.disabled && <span className="adm-pill bad" style={{ marginInlineStart: 4 }}>disabled</span>}</div>
+          <div className="grow"><div className="tt">{u.live && <Icon name="dot" style={{ fontSize: 9, color: 'var(--green)', display: 'inline-block', marginInlineEnd: 5 }} />}{u.name} {u.admin && <span {...sx('adm-pill', ...pill('acc'))} style={{ marginInlineStart: 4 }}>{u.owner ? 'owner' : 'admin'}</span>}{u.disabled && <span {...sx('adm-pill', ...pill('bad'))} style={{ marginInlineStart: 4 }}>disabled</span>}</div>
             <div className="ss">{u.live ? 'training now' + (u.live.name ? ' · ' + u.live.name : '') : u.workouts + ' workouts' + (u.lastWorkout ? ' · last ' + fmtDate(u.lastWorkout) : '') + ' · last sync ' + rel(u.lastSync)}</div>
             {u.email && <div className="ss" title="sign-in e-mail">{u.email}</div>}</div>
           {u.hasPush && <Icon name="bell" title="push notifications on" style={{ fontSize: 'var(--fs-subhead)', color: 'var(--label-3)' }} />}<Icon name="chevronRight" className="chev" />
         </div>)}
-        {users && !users.length && <div className="adm-empty">No users yet.</div>}
+        {users && !users.length && <div {...sx(null, adm.empty)}>No users yet.</div>}
       </div>
     </div>
 

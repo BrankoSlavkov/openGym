@@ -6,6 +6,8 @@ import { api } from '../lib/api.ts'
 import { useStore } from '../store/useStore.js'
 import { oidcOn } from '../lib/oidc.js'
 import { Button } from './ui.tsx'
+import { sx } from '../lib/sx.ts'
+import { styles as adm } from '../views/Admin.styles.ts'
 
 const when = ts => (ts ? new Date(ts).toLocaleString() : 'never')
 const yes = v => (v ? 'on' : 'off')
@@ -41,7 +43,7 @@ export default function AdminOidc() {
   return <div className="card">
     <div className="row between"><h2 style={{ margin: 0 }}>Identity provider</h2>
       <Button size="sm" icon="reset" onClick={check} disabled={busy}>{busy ? 'Checking…' : 'Check now'}</Button></div>
-    <div className="adm-lead">
+    <div {...sx(null, adm.lead)}>
       {!st ? (err || 'Loading…')
         : ok ? 'Sign-in with ' + st.label + ' is working: the provider answered and its signing keys are loaded.'
           : 'The provider has not answered properly yet, so nobody can sign in with ' + st.label + '. The last error says why.'}

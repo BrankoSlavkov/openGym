@@ -18,7 +18,7 @@
 // A generated row remembers the rung it came from (`wp` percent, `wb` the bare bar), so when the
 // work weight moves the open rungs move with it (history.js rerampWarmups) and a block saved as
 // your own scales with your progress instead of freezing at the day you saved it.
-import { isOn } from './modules.js'
+import { isOn } from './modules.ts'
 import { modeOf, isBw, isPerSide } from './history.js'
 import { isWarmupRow, makeSideSet } from './workout-model.js'
 import { exerciseOf, isAssisted } from './exercises.js'

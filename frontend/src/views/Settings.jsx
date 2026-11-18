@@ -7,7 +7,7 @@ import { useStore, DEF, hasData } from '../store/useStore.js'
 import { readWatchPrefs, writeWatchPrefs } from '../lib/watch-settings.js'
 import { healthStatus, loadHealth, enableHealth, disableHealth, openHealthConnect, onHealthChange, enableRead, disableRead, allowBirthDate } from '../lib/health-sync.js'
 import { phoneSessionSupported } from '../lib/phone-workout.js'
-import { workoutControls } from '../lib/workout-controls.js'
+import { workoutControls } from '../lib/workout-controls.ts'
 import { speedUnitOf } from '../lib/speed.js'
 import { formulaOf, FORMULA_NAMES } from '../lib/onerm.ts'
 import { copyText } from '../lib/clipboard.ts'
@@ -50,7 +50,7 @@ import { pushSupported, enablePush, disablePush, sendTestPush, syncPushSubscript
 import { wakeLockSupported } from '../lib/wakelock.js'
 import { t, tn, LANGS, INSTR_LANGS, EXERCISE_NAME_LANGS, baseLang, dateLocale } from '../lib/i18n.js'
 import { nameIn, said } from '../lib/a11y-name.ts'
-import { effectiveLang } from '../lib/default-lang.js'
+import { effectiveLang } from '../lib/default-lang.ts'
 import { DEMO, REPO } from '../lib/demo.js'
 import { MOBILE, isAndroid, shareExport, shareExportBlob, syncReminder } from '../lib/mobile.js'
 import { NUDGE_COPY, NUDGE_TONES, toneOf } from '../lib/nudge.js'
@@ -60,7 +60,7 @@ import { syncMedia, fetchToStore } from '../lib/media-sync.js'
 import { getMediaStatus, subscribeMediaStatus, pendingRefCount, localOnlyRefCount } from '../lib/media-owed.js'
 import { limitsFrom, fmtMB, MB } from '../lib/media-limits.js'
 import { setRestAccent } from '../lib/rest-alert.js'
-import { CUSTOM, accentKey, adjustedIn, applyAccent, cleanHex, inkOn, isGrey } from '../lib/accent.js'
+import { CUSTOM, accentKey, adjustedIn, applyAccent, cleanHex, inkOn, isGrey } from '../lib/accent.ts'
 import { checkForUpdate, downloadAndInstall, fetchChecksum, forgetDownloadedUpdate, RELEASES_PAGE } from '../lib/update.js'
 import { APK_VARIANT, VARIANT_NAMES } from '../lib/apk-variant.js'
 import { BUILTIN_PX } from '../lib/anim-quality.js'
@@ -90,16 +90,16 @@ import { POLICIES_FOR, POLICY_NAME, POLICY_DESC, profileRule } from '../lib/prog
 import { STEPS, profileStep, stepOverrides, applyStepToAll, fmtStepLabel } from '../lib/weight-step.js'
 import { PAGES, ROOT_GROUPS, WATCH_PAGES, pageVisible, onRoot, searchSettings, pageTrail } from './settings-pages.js'
 import { platformNow } from '../lib/platform-now.js'
-import { pathBefore, historyIndex } from '../lib/nav.js'
+import { pathBefore, historyIndex } from '../lib/nav.ts'
 import WatchSettingsPage from './WatchSettings.jsx'
 import GarminSettingsPage from './GarminSettings.jsx'
 import WearSettingsPage from './WearSettings.jsx'
 import IntegrationsPage from './Integrations.jsx'
-import ApiTokensPage from './ApiTokens.jsx'
+import ApiTokensPage from './ApiTokens.tsx'
 import MyTrainerPage from './MyTrainer.jsx'
 import { libraryOn } from '../lib/shared-api.ts'
-import ModulesPage from './Modules.jsx'
-import { isOn, presetOf } from '../lib/modules.js'
+import ModulesPage from './Modules.tsx'
+import { isOn, presetOf } from '../lib/modules.ts'
 import { presetCopy } from '../lib/modules-copy.js'
 import { reportSheet } from '../components/ReportSheet.tsx'
 import { csvExportSheet } from '../components/CsvExportSheet.tsx'
@@ -114,8 +114,8 @@ import { voiceShortcutsSheet, voiceRowTitle } from '../components/VoiceShortcuts
 import { readOrientation, setOrientation } from '../lib/orientation.js'
 import { AvatarFace, AvatarSection } from '../components/Avatar.jsx'
 import { useOfflineBuild } from '../lib/use-offline-build.js'
-import { offlineBuild } from '../lib/build-caps.js'
-import NetworkLogPage, { NetworkLogRow } from './NetworkLog.jsx'
+import { offlineBuild } from '../lib/build-caps.ts'
+import NetworkLogPage, { NetworkLogRow } from './NetworkLog.tsx'
 import ReminderSounds from '../components/ReminderSounds.jsx'
 import DisplayRows from '../components/DisplayRows.tsx'
 
@@ -250,7 +250,7 @@ export default function Settings({ page = null, find = null, via = null, entryKe
   const [selfUpdate, setSelfUpdate] = useState(false)   // the sideloaded APK, which updates itself
   const [play, setPlay] = useState(false)   // the Google Play build: no donation links (Play payments policy)
   const [fdroid, setFdroid] = useState(false)   // the F-Droid build: F-Droid updates it, no Wear OS link
-  // openGym Offline (lib/build-caps.js): no INTERNET, so nothing that needs a network is offered.
+  // openGym Offline (lib/build-caps.ts): no INTERNET, so nothing that needs a network is offered.
   const offline = useOfflineBuild()
   const [gymReminder, setGymReminder] = useState(true)   // false in a Play build without background location
   const [checking, setChecking] = useState(false)
@@ -1109,7 +1109,7 @@ export default function Settings({ page = null, find = null, via = null, entryKe
           <Switch aria-label={t('Sport counts for the streak')} checked={S.activityStreak === true}
             onChange={v => update(s => { if (v) s.activityStreak = true; else delete s.activityStreak })} />
         </Row>}
-        {/* Motion and text size (lib/display-prefs.js): this device only, like the app icon. */}
+        {/* Motion and text size (lib/display-prefs.ts): this device only, like the app icon. */}
         <DisplayRows />
         {/* The home-screen icon: the phone's own, not synced; in the phone app only. */}
         {MOBILE && platformNow() && <AppIconRow />}
@@ -1376,7 +1376,7 @@ export default function Settings({ page = null, find = null, via = null, entryKe
         footer={MOBILE ? (offline ? t('This is openGym Offline: Android doesn’t even let it on the internet. Want sync? The normal openGym app can do that, next to this one.') : t('Signing in on your computer too needs your own server. Connect this phone to it, and Add another device then gives the computer a code.')) : null}>
         {MOBILE ? <>
           <Row icon="lock" iconTint="var(--acc)" title={t('All data stays on this phone')} subtitle={t('No account, no cloud. Back it up anytime in Data & backup.')} />
-          {/* openGym Offline cannot reach a server at all (lib/build-caps.js). */}
+          {/* openGym Offline cannot reach a server at all (lib/build-caps.ts). */}
           {!offline && <Row icon="cloud" iconTint="var(--indigo)" title={t('Connect to my server')} subtitle={t('Sync this device to your own self-hosted openGym instead.')} accessory="chevron"
             onClick={connectServer} />}
           <KeptChangesRows />
@@ -1849,7 +1849,7 @@ function accentLabel(S) {
 }
 
 /**
- * The presets, then one swatch for a colour of the user's own (lib/accent.js). With no colour
+ * The presets, then one swatch for a colour of the user's own (lib/accent.ts). With no colour
  * of their own yet it is a rainbow ring, and a tap opens the system colour picker straight away.
  * Once there is one it is filled with it: a tap picks it again (it is kept while a preset is
  * chosen), and a tap on it while it is the accent opens the picker to change it. The picker is

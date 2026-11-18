@@ -35,8 +35,8 @@ vi.mock('../lib/api.ts', () => ({
 vi.mock('../lib/clipboard.ts', () => ({ copyText: vi.fn(async () => true) }))
 vi.mock('../sheets.jsx', () => ({ confirmSheet: o => { mocks.confirm = o } }))
 
-const { default: Assistants } = await import('./Assistants.jsx')
-const { reachability, connectionOf, connectorsOf } = await import('../lib/assistants.js')
+const { default: Assistants } = await import('./Assistants.tsx')
+const { reachability, connectionOf, connectorsOf } = await import('../lib/assistants.ts')
 
 let host, root
 const render = async el => { await act(async () => { root.render(el) }); await act(async () => {}) }

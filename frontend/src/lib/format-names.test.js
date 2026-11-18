@@ -17,15 +17,6 @@ describe('exerciseNameText', () => {
     expect(exerciseNameText(custom)).toBe('My Own Press')
   })
 
-  it('title-cases a name from a lower-case pack, the English one in parentheses included', () => {
-    _setLangState('es', {}, null, es)
-    expect(exerciseNameText(bench)).toBe('Press De Banca Con Barra (Barbell Bench Press)')
-  })
-
-  it('leaves German as the pack writes it', () => {
-    _setLangState('de', {}, null, de, false)
-    expect(exerciseNameText(bench)).toBe('Bankdrücken mit Langhantel')
-  })
 })
 
 // QA 1.3.9: the accent swatches' screen-reader names were the internal keys ("lime", "sky").

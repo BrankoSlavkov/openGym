@@ -1,13 +1,11 @@
 # Fork: a second, separate stack for trying the api on Bun + Hono next to the real one.
 #
-#   docker compose -f docker-compose.bun-test.yml up -d --build      # start (builds the api only)
+#   docker compose -f docker-compose.bun-test.yml up -d --build      # build and start
 #   open http://localhost:8792                                        # sign in with name + password
 #   docker compose -f docker-compose.bun-test.yml down                # stop and remove it
 #
-# Nothing here touches the main stack: its own project name (containers, network), its own image
-# tag (opengym-bun-test-api:local, so opengym-fork-api:local is never rebuilt or replaced), its own
-# port, and its own data folder, a copy of ./data made by scripts/bun-test-data.sh. The web image is
-# the one the main stack already built (opengym-fork-web:local), reused as is, not rebuilt.
+# This stack has its own network, image tags and data directory. To seed its data from the
+# main stack, use scripts/bun-test-data.sh.
 name: opengym-bun-test
 
 services:
@@ -41,8 +39,11 @@ services:
       - ./coach-auth-bun-test:/coach-auth
 
   web:
-    image: opengym-fork-web:local
+    image: opengym-bun-test-web:local
     pull_policy: never
+    build:
+      context: .
+      dockerfile: web/Dockerfile
     restart: "no"
     depends_on:
       api:

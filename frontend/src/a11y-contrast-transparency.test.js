@@ -66,7 +66,7 @@ describe('Reduce Transparency (#708)', () => {
   // Every blurred surface in a sheet has to be listed in that sheet's own
   // prefers-reduced-transparency block, with the blur off. A new frosted bar that forgets it
   // stays see-through for the people who asked for less of exactly that.
-  it.each(['index.css', 'coach.css'])('%s: no surface keeps its blur', (file) => {
+  it.each(['index.css'])('%s: no surface keeps its blur', (file) => {
     const css = read(file)
     const reduce = block(css, /@media\s*\(prefers-reduced-transparency:\s*reduce\)/)
     const off = [...reduce.matchAll(/([^{}]+)\{[^}]*(?:^|;)\s*backdrop-filter:none/g)]
@@ -76,6 +76,17 @@ describe('Reduce Transparency (#708)', () => {
       .filter((s) => !s.startsWith('@'))
     expect(blurred.length).toBeGreaterThan(0)
     for (const sel of blurred) expect(off, sel).toContain(sel)
+  })
+})
+
+// Fork: a StyleX surface turns its own blur off under the same media query.
+describe('Reduce Transparency in StyleX', () => {
+  it('every blurred StyleX surface drops its blur when asked', async () => {
+    const { stylexSources } = await import('./stylex-sources.test-util.js')
+    const props = stylexSources().flatMap(({ file, src }) => [...src.matchAll(/(WebkitBackdropFilter|backdropFilter): (\{[^}]*\}|[^,\n]+)/g)]
+      .filter(m => /blur\(|glass/.test(m[2])).map(m => ({ file, prop: m[1], value: m[2] })))
+    expect(props.length).toBeGreaterThan(0)
+    for (const p of props) expect(p.value, `${p.file} ${p.prop}`).toMatch(/prefers-reduced-transparency: ?reduce\)'?\]?: 'none'|\[solid\]: 'none'/)
   })
 })
 

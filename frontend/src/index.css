@@ -113,6 +113,9 @@
 }
 
 :root[data-theme="light"] {
+  --brand-lockup-open: #12151b;
+  /* Wrapped (Wrapped.styles.ts): the darker accent step for text, softer glows on light paper. */
+  --wr-ink: var(--acc-2); --wr-glow-1: .22; --wr-glow-2: .12;
   --bg:        #f2f2f7;
   --bg-el:     #f7f7fa;
   --surface:   #ffffff;
@@ -159,7 +162,7 @@
 :root[data-accent="teal"]  { --acc:var(--teal);   --acc-2:#0071a4; --on-acc:#000 }
 :root[data-accent="gold"]  { --acc:var(--yellow); --acc-2:#b25000; --on-acc:#000; --knob-ring:rgba(0,0,0,.28) }
 /* --acc-ink in the light theme, per preset: 4.5:1 or better on both --bg (#f2f2f7) and white. A
-   colour of the user's own gets its --acc-ink inline from lib/accent.js (inkIn), to the same 4.5:1
+   colour of the user's own gets its --acc-ink inline from lib/accent.ts (inkIn), to the same 4.5:1
    in both themes (redesign 1.4.5, P12). */
 :root[data-theme="light"][data-accent="brand"] { --acc-ink:#4a7a0e }
 :root[data-theme="light"][data-accent="lime"]  { --acc-ink:#1a7f37 }
@@ -312,6 +315,8 @@ button,.chip,.tile,.item,.wday,.cal-d,.swatch,.hm-c,.lrow,.seg button,.stp butto
 }
 /* Android 15 with the keyboard up: room to scroll the last field on a page above the keys.
    The tab bar stays where it is, under the keyboard, rather than riding up on it. */
+/* The Coach composer (views/CoachChat.styles.ts) rides on top of the Android keyboard. */
+:root[data-native-kb]{--composer-bottom:var(--native-kb);--composer-pb:10px}
 :root[data-native-kb] #app,:root[data-native-kb] body.resting #app,:root[data-native-kb] body.no-tabbar.resting #app{padding-bottom:calc(88px + var(--native-kb))}
 /* Keep the last workout controls clear of the mobile overlays without adding a second
    screenful of blank scroll space. The stacked rest timer needs the larger reserve. */
@@ -584,8 +589,9 @@ h4.sec{
    did not already owe the title. .lrow-t does not ellipsise on purpose — long settings titles wrap
    onto a second line — and the value next to it shrinks and ellipsises instead (below). */
 .lrow-m{flex:1;min-width:auto;display:flex;flex-direction:column;gap:1px}
-.lrow-t{font-size:var(--fs-body);letter-spacing:-.012em;line-height:1.25}
-.lrow-s{font-size:var(--fs-footnote);color:var(--label-2);line-height:1.3}
+/* --lrow-t-fs, --lrow-s-fs: a StyleX parent (the Coach's cards) sizes the rows inside it. */
+.lrow-t{font-size:var(--lrow-t-fs, var(--fs-body));letter-spacing:-.012em;line-height:1.25}
+.lrow-s{font-size:var(--lrow-s-fs, var(--fs-footnote));color:var(--label-2);line-height:1.3}
 /* Settings → Account ID: a machine string, so a machine face, small, and free to break anywhere
    rather than push the row past a phone's edge. */
 .acct-id{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--fs-caption);overflow-wrap:anywhere}
@@ -780,7 +786,12 @@ h4.sec{
 /* The weekday initials in the readable grey and in their own case (Mo, Tu), as the Plan list writes
    them: the tiny tracked capitals in the faint grey were 2.6:1 (design review 1.4.5). */
 .wday .lbl{font-size:var(--fs-caption);color:var(--label-2);font-weight:500;letter-spacing:0}
-.wday .num{font-size:var(--fs-body);font-weight:400;margin:4px 0;letter-spacing:-.012em}
+.wday .num{
+  font-size:var(--fs-body);font-weight:400;letter-spacing:-.012em;
+  display:grid;place-items:center;
+  inline-size:max(31px, 1.65em);block-size:max(31px, 1.65em);
+  border-radius:50%;margin:2px auto;
+}
 .wday .dot{width:5px;height:5px;border-radius:50%;background:transparent;margin:0 auto}
 .wday .dot.plan{background:var(--label-3)}
 .wday .dot.ovr{background:var(--orange)}
@@ -790,8 +801,6 @@ h4.sec{
 .wday:active{background:var(--press-fill)}
 .wday.today .num{
   background:var(--acc);color:var(--on-acc);font-weight:600;
-  width:31px;height:31px;border-radius:50%;display:flex;align-items:center;
-  justify-content:center;margin:2px auto;
 }
 
 /* ----------------------------------------------------------------- list -- */
@@ -878,7 +887,7 @@ h4.sec{
 .chev{color:var(--label);flex:none;font-size:var(--fs-subhead);--icon-stroke:2.4}
 .tag{
   display:inline-flex;align-items:center;gap:3px;background:var(--surface-2);
-  color:var(--label-2);border-radius:6px;padding:3px 7px;font-size:var(--fs-caption);
+  color:var(--label-2);border-radius:6px;padding:3px 7px;font-size:var(--tag-fs, var(--fs-caption));
   font-weight:500;text-transform:capitalize;
 }
 .tag.acc{background:var(--acc-soft);color:var(--acc-ink)}
@@ -940,7 +949,7 @@ h4.sec{
    rows before that). So a strip never scrolls vertically (overflow-y:hidden), keeps its sideways
    overscroll to itself, and leaves both pan axes to the browser: a sideways swipe scrolls the
    strip, a vertical one that starts on it scrolls the page (pan-x alone used to swallow that). */
-.chips,.seg.seg-scroll,.fv-strip,.pc-picks,.sharew-pick,.tr-controls .tr-chips,.hm-wrap,.pcard-tabs,.chips-row{
+.chips,.seg.seg-scroll,.fv-strip,.pc-picks,.sharew-pick,.tr-controls .tr-chips,.hm-wrap{
   overflow-y:hidden;overscroll-behavior-x:contain;overscroll-behavior-y:auto;touch-action:pan-x pan-y}
 :is(.chips,.seg.seg-scroll,.fv-strip,.pc-picks,.sharew-pick,.tr-chips,.pcard-tabs,.chips-row) :is(.chip,button)::before{top:0;bottom:0}
 /* The chip hit-area (.chip::before, inset:-6px) must not poke out of the strip vertically:
@@ -1130,7 +1139,7 @@ body.chips-dragging *{cursor:inherit}
 }
 .sw.on{background:var(--acc)}
 /* On an accent nearly as light as the knob (an own white or pale yellow, the gold preset) the
-   knob gets a hairline ring so it does not vanish into the track. lib/accent.js sets --knob-ring
+   knob gets a hairline ring so it does not vanish into the track. lib/accent.ts sets --knob-ring
    for an own colour; it is transparent everywhere else. */
 .sw.on .knob{box-shadow:0 0 0 1px var(--knob-ring,transparent),0 3px 8px rgba(0,0,0,.15),0 1px 1px rgba(0,0,0,.16)}
 .sw.on .knob{transform:translateX(20px)}
@@ -1680,7 +1689,7 @@ button.whdr-gym{color:var(--acc-ink);cursor:pointer}
 /* Settings → Text size (1.4.5): a set row's numbers grow with the text up to Large (×1.12) and no
    further, and their columns (`--num`) with them: at Larger and Largest the labels around them keep
    growing, but "227.5" and "10.5" still fit between the − and + of a 390 px row instead of
-   clipping to "10.!". Smallest shrinks them as it shrinks everything. --text-k: lib/display-prefs.js. */
+   clipping to "10.!". Smallest shrinks them as it shrinks everything. --text-k: lib/display-prefs.ts. */
 .setrow,.sethead{--num-k:min(var(--text-k, 1), 1.12)}
 .setrow .stp .num{font-size:min(var(--fs-body), calc(17px * 1.12))}
 .setrow .stp.w,.sethead .w-sp{--num:calc(48px * var(--num-k))}
@@ -1952,8 +1961,6 @@ button.whdr-gym{color:var(--acc-ink);cursor:pointer}
 .cardio-eff:active:not(:disabled){transform:scale(var(--press-scale))}
 .cardio-eff:disabled{opacity:.45;cursor:default}
 .cardio-eff:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-.focus-cardio-eff{display:flex;justify-content:center;margin-top:10px}
-.focus-cardio-eff .cardio-eff{height:34px;padding:0 14px 0 12px;font-size:var(--fs-subhead)}
 @media (prefers-reduced-motion:reduce){.cardio-eff{transition:none}}
 .subrow{display:flex;align-items:center;gap:6px;padding-block:3px;padding-inline:32px 0}
 /* A done set's drops and bursts are done with it (Discord, dark._.ninja): greyed like the row. */
@@ -2595,7 +2602,7 @@ body.no-tabbar #timer.countin{box-shadow:inset 0 var(--hair) 0 var(--acc),0 -10p
    mix have a plain one in front of them for it (color-mix-fallback.test.js keeps it that way), but
    two kinds cannot: a custom property (the mixed one parses, then fails where it is used) and a
    fill or a color, whose plain twin the CSS minifier drops as a duplicate. Those get their
-   stand-ins here, after the rules they stand in for; lib/accent.js sets the accent's tints exactly. */
+   stand-ins here, after the rules they stand in for; lib/accent.ts sets the accent's tints exactly. */
 @supports not (color: color-mix(in srgb, red 50%, blue)) {
   :root{--acc-soft:var(--label-4);--acc-line:var(--label-3)}
   .bodymap{--bm-base:var(--surface-2)}
@@ -4281,7 +4288,7 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 .netlog-lead{margin:0;max-width:34ch;font-size:var(--fs-subhead);color:var(--label-2);line-height:1.4;text-wrap:pretty}
 .netlog-url{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:var(--fs-footnote);word-break:break-all}
 
-/* Settings → Look & Home → Motion: Less (lib/display-prefs.js), the app's own Reduce Motion. */
+/* Settings → Look & Home → Motion: Less (lib/display-prefs.ts), the app's own Reduce Motion. */
 .reduce-motion *, .reduce-motion *::before, .reduce-motion *::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
 
 /* Settings → Timer alerts → Voice (components/VoiceSettings.jsx): speed and pitch as a slider under
@@ -4335,7 +4342,6 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 .settag.big{font-size:1.25rem;margin:0;vertical-align:0}
 .chip.band .band-lvl{color:var(--label-2);font-weight:500}
 .chip.band .band-lvl::before{content:'·';margin-inline-end:6px;color:var(--label-3)}
-.focus-bands{margin:10px 0 2px}
 .banddot{width:10px;height:10px;border-radius:50%;background:var(--band);flex:none;box-shadow:inset 0 0 0 1px var(--sep);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--label) 18%,transparent)}
 .banddot.big{width:16px;height:16px}
 .banddots{display:inline-flex;gap:3px;vertical-align:middle;margin-left:4px}
@@ -4533,15 +4539,6 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 .gl-strip-next{display:flex;flex-direction:column;min-width:0}
 .gl-strip-name{font-size:var(--fs-subhead);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gl-strip-empty{margin:0;color:var(--label-2);font-size:var(--fs-footnote)}
-
-/* ---------------------------------------------------------- brand lockup -- */
-/* The openGym logo (components/BrandLogo.jsx, assets/logo): brand colours whatever the accent, the
-   type 700 with tight tracking, the mark 1.07em high with its middle 0.36em over the baseline. */
-.brand-lockup{display:inline-block;font-weight:700;letter-spacing:-.036em;line-height:1.1;white-space:nowrap;unicode-bidi:isolate;direction:ltr}
-.brand-lockup-mark{display:inline-block;height:1.07em;width:calc(1.07em * 352 / 174);vertical-align:-.175em;margin-inline-end:.2em;fill:#a3e635}
-.brand-lockup-open{color:#eef1f6}
-.brand-lockup-gym{color:#a3e635}
-:root[data-theme="light"] .brand-lockup-open{color:#12151b}
 
 /* Add set / Warm-up / Remove: 44px tall, the leading glyph on the card's content edge; wrapped siblings share the same edge */
 .wk-add{min-height:44px;margin-inline-start:-14px}

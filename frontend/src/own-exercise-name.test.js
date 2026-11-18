@@ -58,10 +58,11 @@ describe('own exercise names are shown as typed', () => {
       expect(rule, sel).not.toMatch(/capitalize/)
     }
     expect(css).not.toMatch(/\.cp-next-l li span:first-child\{text-transform:capitalize\}/)
-    expect(read('./views/FocusView.css')).not.toMatch(/\.focus-card-header h2\{[^}]*capitalize/)
+    expect(read('./views/FocusView.styles.ts')).not.toMatch(/title: \{[^}]*capitalize/)
     // the views that hard-coded it take the class per exercise now
-    expect(read('./views/FocusView.jsx')).toMatch(/<h2 className=\{exerciseNameClass\(ex\)\}>/)
+    expect(read('./views/FocusView.jsx')).toMatch(/<h2 \{\.\.\.sx\(exerciseNameClass\(ex\), x\.title\)\}>/)
     expect(read('./views/Workout.jsx')).not.toMatch(/textTransform: 'capitalize'/)
-    expect(read('./coach.css')).toMatch(/\.pcard-ex-n\.nocap,\.ins-row-n\.nocap\{text-transform:none\}/)
+    expect(read('./coach.styles.ts')).toMatch(/ownName: \{ textTransform: 'none' \}/)
+    expect(read('./views/CoachChat.jsx')).toMatch(/typed\(e\.id\) && pcard\.ownName/)
   })
 })

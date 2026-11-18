@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest'
 import { mergeStates, stampEdits } from './sync-merge.js'
 import { stampPut } from '../../../api/sync-stamps.ts'
-import { isOn } from './modules.js'
+import { isOn } from './modules.ts'
 
 const clone = v => JSON.parse(JSON.stringify(v))
 

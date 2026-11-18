@@ -1,6 +1,6 @@
 // The persisted boundary for a finished session. Keep this pure so compatibility tests can
 // exercise the exact shape the UI writes without mounting React or mutating store state.
-import { stopAt, pauseSpans, pausedBetween } from './workout-pause.js'
+import { stopAt, pauseSpans, pausedBetween } from './workout-pause.ts'
 import { bestWeightForEntry, bestWeightFor, cleanupSg } from './history.js'
 import { hasCompletedWork, isSideSet, isWarmupRow } from './workout-model.js'
 import { beatsWeight, betterWeight } from './exercises.js'

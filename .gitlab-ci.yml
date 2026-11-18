@@ -156,6 +156,7 @@ test:frontend:
       - frontend/.npm
   script:
     - cd frontend
+    - bun run typecheck:tests
     # --ignore-scripts: nothing here needs a postinstall. (@capacitor/assets, whose sharp
     # downloaded libvips from GitHub and once turned a release red, is no longer installed:
     # docs/MOBILE.md runs it with npx when icons are redrawn.)

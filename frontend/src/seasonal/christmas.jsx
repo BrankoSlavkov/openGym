@@ -10,14 +10,14 @@ import {
   countReps, repsDone, adventLit, treeOf, dragAngle, releaseOpens, springStep, springSettled,
 } from '../lib/advent.js'
 import { MOBILE } from '../lib/mobile.js'
-import { appIconState, setAppIcon } from '../lib/app-icon.js'
+import { appIconState, setAppIcon } from '../lib/app-icon.ts'
 import { yearStats, workoutsOfYear } from '../lib/wrapped.js'
 import { openWrapped } from '../lib/wrapped-ui.js'
 import { bestWeightForEntry, defaultConfig } from '../lib/history.js'
 import { buildSessionEntry } from '../lib/session-start.js'
 import { joinSessionNoProg } from '../lib/session-noprog.js'
-import { closeThenNav } from '../lib/nav.js'
-import { isOn } from '../lib/modules.js'
+import { closeThenNav } from '../lib/nav.ts'
+import { isOn } from '../lib/modules.ts'
 import { MUSCLE_NAME } from '../lib/muscles.js'
 import { FESTIVE_FLAME } from '../lib/streak-icons.js'
 import { EXIDX } from '../lib/exercises.js'
@@ -534,7 +534,7 @@ const Confetti = ({ at }) => (
 
 /* ------------------------------------------------ the festive icon -- */
 
-// Asked once per phone: the icon is the phone's own (lib/app-icon.js), so is the answer.
+// Asked once per phone: the icon is the phone's own (lib/app-icon.ts), so is the answer.
 export const ICON_ASKED = 'og_season_xmas_icon'
 const asked = () => { try { return !!localStorage.getItem(ICON_ASKED) } catch (e) { return true } }
 const markAsked = () => { try { localStorage.setItem(ICON_ASKED, '1') } catch (e) { /* no storage: it simply asks again */ } }

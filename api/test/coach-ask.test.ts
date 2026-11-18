@@ -6,7 +6,7 @@ import { tempData } from './helpers.ts';
 
 tempData();
 const payloadLib = await import('../coach/core/payload.js');
-const { runPipeline } = await import('../coach/core/pipeline.js');
+const { runPipeline } = await import('../coach/core/pipeline.ts');
 const { buildPromptParts } = await import('../coach/core/prompt.ts');
 const { validateAsk } = await import('../coach/core/validate.js');
 const { SCHEMAS } = await import('../coach/core/schemas.ts');

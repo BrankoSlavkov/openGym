@@ -37,11 +37,6 @@ describe('setsWorkCount', () => {
     expect(setsWorkCount(4, 3)).toBe('4 sets · 3 work')
   })
 
-  it('and the packs carry it', () => {
-    _setLangState('uk', uk, null, null)
-    expect(setsWorkCount(1, 1)).toBe(uk['{0} set · {1} work'].replace('{0}', '1').replace('{1}', '1'))
-    expect(uk['{0} set · {1} work']).not.toBe(uk['{0} sets · {1} work'])
-  })
 })
 
 // A session's length in the UI language. The units were Latin letters in every pack, so an
@@ -54,14 +49,6 @@ describe('fmtDur', () => {
     expect(fmtDur(175 * 60000)).toBe('2h 55m')
   })
 
-  it('uses each pack\'s own units', () => {
-    _setLangState('ar', ar, null, null)
-    expect(fmtDur(34 * 60000)).toBe('34 دقيقة')
-    expect(fmtDur(65 * 60000)).toBe('1 ساعة 5 دقيقة')
-    _setLangState('uk', uk, null, null)
-    expect(fmtDur(34 * 60000)).toBe('34 хв')
-    expect(fmtDur(65 * 60000)).toBe('1 год 5 хв')
-  })
 })
 
 // The "Last time (…)" line of a workout (#363): calendar days back from the session's own day.
@@ -105,10 +92,4 @@ describe('fmtDaysAgo', () => {
     expect(fmtDaysAgo('2026-10-06', day)).toBe('today')
   })
 
-  it('in the UI language, from the platform', () => {
-    _setLangState('de', {}, null, null)
-    expect(fmtDaysAgo(back(1), day)).toBe('gestern')
-    expect(fmtDaysAgo(back(3), day)).toBe('vor 3 Tagen')
-    expect(fmtDaysAgo(back(14), day)).toBe('vor 2 Wochen')
-  })
 })

@@ -19,7 +19,7 @@ import { isAssisted, isCardio } from './exercises.js'
 import { MUSCLES, loadOfWorkouts } from './muscles.js'
 import { isoOf, weekKey, weekStartOf, weekOrder } from './format.js'
 import { LB_KG } from './units.js'
-import { isOn } from './modules.js'
+import { isOn } from './modules.ts'
 
 export const SEASON_FROM = [12, 1]   // Dec 1, local
 export const SEASON_TO = [1, 31]     // to the end of Jan 31: the year just gone stays up a while

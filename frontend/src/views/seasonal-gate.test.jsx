@@ -12,7 +12,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { searchSettings } from './settings-pages.js'
 import { activeSeason, seasonAccent, seasonInWorkout, shownThemes, themeOn } from '../lib/seasonal.js'
 import { inAdvent, adventOpenable, openDoor } from '../lib/advent.js'
-import { offeredIcons } from '../lib/app-icon-variants.js'
+import { offeredIcons } from '../lib/app-icon-variants.ts'
 import { pickerChoices } from '../lib/streak-icons.js'
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true

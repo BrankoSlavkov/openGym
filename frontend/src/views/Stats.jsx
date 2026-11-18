@@ -53,7 +53,7 @@ import { Button, Segmented, SelectRow, Row, MenuButton } from '../components/ui.
 import { tappable } from '../lib/use-sheet-keyboard.js'
 import { isWarmupRow } from '../lib/workout-model.js'
 import { exView, exUnitOf, shownWeight } from '../lib/ex-unit.js'
-import { isOn } from '../lib/modules.js'
+import { isOn } from '../lib/modules.ts'
 import { activityStimuli } from '../lib/activities.js'
 import { isoRun } from '../lib/bidi.js'
 

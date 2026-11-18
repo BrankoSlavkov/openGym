@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { MODULES, GROUPS, PRESETS } from './modules.js'
+import { MODULES, GROUPS, PRESETS } from './modules.ts'
 import { moduleCopy, groupCopy, presetCopy } from './modules-copy.js'
 
 describe('modules-copy', () => {

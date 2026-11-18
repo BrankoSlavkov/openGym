@@ -40,27 +40,30 @@
 //      restored) bringing an entry back, and that cannot be told apart from a deliberate re-add:
 //      a deleted entry that comes back is one tap to remove again, a wanted one dropped is lost.
 
-const isMap = (v: any): v is Record<string, any> => !!v && typeof v === 'object' && !Array.isArray(v);
-const list = (v: any): any[] => (Array.isArray(v) ? v : []);
-const same = (x, y) => JSON.stringify(x) === JSON.stringify(y);
-const clone = v => (v === undefined ? v : JSON.parse(JSON.stringify(v)));
+type JsonMap = Record<string, unknown>;
+const isMap = (v: unknown): v is JsonMap => !!v && typeof v === 'object' && !Array.isArray(v);
+const list = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
+// Read legacy JSON fields with the same nullish behavior as optional chaining.
+const field = (value: unknown, key: string): unknown => (value as JsonMap | null | undefined)?.[key];
+const same = (x: unknown, y: unknown) => JSON.stringify(x) === JSON.stringify(y);
+const clone = <T>(v: T): T => (v === undefined ? v : JSON.parse(JSON.stringify(v)));
 
-const workoutKey = w => (w?.id != null ? w.id : `${w?.d}|${w?.start}`);
-const workoutTime = w => Number(w?._ts) || Number(w?.end) || Number(w?.start) || 0;
-export const DEL_LISTS = {
-  workouts: workoutKey, routines: x => x?.id, customEx: x => x?.id, bodyweight: e => e?.d,
-  measurements: e => e?.d, gymCards: x => x?.id, equipProfiles: x => x?.id, favEx: x => x,
+const workoutKey = (w: unknown) => (field(w, 'id') != null ? field(w, 'id') : `${field(w, 'd')}|${field(w, 'start')}`);
+const workoutTime = (w: unknown) => Number(field(w, '_ts')) || Number(field(w, 'end')) || Number(field(w, 'start')) || 0;
+export const DEL_LISTS: Record<string, (value: unknown) => unknown> = {
+  workouts: workoutKey, routines: x => field(x, 'id'), customEx: x => field(x, 'id'), bodyweight: e => field(e, 'd'),
+  measurements: e => field(e, 'd'), gymCards: x => field(x, 'id'), equipProfiles: x => field(x, 'id'), favEx: x => x,
 };
-const DEL_TIME = {
-  workouts: workoutTime, routines: x => Number(x?._ts) || 0, customEx: x => Number(x?._ts) || 0,
-  bodyweight: e => Number(e?.t) || 0, measurements: e => Number(e?.t) || 0,
-  gymCards: x => Number(x?._ts) || 0, equipProfiles: x => Number(x?._ts) || 0,
+const DEL_TIME: Record<string, ((value: unknown) => number) | undefined> = {
+  workouts: workoutTime, routines: x => Number(field(x, '_ts')) || 0, customEx: x => Number(field(x, '_ts')) || 0,
+  bodyweight: e => Number(field(e, 't')) || 0, measurements: e => Number(field(e, 't')) || 0,
+  gymCards: x => Number(field(x, '_ts')) || 0, equipProfiles: x => Number(field(x, '_ts')) || 0,
 };
 export const DELETED_MAX = 5000;
-const capStamps = m => {
+const capStamps = (m: JsonMap) => {
   const ks = Object.keys(m);
   if (ks.length <= DELETED_MAX) return m;
-  ks.sort((x, y) => Math.abs(m[x]) - Math.abs(m[y]));
+  ks.sort((x, y) => Math.abs(Number(m[x])) - Math.abs(Number(m[y])));
   for (const k of ks.slice(0, ks.length - DELETED_MAX)) delete m[k];
   return m;
 };
@@ -79,15 +82,16 @@ const ENTRY_META = new Set(['id', '_ts', '_f', '_u']);
 const ENTRY_LISTS = ['routines', 'customEx', 'equipProfiles', 'gymCards', 'workouts'];
 
 // Whether removal record `v` replaces `cur`: the later stamp, and on a tie the add-back.
-const laterDel = (v, cur) => {
+const laterDel = (v: unknown, cur: unknown) => {
   const x = Number(v) || 0, y = Number(cur) || 0;
   return Math.abs(x) > Math.abs(y) || (Math.abs(x) === Math.abs(y) && x < y);
 };
 /** Both records of removals: per entry, the later stamp. */
-export function mergeDeletions(a, b) {
-  const out = {};
+export function mergeDeletions(a: unknown, b: unknown) {
+  const out: Record<string, JsonMap> = {};
   for (const f of Object.keys(DEL_LISTS)) {
-    const x = isMap(a?.[f]) ? a[f] : {}, y = isMap(b?.[f]) ? b[f] : {};
+    const left = field(a, f), right = field(b, f);
+    const x = isMap(left) ? left : {}, y = isMap(right) ? right : {};
     const m = { ...x };
     // On equal stamps the add-back (negative) wins, whichever copy is first (as the app's).
     for (const [k, v] of Object.entries(y)) if (!(k in m) || laterDel(v, m[k])) m[k] = v;
@@ -97,7 +101,7 @@ export function mergeDeletions(a, b) {
 }
 
 /** Both records of edits: per key, the later stamp. */
-export function mergeEdits(a, b) {
+export function mergeEdits(a: unknown, b: unknown) {
   const x = isMap(a) ? a : {}, y = isMap(b) ? b : {};
   const out = { ...x };
   for (const [k, v] of Object.entries(y)) if (!((Number(out[k]) || 0) >= (Number(v) || 0))) out[k] = v;
@@ -105,31 +109,36 @@ export function mergeEdits(a, b) {
 }
 
 /** The latest stamp a copy carries (sync-merge.js highestStamp). */
-export function highestStamp(S) {
+export function highestStamp(state: unknown) {
   let m = 0;
-  const see = v => { const n = Math.abs(Number(v) || 0); if (n > m) m = n; };
-  if (!S || typeof S !== 'object') return 0;
-  see(S._ts); see(S.unitSet?.at); see(S.resetAt);
+  const see = (v: unknown) => { const n = Math.abs(Number(v) || 0); if (n > m) m = n; };
+  if (!state || typeof state !== 'object') return 0;
+  const S = state as JsonMap;
+  see(S._ts); see(field(S.unitSet, 'at')); see(S.resetAt);
   if (isMap(S.edited)) for (const v of Object.values(S.edited)) see(v);
   if (isMap(S.deleted)) for (const f of Object.values(S.deleted)) if (isMap(f)) for (const v of Object.values(f)) see(v);
   for (const f of ENTRY_LISTS) {
     for (const x of list(S[f])) {
       if (!x || typeof x !== 'object') continue;
-      see(x._ts);
-      if (isMap(x._f)) for (const v of Object.values(x._f)) see(v);
+      see(field(x, '_ts'));
+      const stamps = field(x, '_f');
+      if (isMap(stamps)) for (const v of Object.values(stamps)) see(v);
     }
   }
   for (const f of STAMPED_MAPS) {
-    if (isMap(S[f])) for (const v of Object.values(S[f])) see(isMap(v) ? v._ts : 0);
+    const entries = S[f];
+    if (isMap(entries)) for (const v of Object.values(entries)) see(isMap(v) ? v._ts : 0);
   }
   return m;
 }
 
 /** `x` stamped as an edit of `old` at `now`, per field (sync-merge.js stampEntry). Mutates `x`. */
-export function stampEntry(old, x, now) {
-  if (!x || typeof x !== 'object') return x;
+export function stampEntry<T>(previous: unknown, value: T, now: number): T {
+  if (!value || typeof value !== 'object') return value;
+  const x = value as JsonMap;
   x._ts = now;
-  if (!old || typeof old !== 'object') return x;
+  if (!previous || typeof previous !== 'object') return value;
+  const old = previous as JsonMap;
   const f = isMap(old._f) ? { ...old._f } : {};
   for (const k of new Set([...Object.keys(old), ...Object.keys(x)])) {
     if (ENTRY_META.has(k)) continue;
@@ -138,13 +147,13 @@ export function stampEntry(old, x, now) {
   if (Object.keys(f).length) x._f = f; else delete x._f;
   const u = settleMarks(x._u, f, now);
   if (u) x._u = u; else delete x._u;
-  return x;
+  return value;
 }
 // An Undo's markers (`_u`, sync-merge.js "Undo"): completed with this edit's stamp, or dropped
 // once their field moved on.
-function settleMarks(marks, stamps, now) {
+function settleMarks(marks: unknown, stamps: JsonMap, now: number) {
   if (!isMap(marks)) return null;
-  const out = {};
+  const out: Record<string, unknown[]> = {};
   for (const [k, m] of Object.entries(marks)) {
     if (!Array.isArray(m)) continue;
     const at = Number(stamps?.[k]) || 0;
@@ -153,7 +162,7 @@ function settleMarks(marks, stamps, now) {
   }
   return Object.keys(out).length ? out : null;
 }
-const sameEntry = (a, b) => same({ ...a, _ts: 0, _f: 0, _u: 0 }, { ...b, _ts: 0, _f: 0, _u: 0 });
+const sameEntry = (a: JsonMap, b: JsonMap) => same({ ...a, _ts: 0, _f: 0, _u: 0 }, { ...b, _ts: 0, _f: 0, _u: 0 });
 
 // What the server stamped for the last push of a writer that does not stamp (`_unstamped` on the
 // stored document): an older app takes the revision it is told for its own push and reads the
@@ -163,8 +172,8 @@ const sameEntry = (a, b) => same({ ...a, _ts: 0, _f: 0, _u: 0 }, { ...b, _ts: 0,
 // (RC verify 2026-10-07). `fp` is that writer's record of edits as sent: the same writer pushing
 // again over the revision its push made sends the same one. `ed` and `f` hold the stamps it was
 // given, per setting and per entry field, as long as they are still the stored ones.
-const ownStamp = (m, k, v) => isMap(m) && Number(m[k]) > 0 && Number(m[k]) === Number(v);
-function fingerprint(sent) {
+const ownStamp = (m: unknown, k: string, v: unknown) => isMap(m) && Number(m[k]) > 0 && Number(m[k]) === Number(v);
+function fingerprint(sent: unknown) {
   if (!isMap(sent)) return 'none';
   const str = JSON.stringify(Object.keys(sent).sort().map(k => [k, sent[k]]));
   let a = 0x811c9dc5, b = 5381;
@@ -175,16 +184,16 @@ function fingerprint(sent) {
   }
   return `${str.length}.${a.toString(36)}.${b.toString(36)}`;
 }
-function ownRecord(next, now, own, fp) {
-  const ed = {}, f = {};
+function ownRecord(next: JsonMap, now: number, own: JsonMap | null, fp: unknown) {
+  const ed: Record<string, number> = {}, f: Record<string, Record<string, number>> = {};
   for (const [k, v] of Object.entries(isMap(next.edited) ? next.edited : {})) {
     if (Number(v) === now || ownStamp(own?.ed, k, v)) ed[k] = Number(v);
   }
   for (const l of ENTRY_LISTS) {
     for (const x of list(next[l])) {
       if (!isMap(x) || x.id == null || !isMap(x._f)) continue;
-      const key = `${l}|${x.id}`, m = {};
-      for (const [k, v] of Object.entries(x._f)) if (Number(v) === now || ownStamp(own?.f?.[key], k, v)) m[k] = Number(v);
+      const key = `${l}|${x.id}`, m: Record<string, number> = {};
+      for (const [k, v] of Object.entries(x._f)) if (Number(v) === now || ownStamp(field(own?.f, key), k, v)) m[k] = Number(v);
       if (Object.keys(m).length) f[key] = m;
     }
   }
@@ -206,31 +215,32 @@ function ownRecord(next, now, own, fp) {
 // device changed it, looks like its old copy and loses to that change.
 const PRIOR_KEEP = 6;
 const PRIOR_MAX = 5000;
-function valueHash(v) {
+function valueHash(v: unknown) {
   const str = v === undefined ? 'u' : JSON.stringify(v);
   let a = 0x811c9dc5;
   for (let i = 0; i < str.length; i++) a = Math.imul(a ^ str.charCodeAt(i), 0x01000193) >>> 0;
   return `${str.length}.${a.toString(36)}`;
 }
 // `next._prior`: the stored one, with every field this write changes noted, for every writer.
-function notePrior(cur, next) {
+function notePrior(cur: JsonMap, next: JsonMap) {
   const pr = isMap(cur?._prior) ? clone(cur._prior) : {};
-  const note = (key, b, a) => {
+  const note = (key: string, b: unknown, a: unknown) => {
     if (same(b, a)) return;
     const h = valueHash(b);
     delete pr[key];                                   // re-added last: the most recently changed go last
-    pr[key] = [...list(cur?._prior?.[key]).filter(x => x !== h), h].slice(-PRIOR_KEEP);
+    pr[key] = [...list(field(cur._prior, key)).filter(x => x !== h), h].slice(-PRIOR_KEEP);
   };
   for (const k of new Set([...Object.keys(cur || {}), ...Object.keys(next)])) {
     if (OWN_MERGE.has(k)) continue;
     if (PER_KEY.has(k)) {
-      const pm = isMap(cur[k]) ? cur[k] : {}, nm = isMap(next[k]) ? next[k] : {};
+      const prev = cur[k], nextValue = next[k];
+      const pm = isMap(prev) ? prev : {}, nm = isMap(nextValue) ? nextValue : {};
       for (const s of new Set([...Object.keys(pm), ...Object.keys(nm)])) note(`${k}.${s}`, pm[s], nm[s]);
     } else if (k in next) note(k, cur[k], next[k]);
   }
   const live = new Set();
   for (const f of ENTRY_LISTS) {
-    const before = new Map(list(cur?.[f]).filter(x => isMap(x) && x.id != null).map(x => [x.id, x]));
+    const before = new Map(list(cur?.[f]).filter(x => isMap(x)).filter(x => x.id != null).map(x => [x.id, x]));
     for (const x of list(next[f])) {
       if (!isMap(x) || x.id == null) continue;
       live.add(`${f}|${x.id}`);
@@ -249,10 +259,13 @@ function notePrior(cur, next) {
   if (Object.keys(pr).length) next._prior = pr; else delete next._prior;
 }
 // Step 2: what a writer that does not stamp changed against the copy it read, stamped at `now`.
-function stampUnstamped(cur, next, sent, now, own = null) {
+function stampUnstamped(cur: JsonMap, next: JsonMap, sent: unknown, now: number, own: JsonMap | null = null) {
   // Whether `v` is a value the field held before (see notePrior); a field with no history: yes.
   const pr = isMap(cur?._prior) ? cur._prior : {};
-  const wasBefore = (key, v) => !Array.isArray(pr[key]) || pr[key].includes(valueHash(v));
+  const wasBefore = (key: string, v: unknown) => {
+    const history = pr[key];
+    return !Array.isArray(history) || history.includes(valueHash(v));
+  };
   // Removals: every entry the stored copy had and this one lacks, unless already on record.
   const del = isMap(next.deleted) ? next.deleted : {};
   for (const [f, key] of Object.entries(DEL_LISTS)) {
@@ -262,10 +275,12 @@ function stampUnstamped(cur, next, sent, now, own = null) {
       if (x == null) continue;
       const k = String(key(x));
       if (have.has(k)) continue;
-      const m = isMap(del[f]) ? del[f] : (del[f] = {});
+      const fieldStamps = del[f];
+      const m = isMap(fieldStamps) ? fieldStamps : (del[f] = {} as JsonMap);
       if (!(Number(m[k]) > 0 && Number(m[k]) >= time(x))) m[k] = Math.max(now, time(x) + 1);
     }
-    if (isMap(del[f])) capStamps(del[f]);
+    const fieldStamps = del[f];
+    if (isMap(fieldStamps)) capStamps(fieldStamps);
   }
   if (Object.keys(del).length) next.deleted = del;
   // Settings and plan days changed, whose stamp the writer did not move past the stored one.
@@ -278,9 +293,9 @@ function stampUnstamped(cur, next, sent, now, own = null) {
   // change stays. A writer that sends no record at all cannot be placed and goes through as before.
   const ed = isMap(next.edited) ? next.edited : {};
   const mine = isMap(sent) ? sent : {}, theirs = isMap(cur.edited) ? cur.edited : {};
-  const moved = k => (Number(mine[k]) || 0) > (Number(theirs[k]) || 0);
+  const moved = (k: string) => (Number(mine[k]) || 0) > (Number(theirs[k]) || 0);
   // A stamp the server gave this same writer's previous push is its own change, not one it missed.
-  const stale = k => isMap(sent) && (Number(theirs[k]) || 0) > (Number(mine[k]) || 0) && !ownStamp(own?.ed, k, theirs[k]);
+  const stale = (k: string) => isMap(sent) && (Number(theirs[k]) || 0) > (Number(mine[k]) || 0) && !ownStamp(own?.ed, k, theirs[k]);
   for (const k of new Set([...Object.keys(cur), ...Object.keys(next)])) {
     if (OWN_MERGE.has(k)) continue;
     const p = cur[k], n = next[k];
@@ -290,7 +305,8 @@ function stampUnstamped(cur, next, sent, now, own = null) {
         const sk = `${k}.${s}`;
         if ((s in pm) === (s in nm) && same(pm[s], nm[s])) continue;
         if (stale(sk) && wasBefore(sk, nm[s])) {
-          const into = isMap(next[k]) ? next[k] : (next[k] = {});
+          const nextValue = next[k];
+          const into = isMap(nextValue) ? nextValue : (next[k] = {} as JsonMap);
           if (s in pm) into[s] = clone(pm[s]); else delete into[s];
         } else if (!moved(sk)) ed[sk] = now;
       }
@@ -312,9 +328,11 @@ function stampUnstamped(cur, next, sent, now, own = null) {
   // older app keeps the version of an entry edited last as a whole, so its edit of the name used to
   // bring back the sets as they were before another device changed them.
   for (const f of ENTRY_LISTS) {
-    const before = new Map(list(cur[f]).filter(x => x && x.id != null).map(x => [x.id, x]));
-    for (const x of list(next[f])) {
-      if (!x || typeof x !== 'object' || x.id == null) continue;
+    const before = new Map(list(cur[f]).filter(x => field(x, 'id') != null).map(x => [field(x, 'id'), x as JsonMap]));
+    for (const value of list(next[f])) {
+      if (!value || typeof value !== 'object') continue;
+      const x = value as JsonMap;
+      if (x.id == null) continue;
       const old = before.get(x.id);
       if (!old) { if (f !== 'workouts' && x._ts == null) x._ts = now; continue; }
       if (sameEntry(old, x)) continue;
@@ -322,7 +340,7 @@ function stampUnstamped(cur, next, sent, now, own = null) {
         const base = isMap(x._f) ? x._f : {}, of = isMap(old._f) ? old._f : {};
         for (const k of new Set([...Object.keys(old), ...Object.keys(x)])) {
           if (ENTRY_META.has(k) || !((Number(of[k]) || 0) > (Number(base[k]) || 0))) continue;
-          if (ownStamp(own?.f?.[`${f}|${x.id}`], k, of[k])) continue;
+          if (ownStamp(field(own?.f, `${f}|${x.id}`), k, of[k])) continue;
           if ((k in old) === (k in x) && same(old[k], x[k])) continue;
           if (!wasBefore(`${f}|${x.id}|${k}`, x[k])) continue;
           if (k in old) x[k] = clone(old[k]); else delete x[k];
@@ -345,15 +363,15 @@ const CH_ID = /^[a-z][a-z0-9-]{0,31}$/;
 const CH_MONTH = /^\d{4}-(0[1-9]|1[0-2])$/;
 export const CHALLENGE_MONTHS = 24;
 const CHALLENGE_PICKS = 3;
-function cleanChallengePick(p) {
-  if (!isMap(p) || !CH_ID.test(p.id)) return null;
+function cleanChallengePick(p: unknown) {
+  if (!isMap(p) || !CH_ID.test(String(p.id))) return null;
   const n = Number(p.n);
   if (!Number.isFinite(n) || n <= 0 || n > 1e7) return null;
   return p.u === 'kg' || p.u === 'lb' ? { id: p.id, n, u: p.u } : { id: p.id, n };
 }
-function cleanChallengeMonth(v) {
+function cleanChallengeMonth(v: unknown) {
   if (!isMap(v)) return null;
-  const picked = [];
+  const picked: NonNullable<ReturnType<typeof cleanChallengePick>>[] = [];
   for (const p of list(v.picked)) {
     const c = cleanChallengePick(p);
     if (c && !picked.some(x => x.id === c.id)) picked.push(c);
@@ -366,19 +384,19 @@ function cleanChallengeMonth(v) {
   if (!picked.length && !done.length) return null;
   return { picked, done, at: Number.isFinite(at) && at > 0 ? at : 0 };
 }
-export function cleanChallenges(v) {
+export function cleanChallenges(v: unknown) {
   if (!isMap(v)) return null;
-  const out = {};
+  const out: Record<string, NonNullable<ReturnType<typeof cleanChallengeMonth>> | undefined> = {};
   for (const k of Object.keys(v).filter(k => CH_MONTH.test(k)).sort().slice(-CHALLENGE_MONTHS)) {
     const m = cleanChallengeMonth(v[k]);
     if (m) out[k] = m;
   }
   return Object.keys(out).length ? out : null;
 }
-export function mergeChallenges(a, b) {
+export function mergeChallenges(a: unknown, b: unknown) {
   const x = cleanChallenges(a), y = cleanChallenges(b);
   if (!x || !y) return x || y || undefined;
-  const out = {};
+  const out: Record<string, ReturnType<typeof cleanChallengeMonth> | undefined> = {};
   for (const k of new Set([...Object.keys(x), ...Object.keys(y)])) {
     const p = x[k], q = y[k];
     if (!p || !q) { out[k] = p || q; continue; }
@@ -396,17 +414,18 @@ export function mergeChallenges(a, b) {
 // entry names the snapshot it used, which then stays out.
 export const COACH_CAPS = { chat: 40, log: 50, snapshots: 3 };
 const COACH_NAMESPACE_MAX = 256 * 1024;
-export const snapshotKey = x => (isMap(x) ? (x.id != null ? String(x.id) : `${Number(x.at) || 0}|${x.proposalId ?? ''}`) : null);
-const coachKey = { chat: x => (isMap(x) && x.id != null ? String(x.id) : null), log: x => (isMap(x) && x.id != null ? String(x.id) : null), snapshots: snapshotKey };
-function unionInTime(xs, ys, key) {
+export const snapshotKey = (x: unknown) => (isMap(x) ? (x.id != null ? String(x.id) : `${Number(x.at) || 0}|${x.proposalId ?? ''}`) : null);
+const coachKey = { chat: (x: unknown) => (isMap(x) && x.id != null ? String(x.id) : null), log: (x: unknown) => (isMap(x) && x.id != null ? String(x.id) : null), snapshots: snapshotKey };
+function unionInTime(xs: unknown, ys: unknown, key: (value: unknown) => string | null) {
   const seen = new Set(), out = [];
   let i = 0;
-  for (const [from, l] of [[0, list(xs)], [1, list(ys)]] as [number, any[]][]) {
+  for (const [from, l] of [[0, list(xs)], [1, list(ys)]] as [number, unknown[]][]) {
     let at = 0;
     for (const x of l) {
       if (x == null) continue;
       const k = key(x);
-      if (Number(x?.at) > 0) at = Number(x.at);
+      const time = Number(field(x, 'at'));
+      if (time > 0) at = time;
       if (k == null) { if (!from) out.push({ x, at, from, i: i++ }); continue; }
       if (seen.has(k)) continue;
       seen.add(k);
@@ -417,29 +436,32 @@ function unionInTime(xs, ys, key) {
   return out.map(e => e.x);
 }
 /** `win`'s Coach namespace with its chat, log and snapshots joined with `other`'s (sync-merge.js mergeCoach). */
-export function mergeCoach(win, other) {
+export function mergeCoach(win: unknown, other: unknown) {
   if (!isMap(win) || !isMap(other)) return win === undefined ? win : clone(win);
   const out = clone(win);
-  for (const f of ['chat', 'log', 'snapshots']) {
+  for (const f of ['chat', 'log', 'snapshots'] as const) {
     if (!Array.isArray(win[f]) && !Array.isArray(other[f])) continue;
     out[f] = clone(unionInTime(win[f], other[f], coachKey[f]));
   }
-  const used = new Set(), byProposal = [];
+  const used = new Set<string | null>(), byProposal: JsonMap[] = [];
   for (const e of list(out.log)) {
     if (!isMap(e) || e.kind !== 'revert') continue;
     if (e.snap != null) used.add(String(e.snap));
     else if (e.proposalId != null) byProposal.push(e);
   }
   if (out.snapshots) {
-    out.snapshots = out.snapshots.filter(x => !used.has(snapshotKey(x)) &&
-      !byProposal.some(e => x?.proposalId === e.proposalId && (Number(x?.at) || 0) <= (Number(e.at) || 0)));
+    out.snapshots = (out.snapshots as unknown[]).filter(x => !used.has(snapshotKey(x)) &&
+      !byProposal.some(e => field(x, 'proposalId') === e.proposalId && (Number(field(x, 'at')) || 0) <= (Number(e.at) || 0)));
   }
-  for (const [f, max] of Object.entries(COACH_CAPS)) if (Array.isArray(out[f]) && out[f].length > max) out[f] = out[f].slice(-max);
+  for (const [f, max] of Object.entries(COACH_CAPS)) {
+    const entries = out[f];
+    if (Array.isArray(entries) && entries.length > max) out[f] = entries.slice(-max);
+  }
   let guard = 0;
   while (JSON.stringify(out).length > COACH_NAMESPACE_MAX && guard++ < 60) {
-    if (list(out.chat).length > 8) out.chat.shift();
-    else if (list(out.snapshots).length > 1) out.snapshots.shift();
-    else if (list(out.log).length > 1) out.log.shift();
+    if (list(out.chat).length > 8) list(out.chat).shift();
+    else if (list(out.snapshots).length > 1) list(out.snapshots).shift();
+    else if (list(out.log).length > 1) list(out.log).shift();
     else break;
   }
   return out;
@@ -447,26 +469,27 @@ export function mergeCoach(win, other) {
 
 const ORDER_KEY = 'routineOrder';
 /** Whether two lists hold the routines both have in a different order (sync-merge.js orderMoved). */
-export function orderMoved(a, b) {
-  const ida = list(a).map(r => r?.id).filter(id => id != null), idb = list(b).map(r => r?.id).filter(id => id != null);
+export function orderMoved(a: unknown, b: unknown) {
+  const ida = list(a).map(r => field(r, 'id')).filter(id => id != null), idb = list(b).map(r => field(r, 'id')).filter(id => id != null);
   const inA = new Set(ida), inB = new Set(idb);
   return JSON.stringify(ida.filter(id => inB.has(id))) !== JSON.stringify(idb.filter(id => inA.has(id)));
 }
 // `xs` with the routines `order` also has in its order, each other one after its nearest earlier
 // neighbour in `xs` (sync-merge.js unionByNeighbours).
-function inOrderOf(order, xs) {
-  const by = new Map(list(xs).filter(x => x?.id != null).map(x => [x.id, x]));
-  const out = list(order).filter(x => x?.id != null && by.has(x.id)).map(x => by.get(x.id));
-  const at = new Set(out.map(x => x.id));
-  let prev = null;
+function inOrderOf(order: unknown, xs: unknown) {
+  const by = new Map(list(xs).filter(x => field(x, 'id') != null).map(x => [field(x, 'id'), x]));
+  const out = list(order).filter(x => field(x, 'id') != null && by.has(field(x, 'id'))).map(x => by.get(field(x, 'id')));
+  const at = new Set(out.map(x => field(x, 'id')));
+  let prev: unknown = null;
   for (const x of list(xs)) {
-    if (x?.id == null) { out.push(x); continue; }
-    if (!at.has(x.id)) {
-      const i = prev == null ? -1 : out.findIndex(y => y?.id === prev);
+    const id = field(x, 'id');
+    if (id == null) { out.push(x); continue; }
+    if (!at.has(id)) {
+      const i = prev == null ? -1 : out.findIndex(y => field(y, 'id') === prev);
       out.splice(i + 1, 0, x);
-      at.add(x.id);
+      at.add(id);
     }
-    prev = x.id;
+    prev = id;
   }
   return out;
 }
@@ -483,7 +506,7 @@ function inOrderOf(order, xs) {
 // is a removal and goes through; any other missing key is one it never knew and is put back.
 // A key put back that it had in fact cleared is one tap to clear again; a dropped one was lost.
 // API planners send back what they read, so for them this changes nothing.
-const V139_DROPS = {
+const V139_DROPS: Record<string, ReadonlySet<string> | undefined> = {
   state: new Set(['showRir']),
   routines: new Set(['excludeFromProgression']),
   'routines.ex': new Set(['id', 'sg', 'sets', 'min', 'speed', 'mode', 'sec', 'weight', 'bodyweight', 'prog',
@@ -497,12 +520,12 @@ const V139_DROPS = {
     'done', 'weightOrigin', 'at', 'sides', 'type', 'drops', 'clusters', 'warmup']),
 };
 // The lists inside an entry that are walked too, and how their items are matched.
-const NESTED = { routines: ['ex'], workouts: ['entries'], 'workouts.entries': ['sets'] };
+const NESTED: Record<string, string[] | undefined> = { routines: ['ex'], workouts: ['entries'], 'workouts.entries': ['sets'] };
 // Server bookkeeping and the records merged on their own: never put back from the stored copy.
 const NOT_KEPT = new Set(['_rev', '_wid', '_wids', '_unstamped', '_prior', 'active', 'resetAt', 'resetIds', 'deleted', 'edited']);
 
 // `x` with every key of `old` it lacks and the writer cannot have dropped on purpose. Mutates `x`.
-function keepKeys(old, x, place) {
+function keepKeys(old: unknown, x: unknown, place: string) {
   if (!isMap(old) || !isMap(x)) return;
   const drops = V139_DROPS[place] || new Set();
   for (const k of Object.keys(old)) {
@@ -520,22 +543,26 @@ function keepKeys(old, x, place) {
 // share in order, so an exercise added, taken out or moved leaves the others paired; without ids
 // (the sets of an exercise), by position only when the lists are as long as each other. Anything
 // else (a set taken out of the middle) is not guessed at.
-function pairItems(a, b) {
-  const ids = xs => xs.map(x => (isMap(x) ? x.id : undefined));
+function pairItems(a: unknown[], b: unknown[]): [unknown, unknown][] {
+  const ids = (xs: unknown[]) => xs.map(x => (isMap(x) ? x.id : undefined));
   const ia = ids(a), ib = ids(b);
-  const unique = xs => xs.every(k => k != null) && new Set(xs).size === xs.length;
+  const unique = (xs: unknown[]) => xs.every(k => k != null) && new Set(xs).size === xs.length;
   if (unique(ia) && unique(ib)) {
-    const by = new Map(a.map(x => [x.id, x]));
-    return b.filter(x => by.has(x.id)).map(x => [by.get(x.id), x]);
+    const by = new Map(a.map(x => [field(x, 'id'), x]));
+    return b.filter(x => by.has(field(x, 'id'))).map(x => [by.get(field(x, 'id')), x]);
   }
   if (ia.every(k => k != null) && ib.every(k => k != null) && a.length * b.length <= 40000) {
-    const L = Array.from({ length: a.length + 1 }, () => new Array(b.length + 1).fill(0));
+    const L = Array.from({ length: a.length + 1 }, () => new Array<number>(b.length + 1).fill(0));
+    // The extra row and column hold the zero-length suffixes.
     for (let i = a.length - 1; i >= 0; i--) {
-      for (let j = b.length - 1; j >= 0; j--) L[i][j] = same(ia[i], ib[j]) ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+      const row = L[i]!, below = L[i + 1]!;
+      for (let j = b.length - 1; j >= 0; j--) {
+        row[j] = same(ia[i], ib[j]) ? below[j + 1]! + 1 : Math.max(below[j]!, row[j + 1]!);
+      }
     }
-    const out = [];
+    const out: [unknown, unknown][] = [];
     for (let i = 0, j = 0; i < a.length && j < b.length;) {
-      if (same(ia[i], ib[j])) { out.push([a[i], b[j]]); i++; j++; } else if (L[i + 1][j] >= L[i][j + 1]) i++; else j++;
+      if (same(ia[i], ib[j])) { out.push([a[i], b[j]]); i++; j++; } else if (L[i + 1]![j]! >= L[i]![j + 1]!) i++; else j++;
     }
     return out;
   }
@@ -543,20 +570,21 @@ function pairItems(a, b) {
   return b.map((x, i) => [a[i], x]);
 }
 /** Step 0 (above): put back into `next` what a writer that does not stamp left out of `cur`. */
-export function keepUnknown(cur, next) {
+export function keepUnknown<T>(cur: unknown, next: T): T {
   if (!isMap(cur) || !isMap(next)) return next;
   keepKeys(cur, next, 'state');
   for (const f of ENTRY_LISTS) {
-    if (!Array.isArray(cur[f]) || !Array.isArray(next[f])) continue;
-    const before = new Map(cur[f].filter(x => isMap(x) && x.id != null).map(x => [x.id, x]));
-    for (const x of next[f]) if (isMap(x) && x.id != null && before.has(x.id)) keepKeys(before.get(x.id), x, f);
+    const previous = cur[f], incoming = next[f];
+    if (!Array.isArray(previous) || !Array.isArray(incoming)) continue;
+    const before = new Map(list(previous).filter(x => isMap(x)).filter(x => x.id != null).map(x => [x.id, x]));
+    for (const x of list(incoming)) if (isMap(x) && x.id != null && before.has(x.id)) keepKeys(before.get(x.id), x, f);
   }
   return next;
 }
 
 // Step 3: an entry held while a removal on record says it was deleted after its last edit is
 // kept, and marked as added back.
-function keepHeld(next, now) {
+function keepHeld(next: JsonMap, now: number) {
   const del = next.deleted;
   if (!isMap(del)) return;
   for (const [f, key] of Object.entries(DEL_LISTS)) {
@@ -584,10 +612,12 @@ function keepHeld(next, now) {
 // What a document says, without its stamps and the server's bookkeeping: whether the server put
 // back anything of what a writer sent (stampPut's `report`).
 const BOOKKEEPING = new Set(['_ts', '_f', '_u', '_rev', '_wid', '_wids', '_unstamped', '_prior', 'edited', 'deleted', 'undone']);
-const content = S => JSON.stringify(S, (k, v) => (BOOKKEEPING.has(k) ? undefined : v));
+const content = (S: unknown) => JSON.stringify(S, (k, v) => (BOOKKEEPING.has(k) ? undefined : v));
 
-export function stampPut(cur, next, { overRead = false, stamped = false, now = Date.now(), report = null }: { overRead?: boolean; stamped?: boolean; now?: number; report?: any; [key: string]: any } = {}) {
-  if (!next || typeof next !== 'object') return next;
+export function stampPut<T>(current: unknown, incoming: T, { overRead = false, stamped = false, now = Date.now(), report = null }: { overRead?: boolean; stamped?: boolean; now?: number; report?: { changed?: boolean } | null; [key: string]: unknown } = {}): T {
+  if (!incoming || typeof incoming !== 'object') return incoming;
+  const next = incoming as JsonMap;
+  const cur = current as JsonMap | null | undefined;
   const t = Math.max(Number(now) || 0, highestStamp(cur) + 1, highestStamp(next) + 1);
   const reset = (Number(next.resetAt) || 0) > (Number(cur?.resetAt) || 0);
   const sent = isMap(next.edited) ? { ...next.edited } : null;
@@ -620,9 +650,9 @@ export function stampPut(cur, next, { overRead = false, stamped = false, now = D
     }
     if (!stamped && isMap(next.coach) && isMap(cur.coach)) next.coach = mergeCoach(next.coach, cur.coach);
     if (isMap(next.challenges) && isMap(cur.challenges)) next.challenges = mergeChallenges(next.challenges, cur.challenges);
-    if (before != null && content(next) !== before) report.changed = true;
+    if (report && before != null && content(next) !== before) report.changed = true;
   }
   keepHeld(next, t);
   if (cur && !reset) notePrior(cur, next);
-  return next;
+  return incoming;
 }

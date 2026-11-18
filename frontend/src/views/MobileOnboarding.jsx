@@ -177,7 +177,7 @@ export function ConnectSheet({ close, initialUrl = '', again = false }) {
 
 export default function MobileOnboarding() {
   const { chooseLocalMode } = useStore()
-  // openGym Offline (lib/build-caps.js): there is no server to connect to, so one way in.
+  // openGym Offline (lib/build-caps.ts): there is no server to connect to, so one way in.
   const offline = useOfflineBuild()
   const head = <>
     {/* The official lockup (assets/logo), not an icon from the app's set. */}

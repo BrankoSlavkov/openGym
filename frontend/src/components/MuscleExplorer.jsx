@@ -13,7 +13,7 @@ import { Thumb } from './Media.jsx'
 import Icon from './Icon.tsx'
 import ExerciseViewToggle from './ExerciseViewToggle.tsx'
 import { Button, Segmented } from './ui.tsx'
-import { useAutoMore } from '../lib/use-auto-more.js'
+import { useAutoMore } from '../lib/use-auto-more.ts'
 import { favIds, isFav, sortFavouritesFirst } from '../lib/favourites.js'
 
 const FAV = '☆'

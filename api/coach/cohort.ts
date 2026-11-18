@@ -15,7 +15,7 @@
  */
 import * as cfgStore from './config.ts';
 import { readState, listUserIds, isSharing } from './jobs.ts';
-import { libraryHas, libraryName } from './core/library.js';
+import { libraryHas, libraryName } from './core/library.ts';
 
 export const MIN_PEOPLE = 3;
 export const MAX_EXERCISES = 12;

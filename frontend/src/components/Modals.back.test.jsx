@@ -11,7 +11,7 @@ import { createAppRouter } from '../router/routes.ts'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import Modals from './Modals.jsx'
 import { useUI } from '../store/useUI.js'
-import { closeThenNav, nav, setNav } from '../lib/nav.js'
+import { closeThenNav, nav, setNav } from '../lib/nav.ts'
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 

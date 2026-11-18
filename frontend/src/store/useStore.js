@@ -9,8 +9,8 @@ import { t } from '../lib/i18n.js'
 import { registerCustom, healCustomEx } from '../lib/exercises.js'
 import { syncGymInventory } from '../lib/gym-inventory.js'
 import { DEMO, DEMO_SEEDED } from '../lib/demo.js'
-import { rememberDefaultLang } from '../lib/default-lang.js'
-import { guestAllowed } from '../lib/guest.js'
+import { rememberDefaultLang } from '../lib/default-lang.ts'
+import { guestAllowed } from '../lib/guest.ts'
 import { stateJson } from '../lib/state-json.ts'
 import { MOBILE, initReminderSync, nativeLoad, nativeSave, onAppActive, readJsonFile, syncReminder, writeAutoBackup, writeJsonFile } from '../lib/mobile.js'
 import { initHealthSync, syncHealth, readHealth } from '../lib/health-sync.js'
@@ -24,7 +24,7 @@ import { mediaStore, mediaStoreInUse } from '../lib/media-store.js'
 import { countChanges, syncFingerprint } from '../lib/sync-changes.js'
 import { saveWorkoutEdit, deleteEditedWorkout } from '../lib/session-edit.js'
 import { appBase } from '../lib/app-base.ts'
-import { linkTokenFromSearch, stripLinkFromUrl } from '../lib/device-link.js'
+import { linkTokenFromSearch, stripLinkFromUrl } from '../lib/device-link.ts'
 import { loadRemote, chooseLocal, forgetRemote, connect, connectWithProvider, normalizeServerUrl, renewToken } from '../lib/remote.js'
 import { takeOidcReturn } from '../lib/oidc.js'
 import { loadCfAccess } from '../lib/cf-access.js'
@@ -33,8 +33,8 @@ import { initCoachSchedule } from '../lib/coach-schedule.js'
 import { RTL_LANGS } from '../lib/i18n-core.js'
 import { DEFAULT_TEMPLATE_ID } from '../lib/structuralBalanceTemplates.js'
 
-import { WC_DEFAULT } from '../lib/workout-controls.js'
-import { sanitizeAccent, NEW_ACCENT } from '../lib/accent.js'
+import { WC_DEFAULT } from '../lib/workout-controls.ts'
+import { sanitizeAccent, NEW_ACCENT } from '../lib/accent.ts'
 import { registerExerciseAliases } from '../lib/exercise-aliases.js'
 
 const KEY = 'gym_state_v1'
@@ -97,7 +97,7 @@ export const DEF = {
   unit: 'kg', restSec: 90, restPauseSec: 15, sound: true, soundOnSilent: false, vibrateOnSilent: false, timerFlash: false, timedSetOvertime: false, keepAwake: true, lang: 'en',
   // accent: the old iOS green on purpose. A loaded copy that never picked one (saved before accents,
   // a server document, a backup) keeps the green it always had; a new profile starts on the
-  // brand's green instead (freshState, lib/accent.js NEW_ACCENT).
+  // brand's green instead (freshState, lib/accent.ts NEW_ACCENT).
   theme: 'dark', accent: 'lime', body: 'male', targetW: null,
   // The weekly-rate corridor on the body-weight card (#759, lib/bodyweight.js rateCorridor).
   rateGoal: null,
@@ -326,7 +326,7 @@ const detectedLang = () => {
 
 // A copy started from nothing on this device. `langAuto` marks its language as one nobody has
 // picked yet, so the instance's DEFAULT_LANG or the browser's language may set it
-// (lib/default-lang.js, #303); picking one in Settings clears it. DEF does not carry the mark:
+// (lib/default-lang.ts, #303); picking one in Settings clears it. DEF does not carry the mark:
 // merged under a saved copy it would claim that every existing profile never chose.
 export function freshState() {
   const s = clone(DEF)
@@ -2236,7 +2236,7 @@ export const useStore = create((set, get) => {
       if (linkCode) { stripLinkFromUrl(); set({ linkCode }) }
       // Guests never authenticate, so an instance that turned guest mode off has no request to
       // refuse — the only way the switch reaches someone already inside is here, on their next
-      // boot. Ending the session needs a positive `allow_guest: false`; see lib/guest.js for why
+      // boot. Ending the session needs a positive `allow_guest: false`; see lib/guest.ts for why
       // an unreachable server must not be allowed to lock anyone out (#42).
       const cfg = await get().loadConfig()
       if (!guestAllowed(cfg)) get().setGuest(false)

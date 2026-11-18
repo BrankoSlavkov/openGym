@@ -14,7 +14,7 @@ import assert from 'node:assert/strict';
 import { tempData } from './helpers.ts';
 
 tempData();
-const { runPipeline } = await import('../coach/core/pipeline.js');
+const { runPipeline } = await import('../coach/core/pipeline.ts');
 const { validateReview } = await import('../coach/core/validate.js');
 const payloadLib = await import('../coach/core/payload.js');
 

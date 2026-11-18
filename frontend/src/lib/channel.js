@@ -4,14 +4,14 @@
 //   'fdroid'   F-Droid, which builds it from source and updates it. Nothing from Google Play
 //              services in it: no Wear OS link, and the check-in scanner is the browser's
 //   'offline'  openGym Offline: the F-Droid build without the INTERNET permission, its own package
-//              next to the normal app. Nobody updates it from inside; lib/build-caps.js hides
+//              next to the normal app. Nobody updates it from inside; lib/build-caps.ts hides
 //              everything that would need a network
 //   'appstore' the iPhone app, updated by the App Store
 //   'web'      the browser, updated with its server
 // Android says which build it is (ChannelPlugin.java, the build flavour). An APK from before the
 // plugin existed is a sideloaded one: the Play build never shipped without it.
 import { MOBILE } from './mobile.js'
-import { setOfflineBuild } from './build-caps.js'
+import { setOfflineBuild } from './build-caps.ts'
 
 const NATIVE = new Set(['play', 'fdroid', 'offline'])
 
@@ -59,7 +59,7 @@ export async function nativeScanner() {
   return c !== 'fdroid' && c !== 'offline'
 }
 
-/** Asks the shell once which build this is and sets lib/build-caps.js from it. main.jsx waits
+/** Asks the shell once which build this is and sets lib/build-caps.ts from it. main.jsx waits
  *  for it (briefly) before the first render, so no screen ever shows a sync button first. */
 export async function initBuildCaps() {
   if (!MOBILE) return false

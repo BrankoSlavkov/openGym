@@ -12,7 +12,7 @@
 // never a count of intervals, so a phone that was locked or asleep catches up from the clock: a
 // hold that ran out meanwhile is logged with its planned seconds, at the time it ended, and its
 // rest is as far along as it would have been.
-import { nextOpenSet } from './workout-keys.js'
+import { nextOpenSet } from './workout-keys.ts'
 import { isWarmupRow } from './workout-model.js'
 import { ownSetRest, restSecFor, sideRestFor, warmupRestSecFor } from './supersetFlow.js'
 import { pyramidRestFor } from './pyramid.js'

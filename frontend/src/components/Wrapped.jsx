@@ -25,7 +25,8 @@ import { t, useLang, dateLocale } from '../lib/i18n.js'
 import Icon from './Icon.tsx'
 import BodyMap from './BodyMap.tsx'
 import ShareCardSheet from './ShareCard.jsx'
-import './Wrapped.css'
+import { sx } from '../lib/sx.ts'
+import { styles as x } from './Wrapped.styles.ts'
 
 /** A card's picture: the card laid out on a 9:16 or 1:1 canvas, PNG. */
 export async function wrappedCardImage(card, { format, style, year, body }) {
@@ -64,36 +65,39 @@ function useCountUp(target, key, still) {
   return v
 }
 
-function Card({ card, index, total, still, st, body, onHideBody }) {
+function Card({ card, index, total, still, covered, st, body, onHideBody }) {
+  const anim = [still && x.still, covered && x.paused]
+  const up = [x.up, ...anim]
   const count = useCountUp(card.num, card.id, still)
   const nfmt = n => { try { return new Intl.NumberFormat(dateLocale()).format(n) } catch (e) { return String(n) } }
-  return <div className={'wr-card wr-' + card.id} role="group" aria-roledescription={t('Card')} aria-label={t('{0} of {1}', index + 1, total)}>
-    <div className="wr-kicker" style={{ '--d': 0 }}>{card.kicker}</div>
-    <div className="wr-body">
-      {card.bigKind === 'number' && card.big && <div className="wr-big" style={{ '--d': 1 }}>
+  return <div {...sx(['wr-card', 'wr-' + card.id], x.card)} role="group" aria-roledescription={t('Card')} aria-label={t('{0} of {1}', index + 1, total)}>
+    <div {...sx(null, x.kicker, ...up)} style={{ '--d': 0 }}>{card.kicker}</div>
+    <div {...sx('wr-body', x.body, ...up)}>
+      {card.bigKind === 'number' && card.big && <div {...sx(null, x.big, card.id === 'intro' && x.bigIntro, ...up)} style={{ '--d': 1 }}>
         <span className="wr-num" aria-hidden={count != null ? 'true' : undefined}>{count != null ? nfmt(count) : card.big}</span>
         {count != null && <span className="vh">{card.big}</span>}
-        {card.unit && <span className="wr-unit"> {card.unit}</span>}
+        {card.unit && <span {...sx(null, x.unit)}> {card.unit}</span>}
       </div>}
-      {card.bigKind === 'text' && card.big && <div className="wr-bigtext" style={{ '--d': 1 }}>{card.big}</div>}
-      {card.title && <div className={card.bigKind === 'none' ? 'wr-title wr-title-lg' : 'wr-title'} style={{ '--d': 2 }}>{card.title}</div>}
-      {(card.lines || []).map((line, i) => <div key={i} className="wr-line" style={{ '--d': 3 + i }}>{line}</div>)}
-      {card.map && <div className="wr-map" style={{ '--d': 4 }} aria-hidden="true"><BodyMap load={st.load} body={body} /></div>}
-      {card.bars && <div className="wr-bars" style={{ '--d': 4 }} aria-hidden="true">
+      {card.bigKind === 'text' && card.big && <div {...sx(null, x.bigText, card.id === 'personality' && x.bigTextPersonality, ...up)} style={{ '--d': 1 }}>{card.big}</div>}
+      {card.title && <div {...sx(null, x.title, card.bigKind === 'none' && x.titleLg, ...up)} style={{ '--d': 2 }}>{card.title}</div>}
+      {(card.lines || []).map((line, i) => <div key={i} {...sx(null, x.line, ...up)} style={{ '--d': 3 + i }}>{line}</div>)}
+      {card.map && <div {...sx(null, x.map, ...up)} style={{ '--d': 4 }} aria-hidden="true"><BodyMap load={st.load} body={body} className={sx(null, x.mapBody).className} /></div>}
+      {card.bars && <div {...sx(null, x.bars, ...up)} style={{ '--d': 4 }} aria-hidden="true">
         {card.bars.map((n, i) => {
           const max = Math.max(1, ...card.bars)
-          return <div key={i} className={'wr-bar' + (i === card.barPeak ? ' peak' : '')}>
-            <i style={{ height: Math.max(6, (n / max) * 100) + '%', '--b': i }} />
-            <span>{(card.barLabels?.[i] || '').slice(0, 1)}</span>
+          const peak = i === card.barPeak
+          return <div key={i} {...sx(null, x.bar)}>
+            <i {...sx(null, x.barFill, peak && x.barFillPeak, ...anim)} style={{ height: Math.max(6, (n / max) * 100) + '%', '--b': i }} />
+            <span {...sx(null, x.barLabel, peak && x.barLabelPeak)}>{(card.barLabels?.[i] || '').slice(0, 1)}</span>
           </div>
         })}
       </div>}
-      {card.tiles && <div className="wr-tiles" style={{ '--d': 3 }}>
-        {[...card.tiles.filter(x => !x.wide), ...card.tiles.filter(x => x.wide)].map((tile, i) => <div key={i} className={'wr-tile' + (tile.wide ? ' wide' : '')} style={{ '--t': i }}>
-          <div className="l">{tile.label}</div><div className="v">{tile.value}</div>
+      {card.tiles && <div {...sx(null, x.tiles, ...up)} style={{ '--d': 3 }}>
+        {[...card.tiles.filter(x => !x.wide), ...card.tiles.filter(x => x.wide)].map((tile, i) => <div key={i} {...sx(null, x.tile, tile.wide && x.tileWide, ...anim)} style={{ '--t': i }}>
+          <div {...sx(null, x.tileLabel)}>{tile.label}</div><div {...sx(null, x.tileValue)}>{tile.value}</div>
         </div>)}
       </div>}
-      {card.hideable && <button type="button" className="wr-hide" style={{ '--d': 6 }} onClick={e => { e.stopPropagation(); onHideBody() }}>
+      {card.hideable && <button type="button" {...sx('wr-hide', x.hide, ...up)} style={{ '--d': 6 }} onClick={e => { e.stopPropagation(); onHideBody() }}>
         {t('Leave body weight out of my year')}
       </button>}
     </div>
@@ -193,31 +197,35 @@ export default function Wrapped() {
   }
   const hideBody = () => update(s => { s.wrappedBody = false })
   const last = idx === cards.length - 1
-  return <div className={'wrapped' + (still ? ' still' : '') + (covered ? ' covered' : '')} ref={root} role="dialog" aria-modal="true" aria-label={t('Your {0} in openGym', label)}>
-    <div className="wr-glow" aria-hidden="true"><i /><i /><i /></div>
-    <div className="wr-top">
-      <div className="wr-progress" aria-hidden="true">
-        {cards.map((c, n) => <span key={c.id} className={n < idx ? 'done' : n === idx ? 'on' : ''} />)}
+  const anim = [still && x.still, covered && x.paused]
+  return <div {...sx(['wrapped', still && 'still', covered && 'covered'], x.root, ...anim)} ref={root} role="dialog" aria-modal="true" aria-label={t('Your {0} in openGym', label)}>
+    <div {...sx(null, x.glow)} aria-hidden="true">
+      <i {...sx(null, x.disc, x.disc1, ...anim)} /><i {...sx(null, x.disc, x.disc2, ...anim)} /><i {...sx(null, x.disc, x.disc3, ...anim)} />
+    </div>
+    <div {...sx(null, x.top)}>
+      <div {...sx('wr-progress', x.progress)} aria-hidden="true">
+        {cards.map((c, n) => <span key={c.id} {...sx(n < idx ? 'done' : n === idx ? 'on' : '', x.pip, n < idx && x.pipDone,
+          n === idx && x.pipOn, n === idx && rtl && x.pipOnRtl, still && x.stillAfter, covered && x.pausedAfter)} />)}
       </div>
-      <div className="wr-bar-row">
-        <span className="wr-year">{label}</span>
-        <button type="button" className="wr-btn" onClick={() => share(card)} aria-label={t('Share this card')}><Icon name="share" /></button>
-        <button type="button" className="wr-btn" onClick={close} aria-label={t('Close')}><Icon name="xmark" /></button>
+      <div {...sx(null, x.barRow)}>
+        <span {...sx('wr-year', x.year)}>{label}</span>
+        <button type="button" {...sx(null, x.btn)} onClick={() => share(card)} aria-label={t('Share this card')}><Icon name="share" /></button>
+        <button type="button" {...sx(null, x.btn)} onClick={close} aria-label={t('Close')}><Icon name="xmark" /></button>
       </div>
     </div>
-    <div className="wr-stage" ref={stage} tabIndex={-1} aria-live="polite" onPointerDown={onDown} onPointerUp={onUp}>
-      <div key={card.id} className={'wr-slide ' + (dir > 0 ? 'from-end' : 'from-start')}>
-        <Card card={card} index={idx} total={cards.length} still={still} st={st} body={S.body} onHideBody={hideBody} />
+    <div {...sx(null, x.stage)} ref={stage} tabIndex={-1} aria-live="polite" onPointerDown={onDown} onPointerUp={onUp}>
+      <div key={card.id} {...sx(null, x.slide, (dir > 0) === rtl && x.slideBack, ...anim)}>
+        <Card card={card} index={idx} total={cards.length} still={still} covered={covered} st={st} body={S.body} onHideBody={hideBody} />
       </div>
     </div>
-    <div className="wr-foot">
-      <button type="button" className="wr-nav" onClick={prev} disabled={idx === 0} aria-label={t('Previous card')}><Icon name={rtl ? 'chevronRight' : 'chevronLeft'} /></button>
+    <div {...sx(null, x.foot)}>
+      <button type="button" {...sx(null, x.nav)} onClick={prev} disabled={idx === 0} aria-label={t('Previous card')}><Icon name={rtl ? 'chevronRight' : 'chevronLeft'} /></button>
       {last
-        ? <button type="button" className="wr-cta" onClick={() => share(card)}><Icon name="share" /><span>{month ? t('Share my month') : t('Share my year')}</span></button>
-        : <button type="button" className="wr-cta ghost" onClick={() => share(card)}><Icon name="share" /><span>{t('Share')}</span></button>}
+        ? <button type="button" {...sx(null, x.cta)} onClick={() => share(card)}><Icon name="share" /><span {...sx(null, x.ctaText)}>{month ? t('Share my month') : t('Share my year')}</span></button>
+        : <button type="button" {...sx(null, x.cta, x.ctaGhost)} onClick={() => share(card)}><Icon name="share" /><span {...sx(null, x.ctaText)}>{t('Share')}</span></button>}
       {last
-        ? <button type="button" className="wr-nav" onClick={close} aria-label={t('Done')}><Icon name="check" /></button>
-        : <button type="button" className="wr-nav" onClick={next} aria-label={t('Next card')}><Icon name={rtl ? 'chevronLeft' : 'chevronRight'} /></button>}
+        ? <button type="button" {...sx(null, x.nav)} onClick={close} aria-label={t('Done')}><Icon name="check" /></button>
+        : <button type="button" {...sx(null, x.nav)} onClick={next} aria-label={t('Next card')}><Icon name={rtl ? 'chevronLeft' : 'chevronRight'} /></button>}
     </div>
   </div>
 }

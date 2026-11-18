@@ -5,7 +5,7 @@ import { todayISO } from '../lib/format.js'
 import { MOBILE, syncReminder } from '../lib/mobile.js'
 import { enabledMeasurementFields, BP_KEY } from '../lib/measurements.js'
 import { reminderOf, withReminder, checkinLabel, EVERY_CHOICES } from '../lib/checkin-reminder.js'
-import { isOn } from '../lib/modules.js'
+import { isOn } from '../lib/modules.ts'
 import { Button, Row, Section, SelectRow, Switch } from './ui.tsx'
 
 // Check-in reminders (lib/checkin-reminder.js): one interval per thing you track, one time of day,

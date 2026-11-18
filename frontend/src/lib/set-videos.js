@@ -22,7 +22,7 @@
 // They are the owner's own: no Coach payload, MCP tool (get_workout says how many, nothing
 // more), share card, Wrapped, PDF, plan file or CSV reads `media`. The tests pin that.
 import { normalizeMediaRef } from './media-refs.js'
-import { sameWorkout } from './workout-date.js'
+import { sameWorkout } from './workout-date.ts'
 import { stampWorkout } from './sync-merge.js'
 import { isWarmupRow } from './workout-model.js'
 

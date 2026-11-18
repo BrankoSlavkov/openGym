@@ -1,7 +1,7 @@
 // More than one passkey on a profile, and the one-time code that adds one on another device
 // (#95). Settings → Account lists the passkeys and offers both ways to add one; the sign-in screen
 // — or the code's link, opened on the other device — redeems a code. The rules are the
-// server's (api/passkeys-store.js, api/device-link.js and the passkeys block in api/server.js):
+// server's (api/passkeys-store.js, api/device-link.ts and the passkeys block in api/server.js):
 // what needs proof, the last way in, how long a code lives. This only words them.
 import { useEffect, useRef, useState } from 'react'
 import { useStore } from '../store/useStore.js'
@@ -10,7 +10,7 @@ import { t, tn } from '../lib/i18n.js'
 import { dateLocale } from '../lib/i18n-core.js'
 import { api, webauthnOK, createPasskey } from '../lib/api.ts'
 import { copyText } from '../lib/clipboard.ts'
-import { deviceLinkUrl, deviceLabel } from '../lib/device-link.js'
+import { deviceLinkUrl, deviceLabel } from '../lib/device-link.ts'
 import { askAddDeviceData } from '../sheets.jsx'
 import { passwordError, notReached, useAgainOnceReached, ProveOwner } from './PasswordAuth.jsx'
 import { MOBILE } from '../lib/mobile.js'
@@ -22,7 +22,7 @@ const post = (path, body) => api(path, { method: 'POST', body: JSON.stringify(bo
 const errStyle = { color: 'var(--red)', marginTop: 10 }
 // A passkey prompt the person closed is their answer, not an error worth a line in red.
 const dismissed = e => e?.name === 'NotAllowedError' || e?.name === 'AbortError'
-// How long a code lives (api/device-link.js DEVICE_LINK_TTL_MS), for the sentence that says so.
+// How long a code lives (api/device-link.ts DEVICE_LINK_TTL_MS), for the sentence that says so.
 const LINK_MINUTES = 10
 // The server keeps a creation challenge five minutes; one older than four is asked for again
 // rather than risked on a prompt that then fails.

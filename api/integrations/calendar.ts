@@ -16,7 +16,7 @@
  *
  * Pure, so the tests can feed it documents. docs/CALENDAR.md is the reference. */
 import { effectiveRoutineId, queueLiveOn } from '../queue.ts';
-import { libraryName } from '../coach/core/library.js';
+import { libraryName } from '../coach/core/library.ts';
 import { workoutTime } from './events.ts';
 
 export const PAST_DAYS = 7;

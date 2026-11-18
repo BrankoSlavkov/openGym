@@ -16,7 +16,7 @@
 import { weekKey, weekStartOf } from './format.js'
 import { STREAK_BADGES } from './streak.js'
 import { cleanChallenges, isGold } from './challenges.js'
-import { isOn } from './modules.js'
+import { isOn } from './modules.ts'
 
 export const POINTS = { week: 10, badge: 25, challenge: 15, gold: 15 }
 export const STEP = 50

@@ -55,15 +55,4 @@ describe('screen orientation (#821)', () => {
     await expect(m.applyOrientation('landscape')).resolves.toBeUndefined()
   })
 
-  it('the activity applies the saved choice before the page loads, and the app re-applies it', () => {
-    const dir = '../../android/app/src/main/java/ch/duartesantos/opengym/'
-    const activity = readFileSync(new URL(dir + 'MainActivity.java', import.meta.url), 'utf8')
-    const plugin = readFileSync(new URL(dir + 'OrientationPlugin.java', import.meta.url), 'utf8')
-    expect(activity).toMatch(/registerPlugin\(OrientationPlugin\.class\);[\s\S]*OrientationPlugin\.applySaved\(this\);[\s\S]*super\.onCreate/)
-    expect(plugin).toContain('@CapacitorPlugin(name = "Orientation")')
-    expect(plugin).toMatch(/SCREEN_ORIENTATION_SENSOR_PORTRAIT/)
-    expect(plugin).toMatch(/SCREEN_ORIENTATION_UNSPECIFIED/)
-    const app = readFileSync(new URL('../App.jsx', import.meta.url), 'utf8')
-    expect(app).toMatch(/if \(MOBILE\) applyOrientation\(\)/)
-  })
 })

@@ -1,4 +1,4 @@
-import { isFavRoutine, toggleFavRoutine } from '../lib/routine-favs.js'
+import { isFavRoutine, toggleFavRoutine } from '../lib/routine-favs.ts'
 import { useNavigate, useParams } from '../router/hooks.tsx'
 import { useEffect, useRef, useState } from 'react'
 import { useStore } from '../store/useStore.js'
@@ -21,7 +21,7 @@ import { Button, Row, SelectRow, Switch } from '../components/ui.tsx'
 import { shareRoutineSheet } from '../components/RoutineShare.jsx'
 import SwipeRow from '../components/SwipeRow.tsx'
 import { RoutineFolderRow } from '../components/RoutineFolder.tsx'
-import { workoutControls } from '../lib/workout-controls.js'
+import { workoutControls } from '../lib/workout-controls.ts'
 import { copyRoutine, deleteRoutine, replaceSlotExercise } from '../lib/routines.js'
 import { markEntryUndone } from '../lib/sync-merge.js'
 import { speedUnitOf } from '../lib/speed.js'
@@ -504,7 +504,7 @@ export default function RoutineEdit() {
         <input className="input" data-tour="routine-name" aria-label={t('Routine name')} defaultValue={r.name} style={{ fontWeight: 600, fontSize: 'var(--fs-title3)', letterSpacing: '-.021em' }}
           onChange={e => update(s => { s.routines.find(x => x.id === id).name = e.target.value.trim() || t('Routine') })} />
       </div>
-      {/* The star (#327, lib/routine-favs.js): a favourite leads Plan's list and the Start sheet. */}
+      {/* The star (#327, lib/routine-favs.ts): a favourite leads Plan's list and the Start sheet. */}
       <button className={'iconbtn fav-btn' + (isFavRoutine(r) ? ' on' : '')} aria-pressed={isFavRoutine(r)} data-routine-fav
         aria-label={isFavRoutine(r) ? t('Remove from favourites') : t('Add to favourites')}
         onClick={() => { let on = false; update(s => { on = toggleFavRoutine(s, id) }); toast(on ? t('Starred. It leads your routines now.') : t('No longer a favourite.')) }}>

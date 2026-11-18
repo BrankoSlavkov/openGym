@@ -16,7 +16,7 @@ vi.mock('../lib/api.ts', () => ({
   }),
   appBase: () => '/', remoteAuth: () => null
 }))
-const { default: Connect } = await import('./Connect.jsx')
+const { default: Connect } = await import('./Connect.tsx')
 
 let host, root
 beforeEach(() => { calls.length = 0; host = document.createElement('div'); document.body.appendChild(host); root = createRoot(host) })

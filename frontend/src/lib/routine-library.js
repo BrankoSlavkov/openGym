@@ -2,7 +2,7 @@
 // the built-in starter plans plus the community index at a configurable address (the instance's
 // `coach.routinesUrl`, else opengym.ch), fetched by the app, cached for a day, and simply absent
 // when it cannot be read. A question to the Coach carries the few entries that match it.
-import { builtinIndex, normalizeIndex, searchRoutines, compactEntry, entryToBundle, DEFAULT_INDEX_URL } from '../../../api/coach/core/routine-library.js'
+import { builtinIndex, normalizeIndex, searchRoutines, compactEntry, entryToBundle, DEFAULT_INDEX_URL } from '../../../api/coach/core/routine-library.ts'
 import { validatePlan } from '../../../api/coach/core/validate.js'
 import { nativeFetch } from './capacitor-fetch.js'
 import { useStore } from '../store/useStore.js'

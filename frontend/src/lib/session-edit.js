@@ -15,7 +15,7 @@ import { beatsWeight } from './exercises.js'
 import { bestWeightForEntry, workoutVolume } from './history.js'
 import { hasCompletedWork } from './workout-model.js'
 import { stampWorkout } from './sync-merge.js'
-import { legacySyncKey, rebuildPrHistory } from './workout-date.js'
+import { legacySyncKey, rebuildPrHistory } from './workout-date.ts'
 
 const clone = value => structuredClone(value)
 const list = v => (Array.isArray(v) ? v : [])

@@ -14,7 +14,7 @@
 /* One entry per theme. `from` and `to` are [month, day], 1-based and inclusive, in local time:
    Halloween is on from 1 October to the end of 31 October and gone on 1 November. The strings
    are English keys, translated where they are shown. A theme with `colors` offers an accent
-   override, which is only ever opt-in. `appIcon` names its icon in lib/app-icon-variants.js, which
+   override, which is only ever opt-in. `appIcon` names its icon in lib/app-icon-variants.ts, which
    the settings page then suggests while the theme shows.
 
    `hidden: true` makes a theme exist only inside its own window (1.4.5): outside it, nothing of
@@ -23,7 +23,7 @@
    on 1 January it goes back into hiding until the next 1 December. No row in Settings, no "On"
    to force it early, no app icon, no advent calendar, no search hit (views/seasonal-gate.test.jsx
    walks every way in). */
-import { isOn } from './modules.js'
+import { isOn } from './modules.ts'
 import { seasonNow } from './season-clock.js'
 
 export const THEMES = [

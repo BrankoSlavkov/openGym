@@ -37,15 +37,5 @@ describe('delete workouts only', () => {
     expect(after.deleted.workouts).toEqual({ a: -200, b: -200 })
     expect(restoreWorkouts(after, removed)).toBe(0)
   })
-  it('the sheet says what stays, runs and recovery sessions included, in every language (QA2 1.4.5)', () => {
-    const src = readFileSync(fileURLToPath(new URL('../components/DeleteWorkouts.jsx', import.meta.url)), 'utf8')
-    const key = src.match(/t\('(Clears your training log[^']*)'\)/)[1]
-    expect(key).toMatch(/activities like runs or rides, recovery sessions/)
-    const dir = fileURLToPath(new URL('../locales/', import.meta.url))
-    for (const f of readdirSync(dir).filter(f => /^[a-z-]+\.js$/i.test(f))) {
-      const line = readFileSync(dir + f, 'utf8').split('\n').find(l => l.trim().startsWith(JSON.stringify(key) + ':'))
-      expect(line, f).toBeTruthy()
-      expect(line.slice(line.indexOf(':', JSON.stringify(key).length) + 1).trim(), f).not.toBe(JSON.stringify(key) + ',')
-    }
-  })
+
 })

@@ -8,6 +8,7 @@ applications; reusable domain models and coach functions live in `packages/share
 - `bun start`: regenerate OpenAPI and Orval hooks, then start the API.
 - `bun run generate`: regenerate the API schema and frontend client without a server.
 - `bun run build`: regenerate and build the frontend.
+- `bun run --cwd frontend typecheck:tests`: check converted frontend tests and their imports.
 - `bun run typecheck`: API, frontend production TypeScript, and shared TypeScript.
 - `bun run test:api` / `bun run test:web` / `bun run test:mcp`: application suites.
 

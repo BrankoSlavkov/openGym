@@ -18,7 +18,7 @@ import { useUI } from '../store/useUI.js'
 import { t } from '../lib/i18n.js'
 import { todayISO } from '../lib/format.js'
 import { scheduleModeOf } from '../lib/rotation.js'
-import { workoutControls } from '../lib/workout-controls.js'
+import { workoutControls } from '../lib/workout-controls.ts'
 import {
   useTour, tourSteps, stepFrom, indexOfStep, noteStep, markTourDone, markTutorialDone, markOffered, markResumeAsked,
   openTour, closeTour, placeCard, visiblePart, routeOf, reached, passOver, TUTORIALS, TUTORIAL_COPY, SAMPLE_ROUTINE_ID, SAMPLE_WORKOUT_ID,
@@ -26,9 +26,10 @@ import {
 import { beginWorkout } from '../sheets.jsx'
 import { Button } from './ui.tsx'
 import Icon from './Icon.tsx'
-import { PRESETS, presetOf, applyPreset } from '../lib/modules.js'
+import { PRESETS, presetOf, applyPreset } from '../lib/modules.ts'
 import { presetCopy } from '../lib/modules-copy.js'
-import './Tour.css'
+import { sx } from '../lib/sx.ts'
+import { styles as x } from './Tour.styles.ts'
 
 // What each stop says. Literal t() calls, so check-source-strings sees every one.
 const COPY = {
@@ -294,24 +295,24 @@ function Question({ kind, at }) {
   const S = useStore(s => s.S)
   const preset = presetOf(S)
   const pick = id => { if (id !== preset) useStore.getState().update(s => applyPreset(s, id)) }
-  return <div className="tour tour-ask">
-    <div className="tour-block tour-dim" />
-    <div className="tour-card tour-center" ref={cardRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="tour-t" aria-describedby="tour-b">
+  return <div {...sx('tour tour-ask', x.root)}>
+    <div {...sx('tour-block', x.block, x.dim)} />
+    <div {...sx('tour-card tour-center', x.card, x.center)} ref={cardRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="tour-t" aria-describedby="tour-b">
       {!resume && <>
-        <h2 id="tour-m">{t('How much app do you want?')}</h2>
-        <div className="tour-list tour-presets" role="radiogroup" aria-labelledby="tour-m">
-          {PRESETS.map(p => <button key={p.id} type="button" role="radio" aria-checked={preset === p.id} className="tour-tut tour-pick" data-preset={p.id} onClick={() => pick(p.id)}>
-            <span className="tour-tut-m"><span className="tour-tut-t">{presetCopy()[p.id][0]}</span><span className="tour-tut-s">{presetCopy()[p.id][1]}</span></span>
-            <Icon name="check" className="tour-pick-k" aria-hidden="true" />
+        <h2 id="tour-m" {...sx(null, x.h2)}>{t('How much app do you want?')}</h2>
+        <div {...sx(null, x.list, x.presets)} role="radiogroup" aria-labelledby="tour-m">
+          {PRESETS.map(p => <button key={p.id} type="button" role="radio" aria-checked={preset === p.id} {...sx('tour-tut', x.tut, x.pick, preset === p.id && x.picked)} data-preset={p.id} onClick={() => pick(p.id)}>
+            <span {...sx(null, x.tutText)}><span {...sx('tour-tut-t', x.tutTitle)}>{presetCopy()[p.id][0]}</span><span {...sx(null, x.tutSub)}>{presetCopy()[p.id][1]}</span></span>
+            <Icon name="check" {...sx(null, x.tutIcon, x.pickCheck, preset === p.id && x.pickCheckOn)} aria-hidden="true" />
           </button>)}
         </div>
-        <p className="tour-pick-f">{t('Change it anytime in Settings → Modules.')}</p>
+        <p {...sx(null, x.p, x.pickFoot)}>{t('Change it anytime in Settings → Modules.')}</p>
       </>}
-      <h2 id="tour-t" className={resume ? '' : 'tour-q2'}>{resume ? t('Finish the tour?') : t('Want a 1-minute tour?')}</h2>
-      <p id="tour-b">{resume ? t('You stopped halfway. Want to see the rest?') : t('We’ll point at the good bits on the real screens. Bail out anytime.')}</p>
-      <div className="tour-acts">
-        <Button onClick={no}>{resume ? t('No thanks') : t('Skip')}</Button>
-        <Button variant="primary" onClick={yes}>{resume ? t('Continue') : t('Show me')}</Button>
+      <h2 id="tour-t" {...sx(null, x.h2, !resume && x.q2)}>{resume ? t('Finish the tour?') : t('Want a 1-minute tour?')}</h2>
+      <p id="tour-b" {...sx(null, x.p)}>{resume ? t('You stopped halfway. Want to see the rest?') : t('We’ll point at the good bits on the real screens. Bail out anytime.')}</p>
+      <div {...sx(null, x.acts)}>
+        <Button {...sx(null, x.act)} onClick={no}>{resume ? t('No thanks') : t('Skip')}</Button>
+        <Button {...sx(null, x.act)} variant="primary" onClick={yes}>{resume ? t('Continue') : t('Show me')}</Button>
       </div>
     </div>
   </div>
@@ -552,61 +553,61 @@ function Run({ at, flow = 'tour' }) {
   // Between stops, and for a moment while the element scrolls into view, the card waits unseen
   // rather than flashing up in the middle.
   const settling = !ready || (step.anchor && !rect && Date.now() - shownAt.current < 700)
-  const counter = <span className="tour-count">{t('Step {0} of {1}', i + 1, steps.length)}</span>
-  const skip = !last && <button type="button" className="tour-skip" onClick={() => finish(false)}>{tutorial ? t('Skip') : t('Skip tour')}</button>
+  const counter = <span {...sx(null, x.count)}>{t('Step {0} of {1}', i + 1, steps.length)}</span>
+  const skip = !last && <button type="button" {...sx('tour-skip', x.skip)} onClick={() => finish(false)}>{tutorial ? t('Skip') : t('Skip tour')}</button>
   const routine = step.commit ? useStore.getState().S.routines.find(r => r.id === madeRef.current) : null
 
   // The screen is the user's: a bar out of the way of the open sheet, and a ring, not a dimmer.
   if (step.free) {
     const atBottom = sheetTop != null && sheetTop < view.top + 140
-    return <div className="tour tour-free" data-step={step.id} data-flow={flow}>
-      {rect && sheetTop == null && <div className="tour-ring" style={{ top: rect.top - 4, left: rect.left - 4, width: rect.width + 8, height: rect.height + 8, transition: motion }} />}
-      <div className={'tour-card tour-bar' + (atBottom ? ' at-bottom' : '')} ref={cardRef} tabIndex={-1} role="dialog" aria-modal="false"
+    return <div {...sx('tour tour-free', x.root)} data-step={step.id} data-flow={flow}>
+      {rect && sheetTop == null && <div {...sx(null, x.ring)} style={{ top: rect.top - 4, left: rect.left - 4, width: rect.width + 8, height: rect.height + 8, transition: motion }} />}
+      <div {...sx('tour-card tour-bar', x.card, x.bar, atBottom && x.atBottom)} ref={cardRef} tabIndex={-1} role="dialog" aria-modal="false"
         aria-labelledby="tour-t" aria-describedby="tour-b" style={{ visibility: ready ? undefined : 'hidden' }}>
-        <div className="tour-top">{counter}{skip}</div>
-        <h2 id="tour-t">{title}</h2>
-        <p id="tour-b">{body}</p>
-        <div className="tour-acts">
-          {i > 0 && <Button size="sm" onClick={() => go(-1)}>{t('Back')}</Button>}
-          <Button size="sm" variant="primary" onClick={() => go(1)}>{t('Next')}</Button>
+        <div {...sx(null, x.top)}>{counter}{skip}</div>
+        <h2 id="tour-t" {...sx(null, x.h2, x.barH2)}>{title}</h2>
+        <p id="tour-b" {...sx(null, x.p, x.barP)}>{body}</p>
+        <div {...sx(null, x.acts)}>
+          {i > 0 && <Button {...sx(null, x.act)} size="sm" onClick={() => go(-1)}>{t('Back')}</Button>}
+          <Button {...sx(null, x.act)} size="sm" variant="primary" onClick={() => go(1)}>{t('Next')}</Button>
         </div>
       </div>
     </div>
   }
 
-  return <div className="tour" data-step={step.id} data-flow={flow}>
+  return <div {...sx('tour', x.root)} data-step={step.id} data-flow={flow}>
     {hole ? <>
-      <div className="tour-hole" data-testid="tour-hole" style={{ ...hole, transition: motion }} />
+      <div {...sx('tour-hole', x.hole)} data-testid="tour-hole" style={{ ...hole, transition: motion }} />
       {/* Four panes around the hole take the taps the dimmed screen should not get. */}
-      <div className="tour-block" style={{ top: 0, left: 0, right: 0, height: Math.max(0, hole.top) }} />
-      <div className="tour-block" style={{ top: hole.top + hole.height, left: 0, right: 0, bottom: 0 }} />
-      <div className="tour-block" style={{ top: hole.top, left: 0, width: Math.max(0, hole.left), height: hole.height }} />
-      <div className="tour-block" style={{ top: hole.top, left: hole.left + hole.width, right: 0, height: hole.height }} />
-      {!open && <div className="tour-block" style={hole} />}
-    </> : <div className="tour-block tour-dim" />}
-    <div className={'tour-card' + (hole ? '' : ' tour-center') + (step.id === 'done' ? ' tour-wide' : '')} ref={cardRef} tabIndex={-1}
+      <div {...sx('tour-block', x.block)} style={{ top: 0, left: 0, right: 0, height: Math.max(0, hole.top) }} />
+      <div {...sx('tour-block', x.block)} style={{ top: hole.top + hole.height, left: 0, right: 0, bottom: 0 }} />
+      <div {...sx('tour-block', x.block)} style={{ top: hole.top, left: 0, width: Math.max(0, hole.left), height: hole.height }} />
+      <div {...sx('tour-block', x.block)} style={{ top: hole.top, left: hole.left + hole.width, right: 0, height: hole.height }} />
+      {!open && <div {...sx('tour-block', x.block)} style={hole} />}
+    </> : <div {...sx('tour-block', x.block, x.dim)} />}
+    <div {...sx(['tour-card', !hole && 'tour-center'], x.card, !hole && x.center, hole && pos.arrow != null && x.cardWithArrow)} ref={cardRef} tabIndex={-1}
       role="dialog" aria-modal="true" aria-labelledby="tour-t" aria-describedby="tour-b" data-side={hole ? pos.side : 'center'}
       style={{ ...(hole ? { top: pos.top, left: pos.left, transition: motion } : null), visibility: settling ? 'hidden' : undefined }}>
-      {hole && pos.arrow != null && <span className={'tour-arrow ' + pos.side} aria-hidden="true" style={{ left: pos.arrow }} />}
-      <div className="tour-top">{counter}{skip}</div>
-      <h2 id="tour-t">{title}</h2>
-      <p id="tour-b">{body}{step.commit && !routine?.ex.length ? ' ' + t('Add an exercise first, then it’s worth saving.') : ''}{what && <span className="tour-sr"> {t('Pointing at: {0}', what)}</span>}</p>
-      {step.id === 'done' && <div className="tour-list" role="group" aria-label={t('Tutorials')}>
+      {hole && pos.arrow != null && <span {...sx(null, x.arrow, pos.side === 'below' && x.below, pos.side === 'above' && x.above)} aria-hidden="true" style={{ left: pos.arrow }} />}
+      <div {...sx(null, x.top)}>{counter}{skip}</div>
+      <h2 id="tour-t" {...sx(null, x.h2)}>{title}</h2>
+      <p id="tour-b" {...sx(null, x.p)}>{body}{step.commit && !routine?.ex.length ? ' ' + t('Add an exercise first, then it’s worth saving.') : ''}{what && <span {...sx('tour-sr', x.sr)}> {t('Pointing at: {0}', what)}</span>}</p>
+      {step.id === 'done' && <div {...sx(null, x.list)} role="group" aria-label={t('Tutorials')}>
         {TUTORIALS.map(f => {
           const [tt, ss] = TUTORIAL_COPY[f]()
-          return <button key={f} type="button" className="tour-tut" onClick={() => runTutorial(f)}>
-            <span className="tour-tut-m"><span className="tour-tut-t">{tt}</span><span className="tour-tut-s">{ss}</span></span>
-            <Icon name="chevronRight" />
+          return <button key={f} type="button" {...sx('tour-tut', x.tut)} onClick={() => runTutorial(f)}>
+            <span {...sx(null, x.tutText)}><span {...sx('tour-tut-t', x.tutTitle)}>{tt}</span><span {...sx(null, x.tutSub)}>{ss}</span></span>
+            <Icon name="chevronRight" {...sx(null, x.tutIcon)} />
           </button>
         })}
       </div>}
-      <div className="tour-acts">
-        {i > 0 && <Button onClick={() => go(-1)}>{t('Back')}</Button>}
+      <div {...sx(null, x.acts)}>
+        {i > 0 && <Button {...sx(null, x.act)} onClick={() => go(-1)}>{t('Back')}</Button>}
         {step.commit
-          ? <Button variant="primary" disabled={!routine?.ex.length} onClick={save}>{t('Save plan')}</Button>
+          ? <Button {...sx(null, x.act)} variant="primary" disabled={!routine?.ex.length} onClick={save}>{t('Save plan')}</Button>
           : step.go || step.intercept
-            ? <Button variant="primary" onClick={showMe}>{t('Show me')}</Button>
-            : <Button variant="primary" onClick={() => go(1)}>{last ? (tutorial ? t('Done') : t('Let’s go')) : t('Next')}</Button>}
+            ? <Button {...sx(null, x.act)} variant="primary" onClick={showMe}>{t('Show me')}</Button>
+            : <Button {...sx(null, x.act)} variant="primary" onClick={() => go(1)}>{last ? (tutorial ? t('Done') : t('Let’s go')) : t('Next')}</Button>}
       </div>
     </div>
   </div>

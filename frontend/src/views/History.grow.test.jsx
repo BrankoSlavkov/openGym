@@ -45,7 +45,7 @@ describe('History grows as it is scrolled', () => {
     observers = []
     window.IntersectionObserver = FakeIO
     ;({ DEF, useStore } = await import('../store/useStore.js'))
-    ;({ default: History, HISTORY_PAGE: PAGE } = await import('./History.jsx'))
+    ;({ default: History, HISTORY_PAGE: PAGE } = await import('./History.tsx'))
     ;({ TestRouter } = await import('../router/testing.tsx'))
   })
   afterEach(() => {

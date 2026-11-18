@@ -31,7 +31,7 @@
 // arrives: the phone behaves exactly as before.
 import { stripBidi } from './bidi.js'
 import { setBandsOf, bandText } from './bands.js'
-import { isOn } from './modules.js'
+import { isOn } from './modules.ts'
 import { MOBILE, nativePlatform } from './mobile.js'
 import { EXIDX, gifSrc, imgSrc, figureOf, isAssisted } from './exercises.js'
 import { packId, packDrawingId, BUILTIN_PX } from './anim-quality.js'
@@ -52,7 +52,7 @@ import { garminSnapshot, GARMIN_ACKED_MAX } from './garmin-snapshot.js'
 import { plannedType } from './health-connect.js'
 import { exView, exConverted, exUnitOf, viewEntry, viewRow, shownWeight, storedWeight } from './ex-unit.js'
 import { streakInfo } from './streak.js'
-import { accentValue, accentPair, customAccentVars } from './accent.js'
+import { accentValue, accentPair, customAccentVars } from './accent.ts'
 import { circuitClock } from './circuit.js'
 
 // A circuit's clock (lib/circuit.js, store/useCircuit.js), when one runs: its rests and its get

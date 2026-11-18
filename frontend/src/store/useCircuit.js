@@ -23,7 +23,7 @@ import { beep, chime, vibrate, unlock } from '../lib/sound.js'
 import { speak, voiceOpts } from '../lib/speech.js'
 import { MOBILE } from '../lib/mobile.js'
 import { armRestAlert, disarmRestAlert } from '../lib/rest-alert.js'
-import { accentValue } from '../lib/accent.js'
+import { accentValue } from '../lib/accent.ts'
 import { t } from '../lib/i18n.js'
 import { bindCircuitSource, circuitChanged } from '../lib/watch-sync.js'
 

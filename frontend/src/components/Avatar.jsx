@@ -22,7 +22,7 @@ const VIEW = 264   // px, the crop viewport: fits a 320 px phone inside the shee
 /** The sentence for a picked file that cannot be a picture. */
 import { PinnedBadges, profileBadgesSheet } from './Streak.jsx'
 import { streakInfo } from '../lib/streak.js'
-import { isOn } from '../lib/modules.js'
+import { isOn } from '../lib/modules.ts'
 
 export function avatarErrorText(e) {
   if (e?.code === 'type') return t('That isn’t a photo. Try a JPEG, PNG, WebP or HEIC.')

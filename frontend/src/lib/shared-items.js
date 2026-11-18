@@ -11,7 +11,7 @@ import { normalizeMediaRef } from './media-refs.js'
 import { soundsOf, addSound, SOUNDS_MAX } from './user-sounds.js'
 import { buildPlanBundle, parsePlan, mergePlan } from './plan-share.js'
 import { iconChoice } from './streak-icons.js'
-import { accentValue } from './accent.js'
+import { accentValue } from './accent.ts'
 import { dayPhotosOf } from './day-photos.js'
 
 /* The kinds, in the order of the Community tabs. `take` false: browse only (a profile picture is

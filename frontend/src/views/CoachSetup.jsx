@@ -24,6 +24,53 @@ import { ConnectSheet } from './MobileOnboarding.jsx'
 import { AiConsentSection } from '../components/CoachConsentSheet.jsx'
 import Icon from '../components/Icon.tsx'
 import { Section, Row, Button, TextField } from '../components/ui.tsx'
+import * as stylex from '@stylexjs/stylex'
+import { sx } from '../lib/sx.ts'
+
+// The Coach setup's provider cards: big, tappable, one line each (was in coach.css).
+const styles = stylex.create({
+  cards: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(150px,1fr))', gap: 10, padding: '10px 12px 6px' },
+  card: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: 4,
+    minHeight: 104,
+    padding: 14,
+    textAlign: 'start',
+    borderRadius: 14,
+    backgroundColor: 'var(--surface-2)',
+    border: '1.5px solid transparent',
+    color: 'var(--label)',
+    font: 'inherit',
+    cursor: 'pointer',
+    transition: {
+      default: 'transform 140ms cubic-bezier(.23,1,.32,1),border-color 160ms ease,background-color 160ms ease',
+      '@media (prefers-reduced-motion:reduce)': 'border-color 160ms ease,background-color 160ms ease',
+    },
+    transform: { default: null, ':active': { default: 'scale(.97)', '@media (prefers-reduced-motion:reduce)': 'none' } },
+    opacity: { default: null, ':disabled': 0.55 },
+  },
+  cardOn: { borderColor: 'var(--acc)', backgroundColor: 'var(--acc-soft)' },
+  cardIcon: { fontSize: 22, lineHeight: 1 },
+  cardTitle: { fontWeight: 600, fontSize: 'var(--fs-body)' },
+  cardSub: { fontSize: 'var(--fs-footnote)', color: 'var(--label-2)', lineHeight: 1.35 },
+  ok: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    margin: '0 0 18px',
+    padding: '12px 14px',
+    borderRadius: 12,
+    backgroundColor: stylex.firstThatWorks('color-mix(in srgb,var(--green) 14%,transparent)', 'var(--surface)'),
+    color: 'var(--label)',
+    fontWeight: 500,
+  },
+  okIcon: { color: 'var(--green)' },
+  steps: { margin: '2px 12px 8px', paddingInlineStart: 22, color: 'var(--label-2)', fontSize: 'var(--fs-footnote)', lineHeight: 1.5 },
+  stepItem: { padding: '2px 0' },
+})
+
 
 // Literal t() calls, so check-source-strings sees the three lines; t(s) over a list of keys hid them.
 const STEPS = () => [t('Loading the exercise catalogue…'), t('Checking the endpoint…'), t('Ready')]
@@ -265,11 +312,11 @@ export default function CoachSetup() {
 
     {choice === 'byok' && <>
       <Section title={t('Pick your AI')}>
-        <div className="cs-cards">
-          {CARDS.map(c => <button key={c.id} type="button" className={'cs-card' + (card === c.id ? ' on' : '')} disabled={busy} aria-pressed={card === c.id} onClick={() => pick(c)}>
-            <span className="cs-card-i" style={{ color: c.tint }}><Icon name={c.icon} /></span>
-            <span className="cs-card-t">{c.title ? c.title() : HTTP_PROVIDERS[c.provider].label}</span>
-            <span className="cs-card-s">{c.line()}</span>
+        <div {...stylex.props(styles.cards)}>
+          {CARDS.map(c => <button key={c.id} type="button" {...sx(['cs-card', card === c.id && 'on'], styles.card, card === c.id && styles.cardOn)} disabled={busy} aria-pressed={card === c.id} onClick={() => pick(c)}>
+            <span {...stylex.props(styles.cardIcon)} style={{ color: c.tint }}><Icon name={c.icon} /></span>
+            <span {...sx('cs-card-t', styles.cardTitle)}>{c.title ? c.title() : HTTP_PROVIDERS[c.provider].label}</span>
+            <span {...stylex.props(styles.cardSub)}>{c.line()}</span>
           </button>)}
         </div>
         <div className="row" style={{ flexWrap: 'wrap', gap: 7, padding: '4px 12px 10px' }}>
@@ -308,10 +355,10 @@ export default function CoachSetup() {
           <TextField value={key} type="password" placeholder={hasKey ? '••••••••  ' + t('(saved)') : (meta.keyPlaceholder || 'sk-…')} autoCapitalize="none" autoCorrect="off"
             onChange={e => onKey(e.target.value)} />
         </div>
-        {provider === 'gemini' && <ol className="cs-steps">
-          <li>{t('Open Google AI Studio and sign in with your Google account.')}</li>
-          <li>{t('Press Create API key and copy it.')}</li>
-          <li>{t('Come back and paste it. openGym tests it on its own.')}</li>
+        {provider === 'gemini' && <ol {...stylex.props(styles.steps)}>
+          <li {...stylex.props(styles.stepItem)}>{t('Open Google AI Studio and sign in with your Google account.')}</li>
+          <li {...stylex.props(styles.stepItem)}>{t('Press Create API key and copy it.')}</li>
+          <li {...stylex.props(styles.stepItem)}>{t('Come back and paste it. openGym tests it on its own.')}</li>
         </ol>}
         {meta.keyUrl && <Row icon="link" iconTint="var(--acc)" title={provider === 'gemini' ? t('Open Google AI Studio') : t('Get a key from {0}', meta.label)} subtitle={hostOf(meta.keyUrl)} accessory="chevron" onClick={() => window.open(meta.keyUrl, '_blank', 'noopener')} />}
         {provider === 'anthropic' && <Row icon="lightbulb" iconTint="var(--yellow)" title={t('Got Claude Max? Your plan includes monthly API credits: create a key here')}
@@ -336,7 +383,7 @@ export default function CoachSetup() {
         </div>)}
       </div>}
 
-      {models && step === 2 && <div className="cs-ok" role="status"><Icon name="checkCircle" /> {tn('It works! {0} model to pick from.', 'It works! {0} models to pick from.', models.length)}</div>}
+      {models && step === 2 && <div {...stylex.props(styles.ok)} role="status"><Icon name="checkCircle" {...stylex.props(styles.okIcon)} /> {tn('It works! {0} model to pick from.', 'It works! {0} models to pick from.', models.length)}</div>}
 
       {models && <Section title={t('Model')}>
         <div style={{ padding: '8px 12px' }}>

@@ -14,6 +14,10 @@ type StepperProps = {
   onChange: (value: number) => void
   decimal?: boolean
   className?: string
+  /** Class names for the labelled wrapper, the label and the number field (StyleX from a container). */
+  wrapClassName?: string
+  labelClassName?: string
+  numClassName?: string
   label?: ReactNode
   unit?: ReactNode
   invalid?: boolean
@@ -32,6 +36,9 @@ export default function Stepper({
   onChange,
   decimal = true,
   className = '',
+  wrapClassName = '',
+  labelClassName = '',
+  numClassName = '',
   label,
   unit,
   invalid = false,
@@ -132,6 +139,7 @@ export default function Stepper({
             value={value}
             decimal={decimal}
             step={step}
+            className={numClassName}
             onChange={onChange}
             disabled={disabled}
             aria-invalid={invalid ? 'true' : undefined}
@@ -151,8 +159,8 @@ export default function Stepper({
   )
   if (!label) return inner
   return (
-    <div className="stp-w">
-      <span className="stp-l">{label}</span>
+    <div className={'stp-w ' + wrapClassName}>
+      <span className={'stp-l ' + labelClassName}>{label}</span>
       {inner}
     </div>
   )

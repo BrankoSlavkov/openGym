@@ -10,7 +10,7 @@
 import { reportData } from './report.js'
 import { isoOf, todayISO, weekStartOf } from './format.js'
 import { streakWeeks } from './streak.js'
-import { isOn } from './modules.js'
+import { isOn } from './modules.ts'
 
 const dateOf = iso => new Date(iso + 'T12:00:00')
 const addDays = (iso, n) => { const d = dateOf(iso); d.setDate(d.getDate() + n); return isoOf(d) }

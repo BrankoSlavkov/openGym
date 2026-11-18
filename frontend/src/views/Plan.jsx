@@ -16,7 +16,7 @@ import { Button, Row, Section, Segmented } from '../components/ui.tsx'
 import SwipeRow from '../components/SwipeRow.tsx'
 import { copyRoutine, deleteRoutine, restoreRoutine, routineSnapshot } from '../lib/routines.js'
 import MiniBodyMap from '../components/MiniBodyMap.tsx'
-import { workoutControls } from '../lib/workout-controls.js'
+import { workoutControls } from '../lib/workout-controls.ts'
 import { tappable } from '../lib/use-sheet-keyboard.js'
 import { useListReorder, moved } from '../lib/use-list-reorder.js'
 import { glyphOf, DEFAULT_GLYPH } from '../lib/glyphs.js'
@@ -31,9 +31,9 @@ import {
   scheduleModeOf, queueRecovery, rotationIds, saveRotation, startNewPass, startPass, stopPass,
   chooseRotation, chooseFixedWeek, sequenceOf, isSimpleSequence, segmentAt, REST,
 } from '../lib/rotation.js'
-import { isOn } from '../lib/modules.js'
+import { isOn } from '../lib/modules.ts'
 import { groupRoutines, folderOpen, setFolderOpen, folderOf } from '../lib/routine-folders.js'
-import { isFavRoutine } from '../lib/routine-favs.js'
+import { isFavRoutine } from '../lib/routine-favs.ts'
 import { routineFromWorkoutSheet } from '../components/RoutineFromWorkout.tsx'
 import { routineSources } from '../lib/session-routines.js'
 
@@ -490,7 +490,7 @@ function Routines({ S, update, nav }) {
             {routines.length > 1 && <button className="plan-handle" aria-label={t('Move {0}', r.name)} title={t('Drag to reorder')}
               {...reorder.handle(i)}><Icon name="chevronsUpDown" /></button>}
           </div>)}</div>
-        // Starred routines first, under Favourites (#327, lib/routine-favs.js): out of their
+        // Starred routines first, under Favourites (#327, lib/routine-favs.ts): out of their
         // folder while starred, so each routine shows once. Edit still orders S.routines itself.
         : [...(routines.some(isFavRoutine) ? [{ folder: '', fav: true, routines: routines.filter(isFavRoutine) }] : []),
           ...groupRoutines(routines.filter(r => !isFavRoutine(r)))].map(g => {

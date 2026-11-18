@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { MODULES, MODULE_IDS, GROUPS, PRESETS, isOn, moduleStates, presetModules, presetOf, applyPreset, setModule, turnedOff, onCount } from './modules.js'
+import { MODULES, MODULE_IDS, GROUPS, PRESETS, isOn, moduleStates, presetModules, presetOf, applyPreset, setModule, turnedOff, onCount } from './modules.ts'
 
 describe('modules', () => {
   it('every module belongs to a group, with an icon and copy', () => {

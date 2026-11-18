@@ -14,7 +14,7 @@
  * model verbatim for the one repair round (FR-48) — and a list of six problems produces a
  * better second attempt than the first of them does.
  */
-import { libraryHas, libraryName, equipmentAllows, isDumbbellLift, machineAllows } from './library.js';
+import { libraryHas, libraryName, equipmentAllows, isDumbbellLift, machineAllows } from './library.ts';
 
 // A catalogue exercise the person's equipment does not reach, and that was not in the library
 // slice they were offered (which already pins what they train). The prompt says "their
@@ -27,7 +27,7 @@ const offEquipment = (ctx, id) => libraryHas(id) && !(ctx.offered && ctx.offered
     || !machineAllows(ctx.machines, id));
 const OFF_EQUIPMENT = (where, id) => `${where} "${id}" needs equipment the user does not have — use an exercise from the library provided in the payload`;
 import { glyphStr } from './glyphs.ts';
-import { sortActions } from './ask-actions.js';
+import { sortActions } from './ask-actions.ts';
 
 // The closed list (FR-23 / C3). Adding a member here is a deliberate act with an apply
 // implementation on the client to match; there is no default case anywhere.
@@ -808,6 +808,7 @@ export const MAX_ANSWER_CHARS = 2000;
  * Validate an answer to a question in the chat: one non-empty string, and nothing to apply — an
  * answer that tries to carry plan changes is refused, the way a debrief's is.
  * Returns { ok, proposal:{ answer } } | { ok:false, errors }.
+ * @param {Record<string, unknown> | null} [payload]
  */
 export function validateAsk(data, payload = null, ctx = {}) {
   if (!data || typeof data !== 'object') return fail(['the answer was not an object']);

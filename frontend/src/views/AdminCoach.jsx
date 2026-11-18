@@ -5,6 +5,9 @@ import { api } from '../lib/api.ts'
 import Icon from '../components/Icon.tsx'
 import { Button, Switch, TextArea, TextField } from '../components/ui.tsx'
 import { confirmSheet } from '../sheets.jsx'
+import * as stylex from '@stylexjs/stylex'
+import { sx } from '../lib/sx.ts'
+import { styles as adm, pill } from './Admin.styles.ts'
 
 /* The operator's side of the Coach, laid out as a guided setup: one master switch, numbered
    steps that each say what they are for, and everything an owner rarely needs folded away
@@ -56,8 +59,8 @@ const RUNTIME_IDS = ['claude', 'codex']
 // Claude Max, Ultra and Team include monthly API credits (support.claude.com/en/articles/17154008);
 // Gemini's key from AI Studio is free to start with.
 export function ProviderHint({ id }) {
-  if (id === 'anthropic' || id === 'claude') return <div className="adm-hint adm-tip"><Icon name="lightbulb" /><span><b>Got Claude Max, Ultra or Team?</b> Your plan includes monthly API credits (link the Console organisation once under Settings, Billing on claude.ai). <a href="https://platform.claude.com/settings/keys" target="_blank" rel="noopener noreferrer">Create a key here</a>.</span></div>
-  if (id === 'gemini') return <div className="adm-hint adm-tip"><Icon name="lightbulb" /><span><b>A free key in a minute.</b> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">Open Google AI Studio</a>, press Create API key, copy it, then Add API key here and Test the Coach.</span></div>
+  if (id === 'anthropic' || id === 'claude') return <div {...sx(null, adm.hint, adm.tip)}><Icon name="lightbulb" {...sx(null, adm.tipIcon)} /><span><b>Got Claude Max, Ultra or Team?</b> Your plan includes monthly API credits (link the Console organisation once under Settings, Billing on claude.ai). <a {...sx(null, adm.tipLink)} href="https://platform.claude.com/settings/keys" target="_blank" rel="noopener noreferrer">Create a key here</a>.</span></div>
+  if (id === 'gemini') return <div {...sx(null, adm.hint, adm.tip)}><Icon name="lightbulb" {...sx(null, adm.tipIcon)} /><span><b>A free key in a minute.</b> <a {...sx(null, adm.tipLink)} href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">Open Google AI Studio</a>, press Create API key, copy it, then Add API key here and Test the Coach.</span></div>
   return null
 }
 const TESTING_IDS = ['fixture']
@@ -134,7 +137,7 @@ export default function AdminCoach() {
 
   if (d.disabledByEnv) return <div className="card">
     <h2 style={{ margin: '0 0 6px' }}>AI Coach</h2>
-    <div className="adm-lead">Force-disabled by <code>COACH_DISABLED</code> in the server's environment. Remove that variable and restart to configure the Coach here.</div>
+    <div {...sx(null, adm.lead)}>Force-disabled by <code>COACH_DISABLED</code> in the server's environment. Remove that variable and restart to configure the Coach here.</div>
   </div>
 
   const meta = d.providers.find(p => p.id === d.provider) || {}
@@ -182,17 +185,17 @@ export default function AdminCoach() {
 
   // Off = a quiet, optional feature: one clean pitch and one button, no half-dimmed controls.
   if (!d.enabled) return <div className="card">
-    <div className="adm-hero">
-      <div className="adm-hero-av"><Icon name="sparkles" /></div>
-      <h2>AI Coach</h2>
-      <p>An optional coach that designs training plans and reviews what people actually log. Off right now, so nobody sees it anywhere in the app.</p>
-      <div className="adm-hero-feats">
-        <div><Icon name="key" /><span><b>Bring any AI.</b> An API key from Anthropic, OpenAI or Gemini, or a free local model via Ollama.</span></div>
-        <div><Icon name="chat" /><span><b>Or skip the key.</b> With <code>MCP=on</code> everyone can add openGym to the Claude, ChatGPT or Gemini they already pay for: Settings, Use your subscription.</span></div>
-        <div><Icon name="shield" /><span><b>Private by design.</b> A strict allowlist decides what leaves; every change needs the user's yes and can be undone.</span></div>
-        <div><Icon name="person" /><span><b>Each user decides.</b> Turning it on only makes the Coach available; every person consents for themselves.</span></div>
+    <div {...sx(null, adm.hero)}>
+      <div {...sx(null, adm.heroAvatar)}><Icon name="sparkles" /></div>
+      <h2 {...sx(null, adm.heroTitle)}>AI Coach</h2>
+      <p {...sx(null, adm.heroText)}>An optional coach that designs training plans and reviews what people actually log. Off right now, so nobody sees it anywhere in the app.</p>
+      <div {...sx(null, adm.heroFeats)}>
+        <div {...sx(null, adm.heroFeat)}><Icon name="key" {...sx(null, adm.heroFeatIcon)} /><span {...sx(null, adm.heroFeatText)}><b {...sx(null, adm.heroFeatTitle)}>Bring any AI.</b> An API key from Anthropic, OpenAI or Gemini, or a free local model via Ollama.</span></div>
+        <div {...sx(null, adm.heroFeat)}><Icon name="chat" {...sx(null, adm.heroFeatIcon)} /><span {...sx(null, adm.heroFeatText)}><b {...sx(null, adm.heroFeatTitle)}>Or skip the key.</b> With <code>MCP=on</code> everyone can add openGym to the Claude, ChatGPT or Gemini they already pay for: Settings, Use your subscription.</span></div>
+        <div {...sx(null, adm.heroFeat)}><Icon name="shield" {...sx(null, adm.heroFeatIcon)} /><span {...sx(null, adm.heroFeatText)}><b {...sx(null, adm.heroFeatTitle)}>Private by design.</b> A strict allowlist decides what leaves; every change needs the user's yes and can be undone.</span></div>
+        <div {...sx(null, adm.heroFeat)}><Icon name="person" {...sx(null, adm.heroFeatIcon)} /><span {...sx(null, adm.heroFeatText)}><b {...sx(null, adm.heroFeatTitle)}>Each user decides.</b> Turning it on only makes the Coach available; every person consents for themselves.</span></div>
       </div>
-      <Button variant="primary" icon="sparkles" disabled={busy} onClick={() => patch({ enabled: true })}>Set up the Coach</Button>
+      <Button {...sx(null, adm.heroBtn)} variant="primary" icon="sparkles" disabled={busy} onClick={() => patch({ enabled: true })}>Set up the Coach</Button>
     </div>
   </div>
 
@@ -201,12 +204,12 @@ export default function AdminCoach() {
       <h2 style={{ margin: 0 }}>AI Coach</h2>
       <Switch checked={!!d.enabled} disabled={busy} onChange={v => patch({ enabled: v })} />
     </div>
-    <div className="adm-status">
-      <span className={'adm-pill ' + (live ? 'ok' : 'warn')}>{live ? 'ready' : 'not ready'}</span>
+    <div {...sx(null, adm.status)}>
+      <span {...sx('adm-pill', ...pill(live ? 'ok' : 'warn'))}>{live ? 'ready' : 'not ready'}</span>
       <span>{status}</span>
     </div>
-    {!live && <div className="adm-progress" aria-hidden="true"><i style={{ width: Math.round(doneCount / flags.length * 100) + '%' }} /></div>}
-    <div className="adm-lead">
+    {!live && <div {...sx('adm-progress', adm.progress)} aria-hidden="true"><i {...sx(null, adm.progressBar)} style={{ width: Math.round(doneCount / flags.length * 100) + '%' }} /></div>}
+    <div {...sx(null, adm.lead)}>
       {live ? 'Users find the Coach under Plan → Coach. This switch is the only place it can be turned off for everyone.'
         : `${doneCount} of ${flags.length} steps done. Finish the open step and the next one unfolds.`}
     </div>
@@ -214,38 +217,38 @@ export default function AdminCoach() {
     {d.enabled && <>
       {/* ---------- provider ---------- */}
       <Step n={num()} title="Provider" hint={meta.label || 'Which AI answers the Coach'} done={step1Done} {...stepAt()}>
-        <div className="adm-hint">Pick who answers. A key or token you save stays with its provider, so you can switch back and forth without pasting it again.</div>
-        {groups.map(g => !!g.items.length && <div key={g.title} className="adm-group">
-          <div className="adm-group-t">{g.title}</div>
-          <div className="adm-chips">
-            {g.items.map(p => <button key={p.id} className={'chip' + (p.id === d.provider ? ' on' : '')} disabled={busy}
+        <div {...sx(null, adm.hint)}>Pick who answers. A key or token you save stays with its provider, so you can switch back and forth without pasting it again.</div>
+        {groups.map(g => !!g.items.length && <div key={g.title} {...sx(null, adm.group)}>
+          <div {...sx(null, adm.groupTitle)}>{g.title}</div>
+          <div {...sx(null, adm.chips)}>
+            {g.items.map(p => <button key={p.id} {...sx(['chip', p.id === d.provider && 'on'], adm.chip, p.id === d.provider && adm.chipOn)} disabled={busy}
               onClick={() => { setTestResult(null); patch({ provider: p.id }) }}>
-              {p.label}{p.connected && <span className="adm-chip-key">key saved</span>}
+              {p.label}{p.connected && <span {...sx(null, adm.chipKey, p.id === d.provider && adm.chipKeyOn)}>key saved</span>}
             </button>)}
           </div>
-          <div className="adm-hint" style={{ margin: '6px 0 0' }}>{g.hint}</div>
+          <div {...sx(null, adm.hint)} style={{ margin: '6px 0 0' }}>{g.hint}</div>
         </div>)}
       </Step>
 
       {/* ---------- endpoint (compatible only) ---------- */}
       {needsEndpoint && <Step n={num()} title="Endpoint" hint={d.baseUrl || 'Where the model runs'} done={step2Done} {...stepAt()}>
-        <div className="adm-hint">The address of any server that speaks OpenAI's chat API: <b>Ollama</b>, <b>LM Studio</b>, <b>vLLM</b>, <b>OpenRouter</b>, or a gateway of your own. The base as your provider documents it, with or without its version (<code>/v1</code>, <code>/v4</code>), and no key in the URL.</div>
-        <div className="adm-field">
-          <label>Base URL</label>
-          <TextField key={d.baseUrl || ''} defaultValue={d.baseUrl || ''} placeholder="http://ollama:11434  or  https://openrouter.ai/api" inputMode="url" autoCapitalize="none" autoCorrect="off"
+        <div {...sx(null, adm.hint)}>The address of any server that speaks OpenAI's chat API: <b>Ollama</b>, <b>LM Studio</b>, <b>vLLM</b>, <b>OpenRouter</b>, or a gateway of your own. The base as your provider documents it, with or without its version (<code {...sx(null, adm.code)}>/v1</code>, <code {...sx(null, adm.code)}>/v4</code>), and no key in the URL.</div>
+        <div {...sx(null, adm.field)}>
+          <label {...sx(null, adm.fieldLabel)}>Base URL</label>
+          <TextField {...sx(null, adm.input)} key={d.baseUrl || ''} defaultValue={d.baseUrl || ''} placeholder="http://ollama:11434  or  https://openrouter.ai/api" inputMode="url" autoCapitalize="none" autoCorrect="off"
             onBlur={e => e.target.value !== (d.baseUrl || '') && patch({ baseUrl: e.target.value })} />
         </div>
-        <div className="adm-actions">
-          <Button size="sm" variant="tinted" icon="magnifier" disabled={busy} onClick={discover}>Find Ollama or LM Studio</Button>
+        <div {...sx(null, adm.actions)}>
+          <Button {...sx(null, adm.actionBtn)} size="sm" variant="tinted" icon="magnifier" disabled={busy} onClick={discover}>Find Ollama or LM Studio</Button>
         </div>
         {found && (found.length
-          ? found.map(f => <div key={f.base} className="adm-kv"><span className="k">{f.kind} · {f.models.length} models</span>
-            <span className="v"><Button size="sm" disabled={busy} onClick={() => patch({ baseUrl: f.base, ...(f.models[0] && !chosenModel ? { model: f.models[0] } : {}) })}>Use {f.base}</Button></span></div>)
-          : <div className="adm-hint">Nothing answered on the usual ports next to the server. Type the address instead.</div>)}
-        <div className="adm-hint" style={{ margin: 0 }}>The host is written to the job log, so you can always see where requests went.</div>
-        <div className="adm-field">
-          <label>Extra headers (optional)</label>
-          <TextArea key={headersToText(d.headers)} defaultValue={headersToText(d.headers)} placeholder={'x-opencode-session: 550e8400-…'} autoCapitalize="none" autoCorrect="off" rows={2}
+          ? found.map(f => <div key={f.base} {...sx(null, adm.kv)}><span {...sx(null, adm.key)}>{f.kind} · {f.models.length} models</span>
+            <span {...sx(null, adm.value)}><Button size="sm" disabled={busy} onClick={() => patch({ baseUrl: f.base, ...(f.models[0] && !chosenModel ? { model: f.models[0] } : {}) })}>Use {f.base}</Button></span></div>)
+          : <div {...sx(null, adm.hint)}>Nothing answered on the usual ports next to the server. Type the address instead.</div>)}
+        <div {...sx(null, adm.hint)} style={{ margin: 0 }}>The host is written to the job log, so you can always see where requests went.</div>
+        <div {...sx(null, adm.field)}>
+          <label {...sx(null, adm.fieldLabel)}>Extra headers (optional)</label>
+          <TextArea {...sx(null, adm.input)} key={headersToText(d.headers)} defaultValue={headersToText(d.headers)} placeholder={'x-opencode-session: 550e8400-…'} autoCapitalize="none" autoCorrect="off" rows={2}
             onBlur={e => {
               const cur = headersToText(d.headers)
               if (e.target.value === cur) return
@@ -254,7 +257,7 @@ export default function AdminCoach() {
               patch({ headers: p.headers })
             }} />
         </div>
-        <div className="adm-hint" style={{ margin: 0 }}>One <code>Name: value</code> per line, sent with every request to this endpoint. For gateways that demand routing headers. Never <code>Authorization</code> or <code>Content-Type</code> — those are refused.</div>
+        <div {...sx(null, adm.hint)} style={{ margin: 0 }}>One <code {...sx(null, adm.code)}>Name: value</code> per line, sent with every request to this endpoint. For gateways that demand routing headers. Never <code {...sx(null, adm.code)}>Authorization</code> or <code {...sx(null, adm.code)}>Content-Type</code> — those are refused.</div>
       </Step>}
 
       {/* ---------- credential ---------- */}
@@ -263,130 +266,130 @@ export default function AdminCoach() {
           <CredentialPill auth={d.auth} />
         </div>
         {authState === 'connected' ? <>
-          <div className="adm-hint">Connected{d.auth.account ? ' as ' + d.auth.account : ''} via {credentialLabel(d.auth.type)}{d.auth.connectedAt ? ' · added ' + rel(d.auth.connectedAt) : ''}. The key is stored encrypted and is never shown again.</div>
-          <div className="adm-actions">
-            {meta.apiKey && <Button size="sm" variant="tinted" icon="lock" disabled={busy}
+          <div {...sx(null, adm.hint)}>Connected{d.auth.account ? ' as ' + d.auth.account : ''} via {credentialLabel(d.auth.type)}{d.auth.connectedAt ? ' · added ' + rel(d.auth.connectedAt) : ''}. The key is stored encrypted and is never shown again.</div>
+          <div {...sx(null, adm.actions)}>
+            {meta.apiKey && <Button {...sx(null, adm.actionBtn)} size="sm" variant="tinted" icon="lock" disabled={busy}
               onClick={() => openSheet(close => <ApiKeySheet close={close} onDone={load} label={meta.label} placeholder={meta.keyPlaceholder} optional={meta.keyOptional} />)}>Replace key</Button>}
             {/* The key is encrypted at rest and never shown again, so this is the one action on the
                 card that cannot be walked back. Every other irreversible action in the app asks first;
                 until 2026-09-22 this one did not. */}
-            <Button size="sm" variant="danger" disabled={busy} onClick={() => confirmSheet({
+            <Button {...sx(null, adm.actionBtn)} size="sm" variant="danger" disabled={busy} onClick={() => confirmSheet({
               title: 'Remove this credential?',
               message: 'The Coach stops working for everyone on this instance until a new key is added. The stored key cannot be recovered.',
               confirmText: 'Remove', danger: true, onConfirm: disconnect,
             })}>Remove</Button>
           </div>
         </> : <>
-          {authState === 'unreadable' && <div className="adm-hint" style={{ color: 'var(--red)' }}>
-            The stored credential can't be decrypted. This usually means <code>./data</code> was restored without its <code>secret</code> file. Add the key again to fix it.
+          {authState === 'unreadable' && <div {...sx(null, adm.hint)} style={{ color: 'var(--red)' }}>
+            The stored credential can't be decrypted. This usually means <code {...sx(null, adm.code)}>./data</code> was restored without its <code {...sx(null, adm.code)}>secret</code> file. Add the key again to fix it.
           </div>}
-          {authState === 'optional' && <div className="adm-hint">This endpoint works without a key. Add one only if your server asks for it (OpenRouter does; a model on your own network usually does not).</div>}
-          {authState === 'none' && meta.signIn !== 'chatgpt' && <div className="adm-hint">{meta.setupToken
+          {authState === 'optional' && <div {...sx(null, adm.hint)}>This endpoint works without a key. Add one only if your server asks for it (OpenRouter does; a model on your own network usually does not).</div>}
+          {authState === 'none' && meta.signIn !== 'chatgpt' && <div {...sx(null, adm.hint)}>{meta.setupToken
             ? 'Paste either a Claude Code setup token (your subscription) or an Anthropic API key (pay per use).'
             : 'Paste an API key from the provider\'s console. It is stored encrypted on this server and sent to the provider only while a job runs.'}</div>}
           {authState === 'none' && meta.setupToken && <SetupTokenRisk />}
           {authState === 'none' && <ProviderHint id={d.provider} />}
-          <div className="adm-actions">
+          <div {...sx(null, adm.actions)}>
             {meta.signIn === 'chatgpt' && <ChatGptSignIn onDone={load} />}
-            {meta.signIn === 'pkce' && <Button size="sm" variant="primary" icon="person" disabled={busy}
+            {meta.signIn === 'pkce' && <Button {...sx(null, adm.actionBtn)} size="sm" variant="primary" icon="person" disabled={busy}
               onClick={() => import('../lib/openrouter-signin.js').then(m => m.startWebSignIn({ back: '#/admin' }))}>Sign in with OpenRouter</Button>}
-            {meta.setupToken && <Button size="sm" variant="primary" icon="key" disabled={busy}
+            {meta.setupToken && <Button {...sx(null, adm.actionBtn)} size="sm" variant="primary" icon="key" disabled={busy}
               onClick={() => openSheet(close => <SetupTokenSheet close={close} onDone={load} label={meta.label} />)}>Add Claude Code token</Button>}
-            {meta.apiKey && <Button size="sm" variant={meta.setupToken || meta.signIn ? undefined : 'primary'} icon="lock" disabled={busy}
+            {meta.apiKey && <Button {...sx(null, adm.actionBtn)} size="sm" variant={meta.setupToken || meta.signIn ? undefined : 'primary'} icon="lock" disabled={busy}
               onClick={() => openSheet(close => <ApiKeySheet close={close} onDone={load} label={meta.label} placeholder={meta.keyPlaceholder} optional={meta.keyOptional} />)}>
               {meta.keyOptional ? 'Add API key (optional)' : 'Add API key'}</Button>}
-            {meta.keyUrl && <Button size="sm" variant="tinted" icon="link" onClick={() => window.open(meta.keyUrl, '_blank', 'noopener')}>Get a key</Button>}
+            {meta.keyUrl && <Button {...sx(null, adm.actionBtn)} size="sm" variant="tinted" icon="link" onClick={() => window.open(meta.keyUrl, '_blank', 'noopener')}>Get a key</Button>}
           </div>
-          {meta.signIn === 'pkce' && <div className="adm-hint" style={{ margin: '6px 0 0' }}>OpenRouter's own sign-in (OAuth PKCE): you approve openGym on openrouter.ai and it hands back a key of your own, billed to your OpenRouter credits. One key for Claude, GPT, Gemini and the rest.</div>}
+          {meta.signIn === 'pkce' && <div {...sx(null, adm.hint)} style={{ margin: '6px 0 0' }}>OpenRouter's own sign-in (OAuth PKCE): you approve openGym on openrouter.ai and it hands back a key of your own, billed to your OpenRouter credits. One key for Claude, GPT, Gemini and the rest.</div>}
         </>}
       </Step>}
 
       {/* ---------- model ---------- */}
       <Step n={num()} title="Model" hint={d.model || (meta.defaultModel ? 'default: ' + meta.defaultModel : 'not chosen yet')} done={step4Done} {...stepAt()}>
-        <div className="adm-hint">{meta.http
+        <div {...sx(null, adm.hint)}>{meta.http
           ? 'Which model the provider should use. "List models" asks the provider for its current list, so nothing here goes stale.'
           : 'Optional. Leave it empty to use the runtime\'s own default.'}</div>
-        <div className="adm-field">
-          <label>Model</label>
+        <div {...sx(null, adm.field)}>
+          <label {...sx(null, adm.fieldLabel)}>Model</label>
           {models && models.length
-            ? <select className="adm-select" value={chosenModel} disabled={busy} onChange={e => patch({ model: e.target.value })}>
+            ? <select {...sx('adm-select', adm.select)} value={chosenModel} disabled={busy} onChange={e => patch({ model: e.target.value })}>
               <option value="">{meta.defaultModel ? `Default (${meta.defaultModel})` : 'Pick a model…'}</option>
               {chosenModel && !models.includes(chosenModel) && <option value={chosenModel}>{chosenModel} (not in the list)</option>}
               {models.map(m => <option key={m} value={m}>{m}</option>)}
             </select>
-            : <TextField key={d.provider} defaultValue={chosenModel} placeholder={meta.defaultModel ? `Default: ${meta.defaultModel}` : needsEndpoint ? 'e.g. qwen2.5:3b, or press "List models"' : '(runtime default)'}
+            : <TextField {...sx(null, adm.input)} key={d.provider} defaultValue={chosenModel} placeholder={meta.defaultModel ? `Default: ${meta.defaultModel}` : needsEndpoint ? 'e.g. qwen2.5:3b, or press "List models"' : '(runtime default)'}
               onBlur={e => e.target.value !== chosenModel && patch({ model: e.target.value })} />}
         </div>
-        {lists && <div className="adm-actions">
-          <Button size="sm" variant="tinted" icon="reset" disabled={busy} onClick={loadModels}>{models ? 'Refresh list' : 'List models'}</Button>
+        {lists && <div {...sx(null, adm.actions)}>
+          <Button {...sx(null, adm.actionBtn)} size="sm" variant="tinted" icon="reset" disabled={busy} onClick={loadModels}>{models ? 'Refresh list' : 'List models'}</Button>
           {models && models.length ? <span className="dim small" style={{ alignSelf: 'center' }}>{models.length} served by the provider</span> : null}
         </div>}
       </Step>
 
       {/* ---------- test ---------- */}
       <Step n={num()} title="Test" hint={step5Done ? 'passed' : 'one real round trip, no user data'} done={step5Done} {...stepAt()} forceOpen={!!testResult}>
-        <div className="adm-hint">Sends one tiny question to the provider and checks the answer. No training data is involved. Do this after every change above.</div>
-        <div className="adm-actions">
-          <Button size="sm" variant="primary" icon="check" disabled={busy || !authed || !hasEndpoint} onClick={test}>Test the Coach</Button>
+        <div {...sx(null, adm.hint)}>Sends one tiny question to the provider and checks the answer. No training data is involved. Do this after every change above.</div>
+        <div {...sx(null, adm.actions)}>
+          <Button {...sx(null, adm.actionBtn)} size="sm" variant="primary" icon="check" disabled={busy || !authed || !hasEndpoint} onClick={test}>Test the Coach</Button>
         </div>
-        {(!authed || !hasEndpoint) && <div className="adm-hint" style={{ margin: '6px 0 0' }}>
+        {(!authed || !hasEndpoint) && <div {...sx(null, adm.hint)} style={{ margin: '6px 0 0' }}>
           {!hasEndpoint ? 'Finish the Endpoint step first.' : 'Finish the Credential step first.'}
         </div>}
-        {testResult && <div className={'adm-result ' + (testResult.pending ? '' : testResult.ok ? 'ok' : 'bad')}>
+        {testResult && <div {...sx(['adm-result', !testResult.pending && (testResult.ok ? 'ok' : 'bad')], adm.result, !testResult.pending && (testResult.ok ? adm.resultOk : adm.resultBad))}>
           {testResult.pending ? 'Asking the provider…'
-            : testResult.ok ? <><b>Passed</b>{testResult.version ? 'Provider: ' + testResult.version : 'The provider answered as expected.'}</>
-              : <><b>Failed</b>{testResult.error || 'No answer from the provider.'}</>}
+            : testResult.ok ? <><b {...sx(null, adm.resultTitle)}>Passed</b>{testResult.version ? 'Provider: ' + testResult.version : 'The provider answered as expected.'}</>
+              : <><b {...sx(null, adm.resultTitle)}>Failed</b>{testResult.error || 'No answer from the provider.'}</>}
         </div>}
-        <div className="adm-kv" style={{ marginTop: 10 }}>
-          <span className="k">Runtime</span>
-          <span className="v">{d.runtime.ok ? <span className="adm-pill ok">ready</span> : <span className="adm-pill bad">missing</span>}{d.runtime.version ? <div className="dim small">{d.runtime.version}</div> : null}{!d.runtime.ok && d.runtime.error ? <div className="small" style={{ color: 'var(--red)' }}>{d.runtime.error}</div> : null}</span>
+        <div {...sx(null, adm.kv)} style={{ marginTop: 10 }}>
+          <span {...sx(null, adm.key)}>Runtime</span>
+          <span {...sx(null, adm.value)}>{d.runtime.ok ? <span {...sx('adm-pill', ...pill('ok'))}>ready</span> : <span {...sx('adm-pill', ...pill('bad'))}>missing</span>}{d.runtime.version ? <div className="dim small">{d.runtime.version}</div> : null}{!d.runtime.ok && d.runtime.error ? <div className="small" style={{ color: 'var(--red)' }}>{d.runtime.error}</div> : null}</span>
         </div>
       </Step>
 
       {/* ---------- advanced ---------- */}
-      <details className="adm-fold">
-        <summary>Advanced <Icon name="chevronRight" className="chev" /></summary>
-        <div className="adm-fold-b">
-          <div className="adm-group-t">Limits</div>
-          <div className="adm-hint">How many Coach runs are allowed per day. Every run is one request on the provider account above. 0 means no limit.</div>
-          <div className="adm-kv"><span className="k">Per user, per day</span>
-            <span className="v"><input className="num" type="number" min="0" max="200" defaultValue={d.caps.perProfileDaily} disabled={busy}
+      <details {...sx(null, adm.fold, stylex.defaultMarker())}>
+        <summary {...sx(null, adm.foldSummary)}>Advanced <Icon name="chevronRight" {...sx(null, adm.chev)} /></summary>
+        <div {...sx(null, adm.foldBody)}>
+          <div {...sx(null, adm.groupTitle)}>Limits</div>
+          <div {...sx(null, adm.hint)}>How many Coach runs are allowed per day. Every run is one request on the provider account above. 0 means no limit.</div>
+          <div {...sx(null, adm.kv)}><span {...sx(null, adm.key)}>Per user, per day</span>
+            <span {...sx(null, adm.value)}><input {...sx('num', adm.kvInput)} type="number" min="0" max="200" defaultValue={d.caps.perProfileDaily} disabled={busy}
               onBlur={capBlur('perProfileDaily')} /></span></div>
-          <div className="adm-kv"><span className="k">Whole instance, per day</span>
-            <span className="v"><input className="num" type="number" min="0" max="5000" defaultValue={d.caps.instanceDaily} disabled={busy}
+          <div {...sx(null, adm.kv)}><span {...sx(null, adm.key)}>Whole instance, per day</span>
+            <span {...sx(null, adm.value)}><input {...sx('num', adm.kvInput)} type="number" min="0" max="5000" defaultValue={d.caps.instanceDaily} disabled={busy}
               onBlur={capBlur('instanceDaily')} /></span></div>
-          <div className="adm-hint" style={{ marginTop: 10 }}>How long a chat message, refinement or review note can be. The chat composer and the server both enforce this.</div>
-          <div className="adm-kv"><span className="k">Max message length</span>
-            <span className="v"><input className="num" type="number" min="200" max="4000" defaultValue={d.maxMessageLen} disabled={busy}
+          <div {...sx(null, adm.hint)} style={{ marginTop: 10 }}>How long a chat message, refinement or review note can be. The chat composer and the server both enforce this.</div>
+          <div {...sx(null, adm.kv)}><span {...sx(null, adm.key)}>Max message length</span>
+            <span {...sx(null, adm.value)}><input {...sx('num', adm.kvInput)} type="number" min="200" max="4000" defaultValue={d.maxMessageLen} disabled={busy}
               onBlur={e => +e.target.value !== d.maxMessageLen && patch({ maxMessageLen: +e.target.value })} /></span></div>
-          <div className="adm-hint" style={{ marginTop: 10 }}>The ceiling on a single provider answer. Reasoning models — DeepSeek-style endpoints, or a "thinking" Gemini/OpenAI model — count their hidden reasoning against it, so a plan can fail with "the answer was cut off at the output limit" even though the plan itself is short. Raise it if that happens; keep it within the model's own output limit.</div>
-          <div className="adm-kv"><span className="k">Max output tokens</span>
-            <span className="v"><input className="num" type="number" min="1024" max="65536" defaultValue={d.maxOutputTokens} disabled={busy}
+          <div {...sx(null, adm.hint)} style={{ marginTop: 10 }}>The ceiling on a single provider answer. Reasoning models — DeepSeek-style endpoints, or a "thinking" Gemini/OpenAI model — count their hidden reasoning against it, so a plan can fail with "the answer was cut off at the output limit" even though the plan itself is short. Raise it if that happens; keep it within the model's own output limit.</div>
+          <div {...sx(null, adm.kv)}><span {...sx(null, adm.key)}>Max output tokens</span>
+            <span {...sx(null, adm.value)}><input {...sx('num', adm.kvInput)} type="number" min="1024" max="65536" defaultValue={d.maxOutputTokens} disabled={busy}
               onBlur={e => +e.target.value !== d.maxOutputTokens && patch({ maxOutputTokens: +e.target.value })} /></span></div>
 
-          <div className="adm-group-t" style={{ marginTop: 14 }}>Compare with others</div>
+          <div {...sx(null, adm.groupTitle)} style={{ marginTop: 14 }}>Compare with others</div>
           <div className="row between" style={{ gap: 12, alignItems: 'flex-start' }}>
-            <div className="adm-hint" style={{ margin: 0 }}>
+            <div {...sx(null, adm.hint)} style={{ margin: 0 }}>
               <b>Let people compare with each other.</b> Anonymous medians (estimated 1RM, sessions per week) across profiles that opt in; at least three must share before anyone sees a number. Each person switches themselves on in the Coach chat, and sees nothing unless they do.
             </div>
             <Switch checked={!!d.community} disabled={busy} onChange={v => patch({ community: v })} />
           </div>
 
-          <div className="adm-group-t" style={{ marginTop: 14 }}>Web research</div>
+          <div {...sx(null, adm.groupTitle)} style={{ marginTop: 14 }}>Web research</div>
           <div className="row between" style={{ gap: 12, alignItems: 'flex-start' }}>
-            <div className="adm-hint" style={{ margin: 0 }}>
+            <div {...sx(null, adm.hint)} style={{ margin: 0 }}>
               <b>Let the Coach search the web for chat questions.</b> Uses the provider's own search tool (Anthropic web search, OpenAI web search, Google Search grounding, OpenRouter's web plugin), which most providers bill per search on top of tokens. Each person also switches it on for themselves, and the chat shows the pages it used.{meta.web === false ? ' The current provider has no search tool.' : ''}
             </div>
             <Switch checked={!!d.web} disabled={busy} onChange={v => patch({ web: v })} />
           </div>
 
-          <div className="adm-group-t" style={{ marginTop: 14 }}>Routines library</div>
-          <div className="adm-hint">Where the app looks for community routines the Coach can suggest, next to the built-in starter plans (docs/ROUTINES_LIBRARY.md). Empty is opengym.ch's; <code>off</code> keeps to the built-in ones. The app fetches it, not this server.</div>
+          <div {...sx(null, adm.groupTitle)} style={{ marginTop: 14 }}>Routines library</div>
+          <div {...sx(null, adm.hint)}>Where the app looks for community routines the Coach can suggest, next to the built-in starter plans (docs/ROUTINES_LIBRARY.md). Empty is opengym.ch's; <code {...sx(null, adm.code)}>off</code> keeps to the built-in ones. The app fetches it, not this server.</div>
           <TextField key={d.routinesUrl || ''} defaultValue={d.routinesUrl || ''} placeholder="https://opengym.ch/routines/index.json" inputMode="url" autoCapitalize="none" autoCorrect="off"
             onBlur={e => e.target.value !== (d.routinesUrl || '') && patch({ routinesUrl: e.target.value })} />
 
-          <div className="adm-group-t" style={{ marginTop: 14 }}>Whose account pays</div>
-          <div className="adm-hint">{d.authMode === 'profile'
+          <div {...sx(null, adm.groupTitle)} style={{ marginTop: 14 }}>Whose account pays</div>
+          <div {...sx(null, adm.hint)}>{d.authMode === 'profile'
             ? 'Each profile signs in with their own account.'
             : d.auth?.type === 'apikey' || meta.http
               ? 'One API key for the whole instance: every profile may use the Coach with it, and the daily limits above are what bound the spend.'
@@ -394,8 +397,8 @@ export default function AdminCoach() {
                 ? 'One personal account, already in use by one profile. Every other profile is refused, so nobody spends somebody else\'s subscription.'
                 : 'One personal account. The first profile to use it becomes the only one allowed to; every other profile is then refused. Paste an API key instead if the whole instance should have the Coach.'}</div>
 
-          <div className="adm-group-t" style={{ marginTop: 14 }}>Isolation</div>
-          <div className="adm-hint">{d.unprivileged && !d.unprivileged.ok
+          <div {...sx(null, adm.groupTitle)} style={{ marginTop: 14 }}>Isolation</div>
+          <div {...sx(null, adm.hint)}>{d.unprivileged && !d.unprivileged.ok
             ? <span style={{ color: 'var(--red)' }}>Jobs are blocked: {d.unprivileged.why}. Nothing runs until this is fixed.</span>
             : d.unprivileged?.dropped
               ? 'Jobs run as a separate unprivileged user that cannot read your data directory or secrets.'
@@ -406,29 +409,29 @@ export default function AdminCoach() {
       </details>
 
       {/* ---------- activity ---------- */}
-      <details className="adm-fold">
-        <summary>Activity <Icon name="chevronRight" className="chev" /></summary>
-        <div className="adm-fold-b">
+      <details {...sx(null, adm.fold, stylex.defaultMarker())}>
+        <summary {...sx(null, adm.foldSummary)}>Activity <Icon name="chevronRight" {...sx(null, adm.chev)} /></summary>
+        <div {...sx(null, adm.foldBody)}>
           <div className="tiles" style={{ textAlign: 'start', marginBottom: 10 }}>
             <div className="tile"><div className="l">Jobs today</div><div className="v v-sm">{d.jobsToday}</div></div>
             <div className="tile"><div className="l">Last success</div><div className="v" style={{ fontSize: 'var(--fs-footnote)' }}>{rel(d.lastSuccess?.at)}</div></div>
           </div>
           {d.lastError && <>
-            <div className="adm-group-t">Last failure</div>
-            <div className="adm-result bad" style={{ marginTop: 0, marginBottom: 10 }}>
-              <b>{failureTitle(d.lastError.errorClass)}</b>
+            <div {...sx(null, adm.groupTitle)}>Last failure</div>
+            <div {...sx('adm-result bad', adm.result, adm.resultBad)} style={{ marginTop: 0, marginBottom: 10 }}>
+              <b {...sx(null, adm.resultTitle)}>{failureTitle(d.lastError.errorClass)}</b>
               {d.lastError.detail ? <span className="small">{d.lastError.detail}</span> : null}
               <div className="dim" style={{ fontSize: 'var(--fs-caption2)', marginTop: 4 }}>{rel(d.lastError.at)}</div>
             </div>
           </>}
-          <div className="adm-group-t">Recent jobs</div>
-          {d.recent?.length ? <div className="adm-log">
-            {d.recent.slice(0, 10).map((e, i) => <div key={i} className="adm-log-row">
+          <div {...sx(null, adm.groupTitle)}>Recent jobs</div>
+          {d.recent?.length ? <div {...sx('adm-log', adm.log)}>
+            {d.recent.slice(0, 10).map((e, i) => <div key={i} {...sx('adm-log-row', adm.logRow)}>
               <span>{e.kind === 'create' ? 'Plan' : 'Review'}{e.trigger === 'scheduled' ? ' · scheduled' : ''} · <span style={{ color: e.outcome === 'failed' ? 'var(--red)' : e.outcome === 'ready' ? 'var(--acc-ink)' : 'var(--label-2)' }}>{e.outcome}</span>{e.ms ? ' · ' + Math.round(e.ms / 1000) + ' s' : ''}</span>
-              <span className="when">{rel(e.at)}</span>
+              <span {...sx(null, adm.when)}>{rel(e.at)}</span>
             </div>)}
-          </div> : <div className="adm-empty">No jobs yet.</div>}
-          <div className="adm-hint" style={{ margin: '8px 0 0' }}>Counts and outcomes only. What people asked the Coach, and what it answered, is never shown here.</div>
+          </div> : <div {...sx(null, adm.empty)}>No jobs yet.</div>}
+          <div {...sx(null, adm.hint)} style={{ margin: '8px 0 0' }}>Counts and outcomes only. What people asked the Coach, and what it answered, is never shown here.</div>
         </div>
       </details>
     </>}
@@ -440,23 +443,23 @@ export default function AdminCoach() {
 function Step({ n, title, hint, done, open, forceOpen, stepKey, children }) {
   // `stepKey` remounts the <details> when the wizard advances, so the next step unfolds itself.
   // On the element itself: React wants a key written out, not spread in with the other props.
-  return <details key={stepKey} className={'adm-step ' + (done ? 'done' : 'todo')} open={open || forceOpen}>
-    <summary>
-      <span className="adm-num">{done ? <Icon name="check" /> : n}</span>
-      <span className="adm-step-t"><b>{title}</b><span>{hint}</span></span>
-      <Icon name="chevronRight" className="chev" />
+  return <details key={stepKey} {...sx(['adm-step', done ? 'done' : 'todo'], adm.step, stylex.defaultMarker())} open={open || forceOpen}>
+    <summary {...sx(null, adm.stepSummary)}>
+      <span {...sx('adm-num', adm.num, done && adm.numDone)}>{done ? <Icon name="check" /> : n}</span>
+      <span {...sx('adm-step-t', adm.stepText)}><b {...sx(null, adm.stepTitle)}>{title}</b><span {...sx(null, adm.stepHint, done && adm.stepHintDone)}>{hint}</span></span>
+      <Icon name="chevronRight" {...sx(null, adm.chev)} />
     </summary>
-    <div className="adm-step-b">{children}</div>
+    <div {...sx(null, adm.stepBody)}>{children}</div>
   </details>
 }
 
 function CredentialPill({ auth }) {
   const s = auth?.state
-  if (s === 'connected') return <span className="adm-pill ok">connected{auth.account ? ' · ' + auth.account : ''}</span>
-  if (s === 'not-required') return <span className="adm-pill">not needed</span>
-  if (s === 'optional') return <span className="adm-pill">optional, none saved</span>
-  if (s === 'unreadable') return <span className="adm-pill bad">can't be read</span>
-  return <span className="adm-pill warn">needed</span>
+  if (s === 'connected') return <span {...sx('adm-pill', ...pill('ok'))}>connected{auth.account ? ' · ' + auth.account : ''}</span>
+  if (s === 'not-required') return <span {...sx('adm-pill', ...pill())}>not needed</span>
+  if (s === 'optional') return <span {...sx('adm-pill', ...pill())}>optional, none saved</span>
+  if (s === 'unreadable') return <span {...sx('adm-pill', ...pill('bad'))}>can't be read</span>
+  return <span {...sx('adm-pill', ...pill('warn'))}>needed</span>
 }
 
 const credentialHint = (auth, meta) => {
@@ -500,7 +503,7 @@ const failureTitle = cls => ({
 // (code.claude.com/docs/en/agent-sdk/overview, "Authentication").
 export const SETUP_TOKEN_RISK = 'Anthropic\'s terms only allow this token in Claude Code; using it here can get your Claude account limited. An API key, or openGym as a connector inside Claude (Use your subscription), is the safe way.'
 function SetupTokenRisk() {
-  return <div className="adm-risk" role="note"><Icon name="warning" /><span>{SETUP_TOKEN_RISK}</span></div>
+  return <div {...sx(null, adm.risk)} role="note"><Icon name="warning" {...sx(null, adm.riskIcon)} /><span>{SETUP_TOKEN_RISK}</span></div>
 }
 
 /* Sign in with ChatGPT for plan usage (api/coach/chatgpt-plan.js). OpenAI sends the browser back
@@ -526,11 +529,11 @@ function ChatGptSignIn({ onDone }) {
   return <div style={{ flexBasis: '100%' }}>
     <Button size="sm" variant="primary" icon="person" disabled={busy} onClick={start}>Continue with ChatGPT</Button>
     {started && <>
-      <div className="adm-hint" style={{ margin: '10px 0 6px' }}>Allow plan use on the ChatGPT page. It then sends you to <code>127.0.0.1:1455</code>, which shows an error page: that is expected. Copy that whole address from the address bar and paste it here.</div>
+      <div {...sx(null, adm.hint)} style={{ margin: '10px 0 6px' }}>Allow plan use on the ChatGPT page. It then sends you to <code {...sx(null, adm.code)}>127.0.0.1:1455</code>, which shows an error page: that is expected. Copy that whole address from the address bar and paste it here.</div>
       <TextField value={cb} placeholder="http://127.0.0.1:1455/auth/callback?code=…" autoCapitalize="none" autoCorrect="off" onChange={e => setCb(e.target.value)} />
-      <div className="adm-actions" style={{ marginTop: 8 }}><Button size="sm" variant="primary" icon="check" disabled={busy || !cb.trim()} onClick={finish}>Finish sign-in</Button></div>
+      <div {...sx(null, adm.actions)} style={{ marginTop: 8 }}><Button {...sx(null, adm.actionBtn)} size="sm" variant="primary" icon="check" disabled={busy || !cb.trim()} onClick={finish}>Finish sign-in</Button></div>
     </>}
-    <div className="adm-hint" style={{ margin: '6px 0 0' }}>Uses your ChatGPT plan's limits, shared with ChatGPT itself. <a href="https://chatgpt.com/settings/usage" target="_blank" rel="noopener noreferrer">Manage usage</a> there.</div>
+    <div {...sx(null, adm.hint)} style={{ margin: '6px 0 0' }}>Uses your ChatGPT plan's limits, shared with ChatGPT itself. <a href="https://chatgpt.com/settings/usage" target="_blank" rel="noopener noreferrer">Manage usage</a> there.</div>
   </div>
 }
 

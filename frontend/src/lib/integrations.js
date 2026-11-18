@@ -7,7 +7,7 @@
 // integration the admin did not switch on is hidden from everyone but an admin, who is told how.
 //
 // Names of services are names, not translated. Everything else is an English key for t().
-import { OFFLINE_OFF_CARDS } from './build-caps.js'
+import { OFFLINE_OFF_CARDS } from './build-caps.ts'
 
 export const CATEGORIES = [
   { id: 'health', title: 'Health & devices' },
@@ -198,7 +198,7 @@ export const CARD_MODULE = { 'apple-health': 'health', 'health-connect': 'health
 /** The directory for this device: categories with their visible cards, empty ones left out.
  *  `ctx.mod(id)` says whether a module is on (absent: all on). */
 export function directory(ctx) {
-  // openGym Offline (lib/build-caps.js): only what works without a network (the health store, files).
+  // openGym Offline (lib/build-caps.ts): only what works without a network (the health store, files).
   const net = new Set(ctx.offline ? OFFLINE_OFF_CARDS : [])
   return CATEGORIES.map(cat => ({
     ...cat,

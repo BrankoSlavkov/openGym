@@ -1,4 +1,4 @@
-// openGym Offline (lib/build-caps.js) in Settings: nothing that needs a network is a page or a
+// openGym Offline (lib/build-caps.ts) in Settings: nothing that needs a network is a page or a
 // search hit, and the network log is there in the phone app only.
 import { describe, expect, it } from 'vitest'
 import { pageVisible, searchSettings } from './settings-pages.js'

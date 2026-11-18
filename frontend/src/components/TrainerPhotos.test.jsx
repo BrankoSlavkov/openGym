@@ -16,7 +16,7 @@ vi.mock('../lib/media-store.js', () => ({
   mediaStore: { url: h => { mocks.store.push(h); return Promise.resolve(h === 'a'.repeat(64) ? 'blob:local-a' : null) }, release: h => mocks.released.push(h) },
 }))
 
-import TrainerPhotos from './TrainerPhotos.jsx'
+import TrainerPhotos from './TrainerPhotos.tsx'
 
 const H = c => c.repeat(64)
 const photos = { count: 12, last: '2026-11-01', items: Array.from({ length: 12 }, (_, i) => ({ hash: H('abcdef0123456789'[i]), d: `2026-10-${String(20 - i).padStart(2, '0')}` })) }

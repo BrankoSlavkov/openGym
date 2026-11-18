@@ -9,7 +9,7 @@ import { t, tn } from '../lib/i18n.js'
 import { fmtAgo, changeCount } from '../lib/format.js'
 import { passkeyLogin, passkeyError, webauthnOK } from '../lib/api.ts'
 import { MOBILE, shareExport } from '../lib/mobile.js'
-import { offlineBuild } from '../lib/build-caps.js'
+import { offlineBuild } from '../lib/build-caps.ts'
 import { syncMedia } from '../lib/media-sync.js'
 import { DEMO } from '../lib/demo.js'
 import { askAddDeviceData, menuSheet } from '../sheets.jsx'
@@ -97,7 +97,7 @@ export function connectionView(sync, { mobile = MOBILE, online = isOnline(), off
     // Settings still says it and offers Connect, the bar stays away. A guest in a browser is on a
     // server it could sign in to, so it still hears that its data stays in this browser.
     default:
-      // openGym Offline (lib/build-caps.js) has nothing to connect to: no button for it.
+      // openGym Offline (lib/build-caps.ts) has nothing to connect to: no button for it.
       if (mobile && offline) return { tone: 'quiet', icon: 'lock', action: null, line: t('openGym Offline: on this phone, and only here'), banner: null }
       return mobile
         ? { tone: 'quiet', icon: 'lock', action: 'connect', line: t('On this phone only, not connected to a server'), banner: null }

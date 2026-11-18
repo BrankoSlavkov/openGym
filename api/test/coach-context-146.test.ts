@@ -2,7 +2,7 @@
  * each behind its switch under "What the Coach sees" (core/categories.js). */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { recordsOf, measurementsOf, healthOf, cleanVitals, rotationOf } from '../coach/core/context.js';
+import { recordsOf, measurementsOf, healthOf, cleanVitals, rotationOf } from '../coach/core/context.ts';
 import { shareOf, OPTIONAL_CATEGORIES } from '../coach/core/categories.ts';
 import { build } from '../coach/core/payload.js';
 

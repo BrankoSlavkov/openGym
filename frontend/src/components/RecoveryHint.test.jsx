@@ -4,7 +4,7 @@ import React, { act } from 'react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { createRoot } from 'react-dom/client'
 import { DEF, useStore } from '../store/useStore.js'
-import RecoveryHint from './RecoveryHint.jsx'
+import RecoveryHint from './RecoveryHint.tsx'
 import { todayISO, isoOf } from '../lib/format.js'
 
 const clone = v => JSON.parse(JSON.stringify(v))

@@ -15,7 +15,7 @@ vi.mock('../lib/sound.js', () => ({
 }))
 vi.mock('../lib/wakelock.js', () => ({ wakeLockSupported: () => true }))
 const navTo = vi.hoisted(() => vi.fn())
-vi.mock('../lib/nav.js', async importOriginal => {
+vi.mock('../lib/nav.ts', async importOriginal => {
   const real = await importOriginal()
   real.setNav(navTo)
   return real

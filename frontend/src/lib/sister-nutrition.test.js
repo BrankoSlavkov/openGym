@@ -158,7 +158,7 @@ describe('sister-nutrition: where it shows', () => {
 
 describe('sister-nutrition: openGym Offline', () => {
   it('never links, reads or shows anything in the build without the network', async () => {
-    const { setOfflineBuild, OFFLINE_OFF_CARDS } = await import('./build-caps.js')
+    const { setOfflineBuild, OFFLINE_OFF_CARDS } = await import('./build-caps.ts')
     expect(OFFLINE_OFF_CARDS).toContain('opennutrition')
     const m = mockNutrition()
     await link('https://nutrition.example.com', 'GYM12345', { fetchFn: m.fetchFn, now: NOW })

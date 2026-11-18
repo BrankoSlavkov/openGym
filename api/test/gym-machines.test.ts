@@ -8,7 +8,7 @@ import { tempData, sampleState } from './helpers.ts';
 tempData();
 const payload = await import('../coach/core/payload.js');
 const { validatePlan } = await import('../coach/core/validate.js');
-const { gymMachines, machineAllows, LIBRARY, swapSlice } = await import('../coach/core/library.js');
+const { gymMachines, machineAllows, LIBRARY, swapSlice } = await import('../coach/core/library.ts');
 const { handleFor } = await import('../coach/handle.ts');
 
 const byName = n => LIBRARY.find(e => e.n === n);

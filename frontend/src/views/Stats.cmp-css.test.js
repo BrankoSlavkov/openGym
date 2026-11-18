@@ -1,5 +1,5 @@
 // The Week view's done/planned figure (`.mrow .v.cmp`, #573) shares its class name with the
-// Coach's comparison rows (coach.css `.cmp`: a rule line on top and 8px padding), and coach.css is
+// Coach's comparison rows (once coach.css `.cmp`: a rule line on top and 8px padding), and coach.css was
 // loaded on every page. Checked in Chrome: every Week row's figure had a hairline over it and sat
 // 8px off the bar's line. The Stats rule now resets both.
 import { describe, expect, it } from 'vitest'
@@ -9,9 +9,11 @@ import { resolve } from 'node:path'
 const strip = f => readFileSync(resolve(process.cwd(), f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '')
 const rule = (css, sel) => css.match(new RegExp('(^|})\\s*' + sel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\{([^}]*)\\}'))?.[2] || ''
 
+// Fork: the Coach's comparison rows are StyleX now (CoachChat.styles.ts), so no global `.cmp`
+// rule can reach the Week figures any more; the Stats reset stays until Stats moves too.
 describe('Stats Week figures keep clear of the Coach .cmp rule', () => {
-  it('the Coach rule is still there (or this guard can go)', () => {
-    expect(rule(strip('src/coach.css'), '.cmp')).toMatch(/border-top/)
+  it('no stylesheet has a bare .cmp rule for the Coach', () => {
+    expect(rule(strip('src/index.css'), '.cmp')).toBe('')
   })
   it('the Stats rule resets its border and padding', () => {
     const own = rule(strip('src/index.css'), '.mrow .v.cmp')

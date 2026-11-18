@@ -8,7 +8,7 @@ import { useStore } from '../store/useStore.js'
 import { coachAvailable } from './coach.js'
 import { DEMO } from './demo.js'
 import { MOBILE } from './mobile.js'
-import { isOn } from './modules.js'
+import { isOn } from './modules.ts'
 
 /** `{ known, ok }`: `ok` the Coach is available; `known` the answer is final for this session. */
 export function useCoachGate() {

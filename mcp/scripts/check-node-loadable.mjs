@@ -23,7 +23,7 @@ const LIB = new URL('../../frontend/src/lib/', import.meta.url)
 const MODULES = [
   'i18n-core.js', 'format.js', 'exercises.js', 'exercises-data.js',
   'history.js', 'muscles.js', 'onerm.ts', 'progression.js', 'queue.js',
-  'import-csv.js', 'log-workout.js', 'finish-workout.js', 'dumbbells.js', 'backfill.js', 'workout-date.js', 'sync-merge.js',
+  'import-csv.js', 'log-workout.js', 'finish-workout.js', 'dumbbells.js', 'backfill.js', 'workout-date.ts', 'sync-merge.js',
   'routine-write.js', 'routines.js'
 ]
 

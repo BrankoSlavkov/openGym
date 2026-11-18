@@ -10,7 +10,7 @@ import { categoryLabel } from '../lib/sharing-api.ts'
 import { exName, flagText, changeLines, weekdayName, initials, tintOf } from '../lib/trainer-api.ts'
 import { Segmented, Button } from './ui.tsx'
 import Icon from './Icon.tsx'
-import TrainerPhotos from './TrainerPhotos.jsx'
+import TrainerPhotos from './TrainerPhotos.tsx'
 import { isoRun } from '../lib/bidi.js'
 
 const TAB_CATS = { overview: ['metrics', 'bodyweight'], workouts: ['workouts'], plan: ['plans'], body: ['bodyweight', 'measurements'], notes: ['notes'] }

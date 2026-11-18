@@ -26,35 +26,45 @@ export const CONSENT_TEXTS = {
       + 'You can stop sharing any time; copies people already took stay with them.'
   }
 };
+export type ConsentKind = keyof typeof CONSENT_TEXTS;
 export const CONSENT_KINDS = Object.keys(CONSENT_TEXTS);
 
-export const consentHash = (kind, v, text) =>
+export const consentHash = (kind: string, v: number, text: string) =>
   crypto.createHash('sha256').update(`${kind}\n${v}\n${text}`).digest('hex');
 
 /** What the app needs to show and later prove a consent: kind, version, hash, canonical text. */
-export function currentConsent(kind) {
-  const c = CONSENT_TEXTS[kind];
-  if (!c) return null;
+export function currentConsent(kind: unknown) {
+  if (typeof kind !== 'string' || !Object.hasOwn(CONSENT_TEXTS, kind)) return null;
+  const c = CONSENT_TEXTS[kind as ConsentKind];
   return { kind, v: c.v, hash: consentHash(kind, c.v, c.text), text: c.text };
 }
 
 /** Whether what the client says it showed is the current text. Anything else is a 409 for the
  *  caller, with the current text, so the app can show it again. */
-export function consentCurrent(kind, given) {
+export function consentCurrent(kind: unknown, given: unknown) {
   const cur = currentConsent(kind);
-  return !!cur && !!given && typeof given === 'object' && given.v === cur.v && given.hash === cur.hash;
+  return !!cur && !!given && typeof given === 'object' && 'v' in given && given.v === cur.v && 'hash' in given && given.hash === cur.hash;
 }
 
 const LANG_RE = /^[a-z]{2,3}(-[A-Za-z0-9]{2,8})?$/;
 
 /** A consent record, the same shape for every kind:
  *  { id, kind, memberId, subjectId, v, hash, lang, scopes?, at, revokedAt } */
-export function consentRecord({ kind, memberId, subjectId, given, scopes, lang, now = Date.now() }: { kind?: any; memberId?: any; subjectId?: any; given?: any; scopes?: any; lang?: any; now?: number; [key: string]: any }) {
-  const cur = currentConsent(kind);
+interface ConsentRecordInput {
+  kind: ConsentKind;
+  memberId: string;
+  subjectId: string;
+  scopes?: Record<string, unknown> | null;
+  lang?: unknown;
+  now?: number;
+}
+
+export function consentRecord({ kind, memberId, subjectId, scopes, lang, now = Date.now() }: ConsentRecordInput) {
+  const { v, text } = CONSENT_TEXTS[kind];
   return {
     id: 'c_' + crypto.randomBytes(9).toString('base64url'),
     kind, memberId, subjectId,
-    v: cur.v, hash: cur.hash,
+    v, hash: consentHash(kind, v, text),
     lang: typeof lang === 'string' && LANG_RE.test(lang) ? lang : 'en',
     ...(scopes ? { scopes: { ...scopes } } : {}),
     at: now, revokedAt: null

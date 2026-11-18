@@ -19,7 +19,7 @@ import crypto from 'node:crypto';
 import * as cfgStore from './config.ts';
 import { adapterFor } from './adapters/index.ts';
 import * as payloadLib from './core/payload.js';
-import { runPipeline } from './core/pipeline.js';
+import { runPipeline } from './core/pipeline.ts';
 import { extractJSON } from './core/parse.ts';
 import { userMessageFor } from './core/failure.ts';
 import { hashPlan } from './core/plan-hash.ts';

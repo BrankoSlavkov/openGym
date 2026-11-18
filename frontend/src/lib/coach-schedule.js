@@ -14,7 +14,7 @@
 // The check itself is cheap and says no early: without automatic reviews on, or with the Coach
 // off on this phone, it stops here, before the Coach's code is even loaded.
 import { MOBILE } from './mobile.js'
-import { isOn } from './modules.js'
+import { isOn } from './modules.ts'
 
 const TICK_MS = 60000
 

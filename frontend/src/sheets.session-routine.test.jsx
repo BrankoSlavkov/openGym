@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client'
 import { useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
 import { workoutDetailSheet } from './sheets.jsx'
-import { setNav } from './lib/nav.js'
+import { setNav } from './lib/nav.ts'
 import { workoutOption } from './lib/workout-options.test-util.js'
 
 const mounted = []

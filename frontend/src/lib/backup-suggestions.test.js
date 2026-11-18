@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { backupSuggestions } from './backup-suggestions.js'
+import { backupSuggestions } from './backup-suggestions.ts'
 
 const ex = (id, over = {}) => ({ id, tg: 'pectorals', cat: 'strength', eq: 'leverage machine', ...over })
 

@@ -7,7 +7,7 @@ import { tempData, sampleState } from './helpers.ts';
 
 tempData();
 const payload = await import('../coach/core/payload.js');
-const { focusOf } = await import('../coach/core/library.js');
+const { focusOf } = await import('../coach/core/library.ts');
 
 const waist = lib => lib.filter(e => e.bp === 'waist');
 const H = 'h'.repeat(16);

@@ -19,13 +19,15 @@ test('a push from before a badge keeps the badge, for the app and for an older w
 
 test('an older app that never knew challenges keeps them', () => {
   const cur = { _ts: 1, challenges: { '2026-11': { picked, done: ['workouts'], at: 10 } } };
-  const out = stampPut(clone(cur), { _ts: 2, unit: 'kg' }, { stamped: false, overRead: true, now: 100 });
+  const next: { _ts: number; unit: string; challenges?: typeof cur.challenges } = { _ts: 2, unit: 'kg' };
+  const out = stampPut(clone(cur), next, { stamped: false, overRead: true, now: 100 });
   assert.deepEqual(out.challenges, cur.challenges);
 });
 
 test('a reset starts over', () => {
   const cur = { _ts: 1, challenges: { '2026-11': { picked, done: ['workouts'], at: 10 } } };
-  const out = stampPut(clone(cur), { _ts: 2, resetAt: 50 }, { stamped: true, now: 100 });
+  const next: { _ts: number; resetAt: number; challenges?: typeof cur.challenges } = { _ts: 2, resetAt: 50 };
+  const out = stampPut(clone(cur), next, { stamped: true, now: 100 });
   assert.equal(out.challenges, undefined);
 });
 

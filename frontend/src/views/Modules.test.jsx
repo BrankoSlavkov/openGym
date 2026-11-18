@@ -5,7 +5,7 @@ import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { searchSettings, pageVisible, SEARCH } from './settings-pages.js'
-import { MODULES, isOn, presetOf } from '../lib/modules.js'
+import { MODULES, isOn, presetOf } from '../lib/modules.ts'
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 
@@ -26,7 +26,7 @@ vi.mock('../sheets.jsx', () => ({ confirmSheet: opts => mocks.confirms.push(opts
 vi.mock('../lib/api.ts', () => ({ api: vi.fn(() => Promise.resolve({ connections: [] })) }))
 vi.mock('../lib/mobile.js', () => ({ MOBILE: false }))
 
-import ModulesPage, { connectionNotes } from './Modules.jsx'
+import ModulesPage, { connectionNotes } from './Modules.tsx'
 import { bindUI } from '../components/ui.tsx'
 
 let host, root

@@ -22,8 +22,10 @@ import { Button, SearchField, Segmented, Check, TextField, TextArea } from '../c
 import Icon from '../components/Icon.tsx'
 import { confirmSheet } from '../sheets.jsx'
 import { useRevealActiveChip } from '../lib/use-sheet-keyboard.js'
-import { pathBefore, historyIndex } from '../lib/nav.js'
-import './Community.css'
+import { pathBefore, historyIndex } from '../lib/nav.ts'
+import * as stylex from '@stylexjs/stylex'
+import { sx } from '../lib/sx.ts'
+import { styles as x, statusStyle } from './Community.styles.ts'
 
 const day = ms => fmtDate(isoOf(new Date(ms || 0)))
 const serverName = () => {
@@ -57,13 +59,13 @@ const TINTS = ['var(--blue)', 'var(--purple)', 'var(--teal)', 'var(--orange)', '
 const tintOf = name => TINTS[[...String(name || '?')].reduce((n, c) => (n * 31 + c.codePointAt(0)) >>> 0, 7) % TINTS.length]
 function Face({ by, size = 22 }) {
   const url = useSharedFile(by?.avatar || null)
-  return <span className="com-face" style={{ width: size, height: size, background: url ? 'none' : tintOf(by?.name) }} aria-hidden="true">
-    {url ? <img src={url} alt="" /> : initialOf(by?.name || '?')}
+  return <span {...sx(null, x.face)} style={{ width: size, height: size, background: url ? 'none' : tintOf(by?.name) }} aria-hidden="true">
+    {url ? <img {...sx(null, x.faceImg)} src={url} alt="" /> : initialOf(by?.name || '?')}
   </span>
 }
 // The byline. Not optional anywhere: who shared it and when.
 export function Byline({ item }) {
-  return <span className="com-by"><Face by={item.by} /><span>{bylineOf(item, day)}</span></span>
+  return <span {...sx('com-by', x.by)}><Face by={item.by} /><span {...sx(null, x.byText)}>{bylineOf(item, day)}</span></span>
 }
 
 function PlayButton({ hash, size }) {
@@ -80,7 +82,7 @@ function PlayButton({ hash, size }) {
     a.onended = () => setOn(false)
     a.play().then(() => setOn(true)).catch(() => setOn(false))
   }
-  return <button type="button" className="com-play" onClick={toggle} disabled={!url} aria-label={on ? t('Stop') : t('Play')} aria-pressed={on}>
+  return <button type="button" {...sx(null, x.play, on && x.playing)} onClick={toggle} disabled={!url} aria-label={on ? t('Stop') : t('Play')} aria-pressed={on}>
     <Icon name={on ? 'pause' : 'play'} />
   </button>
 }
@@ -88,23 +90,23 @@ function PlayButton({ hash, size }) {
 function Preview({ item, big = false }) {
   const p = item.payload || {}
   const meta = TYPE[item.type] || {}
-  if (item.type === 'sound' && p.m) return <div className="com-pre com-pre-sound"><PlayButton hash={p.m.hash} size={p.m.size} /></div>
+  if (item.type === 'sound' && p.m) return <div {...sx(null, x.pre, x.preSound)}><PlayButton hash={p.m.hash} size={p.m.size} /></div>
   const still = item.type === 'exercise' ? (p.media?.poster || (p.media?.kind !== 'video' ? p.media : null))
     : (item.type === 'photo' || item.type === 'progress' || item.type === 'formvideo') ? (p.media?.[0]?.poster || (p.media?.[0]?.kind !== 'video' ? p.media?.[0] : null)) : null
-  if (still) return <div className={'com-pre com-pre-pic' + (big ? ' big' : '')}><Pic hash={still.hash} size={still.size} /></div>
+  if (still) return <div {...sx(null, x.pre, big && x.preBig)}><Pic hash={still.hash} size={still.size} /></div>
   if (item.type === 'look') {
     const f = p.flame, z = p.freeze
-    return <div className="com-pre com-pre-look" style={{ '--look': f?.c || 'var(--orange)' }}>
-      {f ? (/^[A-Za-z]/.test(f.v) ? <Icon name={f.v} style={{ color: f.c }} /> : <span className="com-emoji">{f.v}</span>) : null}
-      {z ? (/^[A-Za-z]/.test(z.v) ? <Icon name={z.v} style={{ color: z.c }} /> : <span className="com-emoji">{z.v}</span>) : null}
-      {!f && !z && <span className="com-swatch" style={{ background: /^#/.test(p.accent || '') ? p.accent : 'var(--acc)' }} />}
+    return <div {...sx(null, x.pre, x.preLook, big && x.preBig)} style={{ '--look': f?.c || 'var(--orange)' }}>
+      {f ? (/^[A-Za-z]/.test(f.v) ? <Icon name={f.v} style={{ color: f.c }} /> : <span {...sx(null, x.emoji)}>{f.v}</span>) : null}
+      {z ? (/^[A-Za-z]/.test(z.v) ? <Icon name={z.v} style={{ color: z.c }} /> : <span {...sx(null, x.emoji)}>{z.v}</span>) : null}
+      {!f && !z && <span {...sx(null, x.swatch)} style={{ background: /^#/.test(p.accent || '') ? p.accent : 'var(--acc)' }} />}
     </div>
   }
-  return <div className="com-pre" style={{ color: meta.tint }}><Icon name={meta.icon || 'star'} /></div>
+  return <div {...sx(null, x.pre, big && x.preBig)} style={{ color: meta.tint }}><Icon name={meta.icon || 'star'} /></div>
 }
 function Pic({ hash, size }) {
   const url = useSharedFile(hash, size)
-  return url ? <img src={url} alt="" loading="lazy" /> : <span className="com-pic-wait" />
+  return url ? <img {...sx(null, x.picImg)} src={url} alt="" loading="lazy" /> : <span {...sx(null, x.picWait)} />
 }
 
 /* ---------------------------------------------------------------- the screen */
@@ -140,10 +142,10 @@ export default function Community() {
   useEffect(() => { const tm = setTimeout(() => load(false), q ? 250 : 0); return () => clearTimeout(tm) }, [type, q, sort, mine, on]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!on) {
-    return <div className="com">
+    return <div {...sx(null, x.page)}>
       <div className="hdr"><div><h1>{t('Community')}</h1></div></div>
-      <div className="empty com-empty"><div className="ico"><Icon name="globe" /></div>
-        <p>{user && !user.guest ? t('This server has no community library.') : t('Sharing works once you are connected to a server.')}</p>
+      <div {...sx('empty', x.empty)}><div className="ico"><Icon name="globe" /></div>
+        <p {...sx(null, x.emptyText)}>{user && !user.guest ? t('This server has no community library.') : t('Sharing works once you are connected to a server.')}</p>
         <Button size="sm" variant="tinted" onClick={() => nav('/settings')}>{t('Settings')}</Button>
       </div>
     </div>
@@ -153,37 +155,37 @@ export default function Community() {
   const open = item => useUI.getState().openSheet(close => <ItemSheet item={item} close={close} onChanged={() => load(false)} />)
   const share = () => useUI.getState().openSheet(close => <ShareSheet type={type} close={close} onShared={() => { setMine(true); load(false) }} />)
 
-  return <div className="com">
-    <div className="hdr com-hdr">
-      {historyIndex() > 0 && <button type="button" className="iconbtn com-back" data-back={pathBefore() || '/library'} onClick={() => nav(-1)} aria-label={t('Back')}><Icon name="chevronLeft" /></button>}
+  return <div {...sx(null, x.page)}>
+    <div {...sx('hdr', x.hdr)}>
+      {historyIndex() > 0 && <button type="button" {...sx('iconbtn', x.back)} data-back={pathBefore() || '/library'} onClick={() => nav(-1)} aria-label={t('Back')}><Icon name="chevronLeft" /></button>}
       <div className="grow"><h1>{t('Community')}</h1>
-        <div className="sub">{t('Shared by people on {0}. Take a copy, it is yours.', serverName())}</div></div>
+        <div {...sx('sub', x.sub)}>{t('Shared by people on {0}. Take a copy, it is yours.', serverName())}</div></div>
       <Button size="sm" variant="tinted" icon="plus" onClick={share}>{t('Share yours')}</Button>
     </div>
     <AvatarShareRow lib={lib} />
-    <div className="chips com-tabs" role="tablist" aria-label={t('Kinds')} ref={tabsRef}>
-      {tabs.map(x => <button key={x.id} type="button" role="tab" aria-selected={type === x.id} className={'chip nocap ichip' + (type === x.id ? ' on' : '')}
-        onClick={() => setType(x.id)}><Icon name={x.icon} />{typeWords()[x.id]?.[0]}</button>)}
+    <div {...sx('chips', x.tabs)} role="tablist" aria-label={t('Kinds')} ref={tabsRef}>
+      {tabs.map(tab => <button key={tab.id} type="button" role="tab" aria-selected={type === tab.id} className={'chip nocap ichip' + (type === tab.id ? ' on' : '')}
+        onClick={() => setType(tab.id)}><Icon name={tab.icon} {...sx(null, x.tabIcon)} />{typeWords()[tab.id]?.[0]}</button>)}
     </div>
-    <div className="com-tools">
+    <div {...sx(null, x.tools)}>
       <SearchField value={q} onChange={e => setQ(e.target.value)} onClear={() => setQ('')} placeholder={t('Search {0}', (typeWords()[type]?.[0] || '').toLowerCase())} aria-label={t('Search')} />
-      <div className="com-sortrow">
-        <Segmented className="com-sort" value={sort} onChange={setSort} options={[{ value: 'new', label: t('New') }, { value: 'popular', label: t('Popular') }]} />
-        <button type="button" className={'chip nocap' + (mine ? ' on' : '')} aria-pressed={mine} onClick={() => setMine(v => !v)}>{t('Yours')}</button>
+      <div {...sx(null, x.sortRow)}>
+        <Segmented {...sx(null, x.sort)} value={sort} onChange={setSort} options={[{ value: 'new', label: t('New') }, { value: 'popular', label: t('Popular') }]} />
+        <button type="button" {...sx(['chip nocap', mine && 'on'], x.sortChip)} aria-pressed={mine} onClick={() => setMine(v => !v)}>{t('Yours')}</button>
       </div>
     </div>
     {state.error && <p className="intg-problem" role="alert">{state.error}</p>}
-    <div className="com-list" aria-busy={state.loading}>
+    <div {...sx(null, x.list)} aria-busy={state.loading}>
       {state.items.map(item => <Card key={item.id} item={item} onOpen={() => open(item)} onChanged={() => load(false)} />)}
     </div>
-    {state.loading && !state.items.length && <div className="com-skel" aria-hidden="true"><span /><span /><span /></div>}
-    {!state.loading && !state.items.length && !state.error && <div className="empty com-empty">
+    {state.loading && !state.items.length && <div {...sx(null, x.skel)} aria-hidden="true"><span {...sx(null, x.skelRow)} /><span {...sx(null, x.skelRow)} /><span {...sx(null, x.skelRow)} /></div>}
+    {!state.loading && !state.items.length && !state.error && <div {...sx('empty', x.empty)}>
       <div className="ico" style={{ color: meta.tint }}><Icon name={meta.icon || 'globe'} /></div>
-      <p>{q ? t('Nothing matches that. Try fewer words.') : mine ? t('You have not shared any of these yet.') : t('Nothing here yet. Be the first to share something.')}</p>
+      <p {...sx(null, x.emptyText)}>{q ? t('Nothing matches that. Try fewer words.') : mine ? t('You have not shared any of these yet.') : t('Nothing here yet. Be the first to share something.')}</p>
       {!q && <Button size="sm" variant="tinted" icon="plus" onClick={share}>{t('Share yours')}</Button>}
     </div>}
-    {state.next && <><div style={{ height: 10 }} /><Button onClick={() => load(true)} disabled={state.loading}>{t('Show more')}</Button></>}
-    <p className="com-foot small dim">{t('Spotted something that does not belong here? Open it and tap Report.')}</p>
+    {state.next && <><div {...sx(null, x.spacer)} /><Button onClick={() => load(true)} disabled={state.loading}>{t('Show more')}</Button></>}
+    <p {...sx('small dim', x.foot)}>{t('Spotted something that does not belong here? Open it and tap Report.')}</p>
   </div>
 }
 
@@ -199,21 +201,21 @@ function Card({ item, onOpen, onChanged }) {
   const taken = useStore(s => hasCopy(s.S, item))
   const newer = useStore(s => newerThanCopy(s.S, item))
   const line = item.type === 'tip' ? tipLine(item) : cardLine(item)
-  return <div className="com-card tap-host">
+  return <div {...sx('com-card tap-host', x.card)}>
     <Preview item={item} />
-    <button type="button" className="com-main tap-main" aria-haspopup="dialog" onClick={onOpen}>
-      <span className="tt">{item.title}</span>
-      {line && <span className={'ss' + (item.type === 'exercise' || item.type === 'tip' ? ' capitalize' : '')}>{line}</span>}
+    <button type="button" {...sx('tap-main', x.main, stylex.defaultMarker())} aria-haspopup="dialog" onClick={onOpen}>
+      <span {...sx(null, x.title)}>{item.title}</span>
+      {line && <span {...sx(null, x.line, (item.type === 'exercise' || item.type === 'tip') && x.capitalize)}>{line}</span>}
       <Byline item={item} />
     </button>
-    <div className="com-side">
+    <div {...sx(null, x.side)}>
       {item.mine && item.status !== 'live'
-        ? <span className={'tag com-st com-st-' + item.status}>{STATUS[item.status]?.() || item.status}</span>
+        ? <span {...sx('tag', x.status, statusStyle(item.status))}>{STATUS[item.status]?.() || item.status}</span>
         : item.mine ? <span className="tag acc">{t('Yours')}</span>
           : newer ? <span className="tag acc">{t('New version')}</span>
           : taken ? <span className="tag"><Icon name="check" />{t('In yours')}</span>
             : meta.take ? <TakeButton item={item} onDone={onChanged} compact /> : null}
-      {item.stats?.imports > 0 && <span className="com-count small dim" aria-label={t('Taken {0} times', item.stats.imports)}>{t('{0}× taken', item.stats.imports)}</span>}
+      {item.stats?.imports > 0 && <span {...sx('small dim', x.count)} aria-label={t('Taken {0} times', item.stats.imports)}>{t('{0}× taken', item.stats.imports)}</span>}
     </div>
   </div>
 }
@@ -280,21 +282,21 @@ function ItemSheet({ item: first, close, onChanged }) {
     importShared(item.id).then(res => { let msg = ''; useStore.getState().update(s => { msg = applyImport(s, res) }); toastFn(msg); close() })
       .catch(e => toastFn(sharedError(e)))
   }
-  return <div className="com-sheet">
-    <div className="com-sheet-top">
+  return <div {...sx(null, x.sheet)}>
+    <div {...sx(null, x.sheetTop)}>
       <Preview item={item} big />
       <div className="grow">
-        <h3>{item.title}</h3>
+        <h3 {...sx(null, x.h3, x.sheetTitle)}>{item.title}</h3>
         <div className="small dim">{typeWords()[item.type]?.[1]}{item.version > 1 ? ' · ' + t('version {0}', item.version) : ''}</div>
       </div>
     </div>
     <Byline item={item} />
-    {item.stats?.imports > 0 && <span className="small dim com-taken">{t('Taken {0} times', item.stats.imports)}</span>}
-    {item.mine && item.status !== 'live' && <p className={'com-note com-st-' + item.status}>{STATUS[item.status]?.()}</p>}
-    {newer && <p className="com-note com-st-pending">{t('{0} shared a new version. Yours stays as it is; take the new one as another copy if you like.', item.by?.name || t('someone who left'))}</p>}
-    {item.desc && <p className="com-desc">{item.desc}</p>}
+    {item.stats?.imports > 0 && <span {...sx('small dim', x.taken)}>{t('Taken {0} times', item.stats.imports)}</span>}
+    {item.mine && item.status !== 'live' && <p {...sx(null, x.note, statusStyle(item.status))}>{STATUS[item.status]?.()}</p>}
+    {newer && <p {...sx(null, x.note, x.stPending)}>{t('{0} shared a new version. Yours stays as it is; take the new one as another copy if you like.', item.by?.name || t('someone who left'))}</p>}
+    {item.desc && <p {...sx(null, x.desc)}>{item.desc}</p>}
     <Detail item={item} />
-    <div className="com-actions">
+    <div {...sx(null, x.actions)}>
       {item.mine ? <>
         {changed && item.status !== 'withdrawn' && item.status !== 'removed' && <Button variant="primary" onClick={update}>{t('Share the new version')}</Button>}
         {item.status !== 'withdrawn' && item.status !== 'removed' && <Button onClick={stop}>{t('Stop sharing')}</Button>}
@@ -312,38 +314,38 @@ function Detail({ item }) {
   switch (item.type) {
     case 'plan': {
       const rs = p.bundle?.routines || item.summary?.routines || []
-      return <ul className="com-detail">{rs.slice(0, 12).map((r, i) => <li key={i}><Icon name="calendar" /><span className="grow">{r.name || t('Routine')}</span>
+      return <ul {...sx(null, x.detail)}>{rs.slice(0, 12).map((r, i) => <li key={i} {...sx(null, x.detailRow)}><Icon name="calendar" {...sx(null, x.detailIcon)} /><span className="grow">{r.name || t('Routine')}</span>
         <span className="small dim">{exCount(Array.isArray(r.ex) ? r.ex.length : r.n || 0)}</span></li>)}</ul>
     }
     case 'exercise': {
       const ex = p.ex || {}
       return <>
         {p.media?.kind === 'video' && <SharedVideo m={p.media} />}
-        <ul className="com-detail">
-          {ex.bp && <li><Icon name="figureStrength" /><span className="grow">{t('Body part')}</span><span className="capitalize">{t(ex.bp)}</span></li>}
-          {ex.eq && <li><Icon name="kettlebell" /><span className="grow">{t('Equipment')}</span><span className="capitalize">{t(ex.eq)}</span></li>}
+        <ul {...sx(null, x.detail)}>
+          {ex.bp && <li {...sx(null, x.detailRow)}><Icon name="figureStrength" {...sx(null, x.detailIcon)} /><span className="grow">{t('Body part')}</span><span className="capitalize">{t(ex.bp)}</span></li>}
+          {ex.eq && <li {...sx(null, x.detailRow)}><Icon name="kettlebell" {...sx(null, x.detailIcon)} /><span className="grow">{t('Equipment')}</span><span className="capitalize">{t(ex.eq)}</span></li>}
         </ul>
-        {ex.desc && <p className="com-desc">{ex.desc}</p>}
+        {ex.desc && <p {...sx(null, x.desc)}>{ex.desc}</p>}
       </>
     }
     case 'tip': {
       const ex = p.exId ? exOr(p.exId) : null
-      return <blockquote className="com-quote">{p.text}{ex && !ex.missing && <cite className={exerciseNameClass(ex)}>{exerciseNameFor(ex)}</cite>}</blockquote>
+      return <blockquote {...sx(null, x.quote)}>{p.text}{ex && !ex.missing && <cite {...sx(exerciseNameClass(ex), x.cite)}>{exerciseNameFor(ex)}</cite>}</blockquote>
     }
     case 'measures':
-      return <ul className="com-detail">{(p.fields || []).map((f, i) => <li key={i}><Icon name="ruler" /><span className="grow">{f.name}</span><span className="small dim">{f.unit === 'none' ? '' : f.unit}</span></li>)}</ul>
+      return <ul {...sx(null, x.detail)}>{(p.fields || []).map((f, i) => <li key={i} {...sx(null, x.detailRow)}><Icon name="ruler" {...sx(null, x.detailIcon)} /><span className="grow">{f.name}</span><span className="small dim">{f.unit === 'none' ? '' : f.unit}</span></li>)}</ul>
     case 'equipment': {
       const kit = p.profile?.equipment || []
-      return kit.length ? <div className="chips wrap com-kit">{kit.slice(0, 40).map(k => <span key={k} className="tag">{t(k)}</span>)}</div> : null
+      return kit.length ? <div className="chips wrap">{kit.slice(0, 40).map(k => <span key={k} {...sx('tag', x.capitalize)}>{t(k)}</span>)}</div> : null
     }
     case 'photo': case 'progress': case 'formvideo':
-      return <div className="com-gallery">{(p.media || []).map(m => m.kind === 'video' ? <SharedVideo key={m.hash} m={m} /> : <div key={m.hash} className="com-gal-pic"><Pic hash={m.hash} size={m.size} /></div>)}</div>
+      return <div {...sx(null, x.gallery)}>{(p.media || []).map(m => m.kind === 'video' ? <SharedVideo key={m.hash} m={m} /> : <div key={m.hash} {...sx(null, x.galPic)}><Pic hash={m.hash} size={m.size} /></div>)}</div>
   }
   return null
 }
 function SharedVideo({ m }) {
   const url = useSharedFile(m.hash, m.size)
-  return url ? <video className="com-video" src={url} controls playsInline preload="metadata" /> : <div className="com-video com-pic-wait" />
+  return url ? <video {...sx(null, x.video)} src={url} controls playsInline preload="metadata" /> : <div {...sx(null, x.video, x.picWait)} />
 }
 
 /* ---------------------------------------------------------------- reporting */
@@ -358,14 +360,14 @@ function ReportSheet({ item, close }) {
     reportShared(item.id, reason, note).then(() => { toast(t('Thanks. An admin will take a look.')); close() })
       .catch(e => { setBusy(false); toast(sharedError(e)) })
   }
-  return <div className="com-sheet">
-    <h3>{t('Something off?')}</h3>
+  return <div {...sx(null, x.sheet)}>
+    <h3 {...sx(null, x.h3)}>{t('Something off?')}</h3>
     <p className="small dim">{t('Tell us what is up. Only the admins see it, not {0}.', item.by?.name || t('the person who shared it'))}</p>
-    <div className="com-reasons" role="radiogroup" aria-label={t('Reason')}>
+    <div {...sx(null, x.reasons)} role="radiogroup" aria-label={t('Reason')}>
       {REPORT_REASONS.map(r => <button key={r} type="button" role="radio" aria-checked={reason === r} className={'chip nocap' + (reason === r ? ' on' : '')} onClick={() => setReason(r)}>{reasonLabel(r)}</button>)}
     </div>
     <TextArea value={note} maxLength={300} rows={3} placeholder={t('A few words, if you like')} aria-label={t('Note')} onChange={e => setNote(e.target.value)} />
-    <div style={{ height: 12 }} />
+    <div {...sx(null, x.reportGap)} />
     <Button variant="primary" disabled={!reason || busy} onClick={send}>{t('Send report')}</Button>
     <Button variant="ghost" onClick={close}>{t('Cancel')}</Button>
   </div>
@@ -389,23 +391,23 @@ function ShareSheet({ type, close, onShared }) {
   const liveSrc = new Set((shared || []).filter(i => i.status !== 'withdrawn' && i.status !== 'removed').map(i => i.src).filter(Boolean))
   const pick = it => useUI.getState().openSheet(c => <ConsentSheet type={kind} it={it} close={c} done={() => { c(); close(); onShared?.() }} />)
   const meta = TYPE[kind] || {}
-  return <div className="com-sheet">
-    <h3>{t('Share one of yours')}</h3>
+  return <div {...sx(null, x.sheet)}>
+    <h3 {...sx(null, x.h3)}>{t('Share one of yours')}</h3>
     <p className="small dim">{t('Nothing is shared until you pick it and say yes. You decide for each one.')}</p>
-    <div className="chips com-tabs">
-      {tabs.map(x => <button key={x.id} type="button" className={'chip nocap ichip' + (kind === x.id ? ' on' : '')} aria-pressed={kind === x.id} onClick={() => setKind(x.id)}><Icon name={x.icon} />{typeWords()[x.id]?.[0]}</button>)}
+    <div {...sx('chips', x.tabs)}>
+      {tabs.map(tab => <button key={tab.id} type="button" className={'chip nocap ichip' + (kind === tab.id ? ' on' : '')} aria-pressed={kind === tab.id} onClick={() => setKind(tab.id)}><Icon name={tab.icon} {...sx(null, x.tabIcon)} />{typeWords()[tab.id]?.[0]}</button>)}
     </div>
-    <div className="com-own">
+    <div {...sx(null, x.own)}>
       {items.map(it => {
         const done = liveSrc.has(it.src)
-        return <div key={it.src} className="com-own-row">
-          <span className="com-pre sm" style={{ color: meta.tint }}><Icon name={meta.icon} /></span>
-          <span className="grow tt">{it.title || (it.exId ? exerciseNameFor(exOr(it.exId)) : typeWords()[kind]?.[1])}</span>
+        return <div key={it.src} {...sx(null, x.ownRow)}>
+          <span {...sx(null, x.pre, x.preSm)} style={{ color: meta.tint }}><Icon name={meta.icon} /></span>
+          <span {...sx('grow', x.ownTitle)}>{it.title || (it.exId ? exerciseNameFor(exOr(it.exId)) : typeWords()[kind]?.[1])}</span>
           {done ? <span className="tag acc"><Icon name="check" />{t('Shared')}</span>
             : <Button size="sm" variant="tinted" disabled={shared === null} onClick={() => pick(it)}>{t('Share')}</Button>}
         </div>
       })}
-      {!items.length && <p className="small dim com-own-empty">{t('Nothing of yours to share here yet. Things you took from the community are not yours to share again.')}</p>}
+      {!items.length && <p {...sx('small dim', x.ownEmpty)}>{t('Nothing of yours to share here yet. Things you took from the community are not yours to share again.')}</p>}
     </div>
     <Button variant="ghost" onClick={close}>{t('Done')}</Button>
   </div>
@@ -448,18 +450,18 @@ function ConsentSheet({ type, it, close, done }) {
       }
     }
   }
-  return <div className="com-sheet com-consent">
-    <h3>{t('Share with this server?')}</h3>
-    <p className="com-server"><Icon name="globe" />{serverName()}</p>
-    <label className="com-field"><span>{t('Title')}</span>
-      <TextField value={title} maxLength={60} onChange={e => setTitle(e.target.value)} /></label>
-    <label className="com-field"><span>{t('A few words about it')}</span>
-      <TextArea value={desc} maxLength={500} rows={3} placeholder={t('What it is, who it is for')} onChange={e => setDesc(e.target.value)} /></label>
-    {personal && <p className="com-warn" role="note"><Icon name="shield" />{t('Careful: this is a photo of you. Everyone on this server can see it and could save it with a screenshot. Sure?')}</p>}
+  return <div {...sx(null, x.sheet, x.consent)}>
+    <h3 {...sx(null, x.h3)}>{t('Share with this server?')}</h3>
+    <p {...sx(null, x.server)}><Icon name="globe" />{serverName()}</p>
+    <label {...sx(null, x.field)}><span {...sx(null, x.fieldLabel)}>{t('Title')}</span>
+      <TextField {...sx(null, x.input)} value={title} maxLength={60} onChange={e => setTitle(e.target.value)} /></label>
+    <label {...sx(null, x.field)}><span {...sx(null, x.fieldLabel)}>{t('A few words about it')}</span>
+      <TextArea {...sx(null, x.input, x.textarea)} value={desc} maxLength={500} rows={3} placeholder={t('What it is, who it is for')} onChange={e => setDesc(e.target.value)} /></label>
+    {personal && <p {...sx(null, x.warn)} role="note"><Icon name="shield" />{t('Careful: this is a photo of you. Everyone on this server can see it and could save it with a screenshot. Sure?')}</p>}
     {lib?.review || personal ? <p className="small dim">{t('An admin looks at it before anyone else can see it.')}</p> : null}
-    <p className="com-consent-text">{words}</p>
-    <label className="com-own-check">
-      <Check checked={own} onChange={setOwn} label={t('It is mine to share')} />
+    <p {...sx(null, x.consentText)}>{words}</p>
+    <label {...sx(null, x.ownCheck)}>
+      <Check {...sx(null, x.check)} checked={own} onChange={setOwn} label={t('It is mine to share')} />
       <span>{t('It is mine to share. I made it, recorded it or may pass it on, and it is not an openGym animation.')}</span>
     </label>
     <Button variant="primary" disabled={!own || busy || !title.trim()} onClick={go}>{busy ? t('Sharing…') : t('Share it')}</Button>
@@ -490,10 +492,10 @@ function AvatarShareRow({ lib }) {
     useUI.getState().openSheet(close => <ConsentSheet type="avatar" it={{ src: 'avatar', title: t('Profile picture'), payload: { m: pic } }} close={close}
       done={() => { close(); listShared({ type: 'avatar', mine: true }).then(r => setItem(r.items.find(i => i.status !== 'withdrawn') || null)).catch(() => {}) }} />)
   }
-  return <div className="com-avatar">
+  return <div {...sx(null, x.avatar)}>
     <Face by={{ name: useStore.getState().user?.name, avatar: sharedNow ? pic.hash : null }} size={32} />
     <span className="grow">{t('Show your picture next to your name on things you share?')}</span>
-    <Button size="sm" className="com-nowrap" variant={sharedNow ? 'plain' : 'tinted'} onClick={flip}>{sharedNow ? t('Hide it') : t('Show it')}</Button>
+    <Button size="sm" {...sx(null, x.nowrap)} variant={sharedNow ? 'plain' : 'tinted'} onClick={flip}>{sharedNow ? t('Hide it') : t('Show it')}</Button>
   </div>
 }
 
